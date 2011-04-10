@@ -1,0 +1,13 @@
+<div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * The REFINERYCMS object is the single global object used by RefineryCMS.</span>
+<span class="cm"> * @version    $Id$</span>
+<span class="cm"> * @package    refinery-js</span>
+<span class="cm"> * @copyright  Copyright (C) 2011</span>
+<span class="cm"> * @author     keraM marek@keram.name http//keram.name</span>
+<span class="cm"> * @license    MIT</span>
+<span class="cm"> * @module refinerycms</span>
+<span class="cm"> * @title  REFINERYCMS Global</span>
+<span class="cm"> */</span>
+
+<span class="kd">var</span> <span class="nx">REFINERYCMS</span> <span class="o">=</span> <span class="nx">REFINERYCMS</span> <span class="o">||</span> <span class="p">{};</span>
+</pre></div>
