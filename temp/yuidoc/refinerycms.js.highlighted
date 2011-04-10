@@ -5,9 +5,15 @@
 <span class="cm"> * @copyright  Copyright (C) 2011</span>
 <span class="cm"> * @author     keraM marek@keram.name http//keram.name</span>
 <span class="cm"> * @license    MIT</span>
-<span class="cm"> * @module refinerycms</span>
-<span class="cm"> * @title  REFINERYCMS Global</span>
+<span class="cm"> * @module     refinerycms</span>
+<span class="cm"> * @title      REFINERYCMS Global</span>
+<span class="cm"> * @required   jquery-1.5.2</span>
 <span class="cm"> */</span>
 
+<span class="cm">/**</span>
+<span class="cm"> * The REFINERYCMS global namespace object.</span>
+<span class="cm"> * @class REFINERYCMS</span>
+<span class="cm"> * @static</span>
+<span class="cm"> */</span>
 <span class="kd">var</span> <span class="nx">REFINERYCMS</span> <span class="o">=</span> <span class="nx">REFINERYCMS</span> <span class="o">||</span> <span class="p">{};</span>
 </pre></div>

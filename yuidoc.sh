@@ -31,4 +31,4 @@ yuiversion=2
 # add -s to the end of the line to show items marked private
 rm -rf ./temp/yuidoc
 mkdir ./temp/yuidoc
-python -W ignore::DeprecationWarning $yuidoc_home/bin/yuidoc.py $parser_in -p $parser_out -o $generator_out -t $template -v $version -Y $yuiversion
+python -W ignore::DeprecationWarning $yuidoc_home/bin/yuidoc.py $parser_in -p $parser_out -o $generator_out -t $template -m 'RefineryCMS js library' -v $version -Y $yuiversion
