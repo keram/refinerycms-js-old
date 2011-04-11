@@ -7,6 +7,7 @@
 		<script type="text/javascript" src="../libs/yuitest/yuitest-min.js"></script>
 
 		<script type="text/javascript">
+		
 			function webalize (str) {
 				var str = str;
 				str = $.trim(str);
@@ -91,7 +92,11 @@
 
 		<script type="text/javascript" >
 			$(function() {
-	
+				if (typeof fireunit == 'undefined') {
+					alert('Fireunit is not defined. \nVisit http://fireunit.org/ for more informations.');
+					throw 'fireunit_not_defined';
+				}
+				
 				TestRunner.add(suite);
 				TestRunner.run();
     
