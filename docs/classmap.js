@@ -1,4 +1,4 @@
-YAHOO.env.classMap = {"REFINERYCMS": "refinerycms"};
+YAHOO.env.classMap = {"REFINERYCMS": "refinerycms", "REFINERYCMS.Dialog": "refinerycms"};
 
 YAHOO.env.resolveClass = function(className) {
     var a=className.split('.'), ns=YAHOO.env.classMap;

@@ -1,82 +1,101 @@
 <!DOCTYPE HTML>
 <html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
-<title>Refinery JS tests bootstrap</title>
-<script type="text/javascript" src="../libs/jquery-1.5.2.min.js"></script>
-<script type="text/javascript" src="../libs/yuitest/yuitest-min.js"></script>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<title>Refinery JS tests bootstrap</title>
+		<script type="text/javascript" src="../libs/jquery-1.5.2.min.js"></script>
+		<script type="text/javascript" src="../libs/yuitest/yuitest-min.js"></script>
 
-<script type="text/javascript">
-  
-    var TestRunner = YUITest.TestRunner;
+		<script type="text/javascript">
+			function webalize (str) {
+				var str = str;
+				str = $.trim(str);
+				str = str.toLowerCase();
+				str = str.replace(/ /g, '-');
+				
+				return str;
+			}
+			
+			var TestRunner = YUITest.TestRunner;
 
-    TestRunner.attach(TestRunner.BEGIN_EVENT, handleEvent);
-    TestRunner.attach(TestRunner.COMPLETE_EVENT, handleEvent);
-    TestRunner.attach(TestRunner.TEST_CASE_BEGIN_EVENT, handleEvent);
-    TestRunner.attach(TestRunner.TEST_CASE_COMPLETE_EVENT, handleEvent);
-    TestRunner.attach(TestRunner.TEST_SUITE_BEGIN_EVENT, handleEvent);
-    TestRunner.attach(TestRunner.TEST_SUITE_COMPLETE_EVENT, handleEvent);
-    TestRunner.attach(TestRunner.TEST_PASS_EVENT, handleEvent);
-    TestRunner.attach(TestRunner.TEST_FAIL_EVENT, handleEvent);
-    TestRunner.attach(TestRunner.TEST_IGNORE_EVENT, handleEvent);
+			TestRunner.attach(TestRunner.BEGIN_EVENT, handleEvent);
+			TestRunner.attach(TestRunner.COMPLETE_EVENT, handleEvent);
+			TestRunner.attach(TestRunner.TEST_CASE_BEGIN_EVENT, handleEvent);
+			TestRunner.attach(TestRunner.TEST_CASE_COMPLETE_EVENT, handleEvent);
+			TestRunner.attach(TestRunner.TEST_SUITE_BEGIN_EVENT, handleEvent);
+			TestRunner.attach(TestRunner.TEST_SUITE_COMPLETE_EVENT, handleEvent);
+			TestRunner.attach(TestRunner.TEST_PASS_EVENT, handleEvent);
+			TestRunner.attach(TestRunner.TEST_FAIL_EVENT, handleEvent);
+			TestRunner.attach(TestRunner.TEST_IGNORE_EVENT, handleEvent);
 
-    function handleEvent(event){
+			function handleEvent(event){
         
-        switch(event.type){
-            case TestRunner.TEST_PASS_EVENT:
-                fireunit.ok(true, event.testName + " passed.");
-                break;
-            case TestRunner.TEST_FAIL_EVENT:
-                if (event.error instanceof YUITest.ComparisonFailure){
-                    fireunit.ok(false, event.testName + "failed: " + event.error.message, event.error.expected, event.error.actual);
-                } else {
-                    fireunit.ok(false, event.testName + "failed: " + event.error.message);
-                }
-                break;
-            case TestRunner.TEST_CASE_BEGIN_EVENT:
-                fireunit.group(event.testCase.name);
-                break;
-            case TestRunner.TEST_SUITE_BEGIN_EVENT:
-                fireunit.group(event.testSuite.name);
-                $('<li />', {
-			html : event.testSuite.name
-		}).appendTo($('#tests'));
-                break;
-            case TestRunner.TEST_CASE_COMPLETE_EVENT:
-            case TestRunner.TEST_SUITE_COMPLETE_EVENT:
-                fireunit.groupEnd();
-                break;
-            case TestRunner.TEST_IGNORE_EVENT:
-                fireunit.log(event.testName + ": ignored.");
-                break;
-            case TestRunner.COMPLETE_EVENT:
-                fireunit.testDone();
-                break;
-            case TestRunner.BEGIN_EVENT:
-                message = "Testing began at " + (new Date()).toString() + ".";
-                fireunit.log(message);
+				switch(event.type){
+					case TestRunner.TEST_PASS_EVENT:
+						fireunit.ok(true, event.testName + " passed.");
+						break;
+					case TestRunner.TEST_FAIL_EVENT:
+						if (event.error instanceof YUITest.ComparisonFailure){
+							fireunit.ok(false, event.testName + " failed: " + event.error.message, event.error.expected, event.error.actual);
+						} else {
+							fireunit.ok(false, event.testName + " failed: " + event.error.message);
+						}
+						break;
+					case TestRunner.TEST_CASE_BEGIN_EVENT:					
+						fireunit.group(event.testCase.name);
+						$('<li />', {
+							html: event.testCase.name
+						}).appendTo($('#' + webalize(testSuite.name) + ' ul'));
+						
+						break;
+					case TestRunner.TEST_SUITE_BEGIN_EVENT:
+						fireunit.group(event.testSuite.name);
+						$('<li />', {
+							id: webalize(event.testSuite.name),
+							html: event.testSuite.name + '<ul></ul>'
+						}).appendTo($('#tests'));
+						testSuite = event.testSuite;
+						break;
+					case TestRunner.TEST_CASE_COMPLETE_EVENT:
+					case TestRunner.TEST_SUITE_COMPLETE_EVENT:
+						fireunit.groupEnd();
+						break;
+					case TestRunner.TEST_IGNORE_EVENT:
+						fireunit.log(event.testName + ": ignored.");
+						break;
+					case TestRunner.COMPLETE_EVENT:
+						fireunit.testDone();
+						break;
+					case TestRunner.BEGIN_EVENT:
+						message = "Testing began at " + (new Date()).toString() + ".";
+						fireunit.log(message);
                 
-                break;
-        }
-    }
+						break;
+				}
+			}
     
-    var suite = new YUITest.TestSuite("RefineryCMS js Suite");
+			var suite = new YUITest.TestSuite("RefineryCMS js Suite");
 
-</script>
-<body>
-    <h1>Tests</h1>
-    <ul id="tests"></ul>
-    
-  
-<!-- here link your tests files -->
-<script type="text/javascript" src="../src/refinerycms/refinerycms.js"></script>
-<script type="text/javascript" src="./refinerycms/refinerycms_test.js"></script>
-<script type="text/javascript" >
-$(function() {
+		</script>
+	<body>
+		<h1>Tests</h1>
+		<ul id="tests"></ul>
 
-    TestRunner.run();
+
+		<!-- here link your tests files -->
+		<script type="text/javascript" src="../src/refinerycms/refinerycms.js"></script>
+		<script type="text/javascript" src="./refinerycms/refinerycms_test.js"></script>
+
+		<script type="text/javascript" src="../src/dialog/dialog.js"></script>
+		<script type="text/javascript" src="./dialog/dialog_test.js"></script>
+
+		<script type="text/javascript" >
+			$(function() {
+	
+				TestRunner.add(suite);
+				TestRunner.run();
     
-});
-</script>
-</body>
+			});
+		</script>
+	</body>
 </html>
