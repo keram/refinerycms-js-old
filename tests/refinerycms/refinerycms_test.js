@@ -72,7 +72,7 @@
 				}
 			}
 
-			cms.extends(Apple, Fruit);
+			cms.extendObject(Apple, Fruit);
 			var apple = new Apple("red");
 			
 			Assert.isInstanceOf(Apple, apple);

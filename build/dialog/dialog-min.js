@@ -1,0 +1,1 @@
+REFINERYCMS.namespace("REFINERYCMS.dialog");REFINERYCMS.Dialog={name:"Dialog",version:"0.1",yell:function(){}};

@@ -38,14 +38,13 @@
 			var Assert = YUITest.Assert;
 
 			Assert.isObject(cms.Dialog);
-			Assert.areEqual(cms.Dialog.name, 'dialog');
+			Assert.areEqual(cms.Dialog.name, 'Dialog');
 		},
 
 		testYell : function () {
 			var Assert = YUITest.Assert;
 
 			Assert.isFunction(cms.Dialog.yell);
-			
 		}
 	});
 

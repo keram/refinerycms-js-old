@@ -22,27 +22,29 @@ var REFINERYCMS = REFINERYCMS || {};
 
 REFINERYCMS = {
 	
-    /**
+	/**
 	 * I love YUI namespaces
 	 * 
 	 * @see YUI.namespace
-     * @method namespace
-     * @param  {string*} arguments 1-n namespaces to create.
-     * @return {object}  A reference to the last namespace object created.
-     */
-    namespace: function() {
-		var a=arguments, o=null, i, j, d;
-		for (i=0; i<a.length; i=i+1) {
-			d=a[i].split(".");
-			o=window;
-			for (j=0; j<d.length; j=j+1) {
-				o[d[j]]=o[d[j]] || {};
-				o=o[d[j]];
+	 * @method namespace
+	 * @param  {string*} arguments 1-n namespaces to create.
+	 * @global window
+	 * @return {object}  A reference to the last namespace object created.
+	 */
+	namespace: function () {
+		var a = arguments, o = null, i, j, d;
+		for (i = 0; i < a.length; i = i + 1) {
+			d = a[i].split(".");
+			
+			o = window;
+			for (j = 0; j < d.length; j = j + 1) {
+				o[d[j]] = o[d[j]] || {};
+				o = o[d[j]];
 			}
 		}
 		
 		return o;
-    },
+	},
 	
 	/**
 	 * Extend Child object with Parent prototype
@@ -50,20 +52,23 @@ REFINERYCMS = {
 	 * @param {object} Child
 	 * @param {object} Parent
 	 */
-    extends: function(Child, Parent) {
-		function Q() {};
+	extendObject: function (Child, Parent) {
+		var R = Child.prototype,
+			key = null;
+		
+		function Q() {}
 		
 		Q.prototype = Parent.prototype;
-
-		var R = Child.prototype;
-		Child.prototype = new Q;
+		Child.prototype = new Q();
 		
 		// adding back overriden methods and properties
-		for (var key in R) {
-			Child.prototype[key] = R[key];
+		for (key in R) {
+			if (R.hasOwnProperty(key)) {
+				Child.prototype[key] = R[key];
+			}
 		}
 
 		Child.prototype.constructor = Child;
-    }
-}
+	}
+};
 
