@@ -1,0 +1,14 @@
+1. create fork
+2. git clone git@github.com:USERNAME/refinerycms-js.git
+3. cd refinerycms-js/libs
+4. git clone git://github.com/keram/refinerycms-js-builder.git
+5. cd ..
+6. fix/create code in ./src
+7. (re)write tests in ./tests
+8. firefox ./tests/index.html
+9. ./yuidoc.sh
+10. git add (your files)
+11. git commit -m "explain your changes"
+12. git push origin master
+13. Create pull request
+
