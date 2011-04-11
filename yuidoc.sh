@@ -28,7 +28,10 @@ version=1.0.0
 yuiversion=2
 
 ##############################################################################
+# clear env
+rm -rf $parser_out $generator_out
+mkdir $parser_out $generator_out
+
 # add -s to the end of the line to show items marked private
-rm -rf ./temp/yuidoc
-mkdir ./temp/yuidoc
 python -W ignore::DeprecationWarning $yuidoc_home/bin/yuidoc.py $parser_in -p $parser_out -o $generator_out -t $template -m 'RefineryCMS js library' -v $version -Y $yuiversion
+
