@@ -6,10 +6,10 @@
 		var cms = REFINERYCMS;
 	}
 
-	var refinerycmsDialogTestCase = new YUITest.TestCase({
+	var refinerycmsImageDialogTestCase = new YUITest.TestCase({
 
 		//name of the test case - if not provided, one is auto-generated
-		name : "REFINERYCMS Dialog Tests",
+		name : "REFINERYCMS Image Dialog Tests",
 
 		//---------------------------------------------------------------------
 		// setUp and tearDown methods - optional
@@ -37,21 +37,18 @@
 		testInitialization : function () {
 			var Assert = YUITest.Assert;
 
-			Assert.isObject(cms.Dialog);
+			Assert.isObject(cms.dialog.ImageDialog);
 		},
 
-		testFailInstantialize : function () {
+		testInheritation : function () {
 			var Assert = YUITest.Assert;
 
-			try {
-				var my_dialog = new cms.Dialog();
-			} catch (E) {
-				Assert.areEqual('Dialog_is_not_instantiable', E.message);
-			}
+			var my_dialog_image = new cms.dialog.ImageDialog();
+			Assert.isFunction(my_dialog_image.init_tabs);
 		}
 	});
 
-	suite.add(refinerycmsDialogTestCase);
+	suite.add(refinerycmsImageDialogTestCase);
 
 
 })();

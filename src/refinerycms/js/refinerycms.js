@@ -59,6 +59,7 @@ REFINERYCMS = {
 		function Q() {}
 		
 		Q.prototype = Parent.prototype;
+		
 		Child.prototype = new Q();
 		
 		// adding back overriden methods and properties
