@@ -1,0 +1,1 @@
+./../../dialog_image/js/dialog_image.js

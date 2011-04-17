@@ -13,6 +13,8 @@
 
 	cms.namespace('REFINERYCMS.dialog');
 
+	console.log('monika');
+
 	/**
 	 * ImageDialog
 	 *

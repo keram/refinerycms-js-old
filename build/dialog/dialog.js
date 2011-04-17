@@ -1,28 +1,19 @@
-/** 
- * Dialog object handling with default functionality
- * 
- * @author     keraM marek@keram.name http//keram.name
- * @copyright  Copyright (C) 2011
- * @license    MIT
- */
-
-/*global REFINERYCMS, window, $, parent, document */
-
-(function (cms, window) {
-	'use strict';
-	
-	cms.Dialog = function () {
-		throw new Error(this.name + '_is_not_instantiable');
-	};
 
 	/**
-	 * Dialog object prototype
+	 * Dialog object handling with default functionality
 	 *
-	 * @author    marek
+	 * @author     keraM marek@keram.name http//keram.name
+	 * @copyright  Copyright (C) 2011
+	 * @license    MIT
 	 * @version   0.1
 	 * @class     Dialog
 	 */
-	cms.Dialog.prototype = {
+	
+	REFINERYCMS.Dialog = function () {
+		throw new Error(this.name + '_is_not_instantiable');
+	};
+
+	REFINERYCMS.Dialog.prototype = {
 		name: 'Dialog',
 		version: '0.1',
 		callback: null,
@@ -90,7 +81,7 @@
 
 					elm = document.getElementById(elm_id);
 					if (elm) {
-						valid = cms.form.validateControl(elm, this.validation_rules[this.active_area][elm_id], true);
+						valid = REFINERYCMS.form.validateControl(elm, this.validation_rules[this.active_area][elm_id], true);
 					}
 					if (!valid) {
 						break;
@@ -132,5 +123,3 @@
 
 		init: function () {}
 	};
-
-}(REFINERYCMS, window));

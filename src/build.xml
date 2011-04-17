@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="RefineryCMS" default="all">
     <description>RefineryCMS js Library</description>
+    <property file="build.properties" />
     <macrodef name="build-all">
         <attribute name="target"/>
         <sequential>
@@ -15,4 +16,5 @@
     <target name="clean">
         <build-all target="clean"/>
     </target>
+
 </project>

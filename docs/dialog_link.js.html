@@ -1,0 +1,346 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>API: refinerycms   dialog_link.js  (YUI Library)</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1302827461.85" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1302827461.85" />
+
+    <script type="text/javascript" src="assets/api-js?stamp=1302827461.85"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1302827461.85"></script>
+</head>
+
+<body id="yahoo-com">
+
+<div id="doc3" class="yui-t2">
+	<div id="hd">
+        <h1><a href="http://developer.yahoo.com/yui/" title="RefineryCMS js library">RefineryCMS js library</a></h1>
+        <h3>refinerycms&nbsp; <span class="subtitle">1.0.0</span></h3>
+        <a href="./index.html" title="RefineryCMS js library">RefineryCMS js library</a> 
+            &gt; <a href="./module_refinerycms.html" title="refinerycms">refinerycms</a>
+                
+                 &gt; dialog_link.js (source view) 
+        <form onsubmit="return false">
+            <div id="propertysearch">
+                Search: <input autocomplete="off" id="searchinput" />
+                <div id="searchresults">
+                    &nbsp;
+                </div>
+            </div>
+        </form>
+	</div>
+
+	<div id="bd">
+		<div id="yui-main">
+			<div class="yui-b">
+            <form action="#" name="yui-classopts-form" method="get" id="yui-classopts-form">
+                <fieldset>
+                    <legend>Filters</legend>
+                <span class="classopts"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
+                <span class="classopts"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
+                <span class="classopts"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
+                </fieldset>
+            </form>
+
+                    <div id="srcout">
+                        <style>
+                            #doc3 .classopts { display:none; }
+                        </style>
+<div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * Dialog object handling with default functionality</span>
+<span class="cm"> *</span>
+<span class="cm"> * @author     keraM marek@keram.name http//keram.name</span>
+<span class="cm"> * @copyright  Copyright (C) 2011</span>
+<span class="cm"> * @license    MIT</span>
+<span class="cm"> */</span>
+
+<span class="cm">/*global REFINERYCMS, window, $, parent, console */</span>
+
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">cms</span><span class="p">,</span> <span class="nb">window</span><span class="p">)</span> <span class="p">{</span>
+	<span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+	<span class="nx">cms</span><span class="p">.</span><span class="nx">namespace</span><span class="p">(</span><span class="s1">&#39;REFINERYCMS.dialog&#39;</span><span class="p">);</span>
+
+	<span class="cm">/**</span>
+<span class="cm">	 * LinkDialog</span>
+<span class="cm">	 *</span>
+<span class="cm">	 * @author    marek</span>
+<span class="cm">	 * @version   0.1</span>
+<span class="cm">	 * @class     LinkDialog</span>
+<span class="cm">	 */</span>
+	<span class="nx">cms</span><span class="p">.</span><span class="nx">dialog</span><span class="p">.</span><span class="nx">LinkDialog</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s1">&#39;LinkDialog&#39;</span><span class="p">;</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">version</span> <span class="o">=</span> <span class="s1">&#39;0.1&#39;</span><span class="p">;</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">callback</span> <span class="o">=</span> <span class="nx">callback</span> <span class="o">||</span> <span class="kc">null</span><span class="p">;</span>
+
+		<span class="k">this</span><span class="p">.</span><span class="nx">init</span><span class="p">();</span>
+	<span class="p">};</span>
+
+	<span class="nx">cms</span><span class="p">.</span><span class="nx">dialog</span><span class="p">.</span><span class="nx">LinkDialog</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+		<span class="c1">// @todo i18n</span>
+		<span class="nx">validation_rules</span><span class="o">:</span> <span class="p">{</span>
+			<span class="s1">&#39;your_page&#39;</span><span class="o">:</span> <span class="p">{},</span>
+			<span class="s1">&#39;email_address&#39;</span><span class="o">:</span> <span class="p">{</span>
+				<span class="s1">&#39;email_address_text&#39;</span><span class="o">:</span> <span class="p">[</span>
+					<span class="p">{</span>
+						<span class="s1">&#39;op&#39;</span><span class="o">:</span> <span class="s1">&#39;:filled&#39;</span><span class="p">,</span>
+						<span class="s1">&#39;msg&#39;</span><span class="o">:</span> <span class="s1">&#39;Email must be filled&#39;</span>
+					<span class="p">},</span>
+					<span class="p">{</span>
+						<span class="s1">&#39;op&#39;</span><span class="o">:</span> <span class="s1">&#39;:email&#39;</span><span class="p">,</span>
+						<span class="s1">&#39;msg&#39;</span><span class="o">:</span> <span class="s1">&#39;Email is not valid&#39;</span>
+					<span class="p">}</span>
+				<span class="p">]</span>
+			<span class="p">},</span>
+			<span class="s1">&#39;web_address&#39;</span><span class="o">:</span> <span class="p">{</span>
+				<span class="s1">&#39;web_address_text&#39;</span> <span class="o">:</span> <span class="p">[</span>
+					<span class="p">{</span>
+						<span class="s1">&#39;op&#39;</span><span class="o">:</span> <span class="s1">&#39;:filled&#39;</span><span class="p">,</span>
+						<span class="s1">&#39;msg&#39;</span><span class="o">:</span> <span class="s1">&#39;Location must be filled&#39;</span>
+					<span class="p">},</span>
+					<span class="p">{</span>
+						<span class="s1">&#39;op&#39;</span><span class="o">:</span> <span class="s1">&#39;:url&#39;</span><span class="p">,</span>
+						<span class="s1">&#39;msg&#39;</span><span class="o">:</span> <span class="s1">&#39;Location is not valid&#39;</span>
+					<span class="p">}</span>
+				<span class="p">]</span>
+			<span class="p">},</span>
+			<span class="s1">&#39;resource_address&#39;</span><span class="o">:</span> <span class="p">{}</span>
+		<span class="p">},</span>
+
+		<span class="nx">submit_link_choice</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+			<span class="nx">$</span><span class="p">(</span><span class="nx">parent</span><span class="p">.</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;wym_dialog_submit&#39;</span><span class="p">)).</span><span class="nx">click</span><span class="p">();</span>
+		<span class="p">},</span>
+
+		<span class="nx">resource_tab</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+			<span class="c1">// ??</span>
+<span class="c1">//			$(&#39;#submit_button&#39;).click(function (e) {</span>
+<span class="c1">//				var resource_selected = $(&#39;#existing_resource_area_content li.linked a&#39;),</span>
+<span class="c1">//				resourceUrl = null,</span>
+<span class="c1">//				relevant_href = null;</span>
+<span class="c1">//</span>
+<span class="c1">//				e.preventDefault();</span>
+<span class="c1">//				if (resource_selected.length &gt; 0) {</span>
+<span class="c1">//					resourceUrl = parseURL(resource_selected.attr(&#39;href&#39;));</span>
+<span class="c1">//					relevant_href = resourceUrl.pathname;</span>
+<span class="c1">//</span>
+<span class="c1">//					// Add any alternate resource stores that need a absolute URL in the regex below</span>
+<span class="c1">//					if (resourceUrl.hostname.match(/s3.amazonaws.com/)) {</span>
+<span class="c1">//						relevant_href = resourceUrl.protocol + &#39;//&#39; + resourceUrl.host + relevant_href;</span>
+<span class="c1">//					}</span>
+<span class="c1">//</span>
+<span class="c1">//					if (typeof (resource_picker.callback) == &#39;function&#39;) {</span>
+<span class="c1">//						resource_picker.callback({</span>
+<span class="c1">//							id: resource_selected.attr(&#39;id&#39;).replace(&#39;resource_&#39;, &#39;&#39;),</span>
+<span class="c1">//							href: relevant_href,</span>
+<span class="c1">//							html: resource_selected.html()</span>
+<span class="c1">//						});</span>
+<span class="c1">//					}</span>
+<span class="c1">//				}</span>
+<span class="c1">//			});</span>
+		<span class="p">},</span>
+
+		<span class="c1">//Same for resources tab</span>
+		<span class="nx">page_tab</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+			<span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+
+			<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#pages_list&#39;</span><span class="p">).</span><span class="nx">delegate</span><span class="p">(</span><span class="s1">&#39;li&#39;</span><span class="p">,</span> <span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+				<span class="kd">var</span> <span class="nx">elm</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">),</span>
+					<span class="nx">link</span> <span class="o">=</span> <span class="nx">elm</span><span class="p">.</span><span class="nx">children</span><span class="p">(</span><span class="s1">&#39;a.page_link&#39;</span><span class="p">).</span><span class="nx">get</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+					<span class="nx">port</span> <span class="o">=</span> <span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">port</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">?</span> <span class="p">(</span><span class="s1">&#39;:&#39;</span> <span class="o">+</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">port</span><span class="p">)</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+					<span class="nx">url</span> <span class="o">=</span> <span class="nx">link</span><span class="p">.</span><span class="nx">href</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">protocol</span> <span class="o">+</span> <span class="s1">&#39;//&#39;</span> <span class="o">+</span> <span class="nb">window</span><span class="p">.</span><span class="nx">location</span><span class="p">.</span><span class="nx">hostname</span> <span class="o">+</span> <span class="nx">port</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
+
+				<span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+				<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;li.linked&#39;</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s1">&#39;linked&#39;</span><span class="p">);</span>
+				<span class="nx">elm</span><span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s1">&#39;linked&#39;</span><span class="p">);</span>
+				<span class="nx">that</span><span class="p">.</span><span class="nx">set_wym_values</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">link</span><span class="p">.</span><span class="nx">rel</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\ ?&lt;em&gt;.+?&lt;\/em&gt;/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">));</span>
+			<span class="p">});</span>
+		<span class="p">},</span>
+
+		<span class="nx">web_tab</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+			<span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+				<span class="nx">web_address_text</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#web_address_text&#39;</span><span class="p">),</span>
+				<span class="nx">web_address_target_blank</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#web_address_target_blank&#39;</span><span class="p">),</span>
+				<span class="nx">rules</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">validation_rules</span><span class="p">.</span><span class="nx">web_address</span> <span class="o">||</span> <span class="p">{},</span>
+				<span class="nx">validate</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+					<span class="kd">var</span> <span class="nx">val</span> <span class="o">=</span> <span class="nx">web_address_text</span><span class="p">.</span><span class="nx">val</span><span class="p">(),</span>
+						<span class="nx">valid</span> <span class="o">=</span> <span class="p">(</span><span class="o">!</span><span class="nx">rules</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">||</span> <span class="nx">cms</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">validateControl</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">rules</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">],</span> <span class="kc">true</span><span class="p">))</span> <span class="o">?</span> <span class="kc">true</span> <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+						<span class="nx">icon</span> <span class="o">=</span> <span class="nx">valid</span> <span class="o">?</span> <span class="s1">&#39;success_icon&#39;</span> <span class="o">:</span> <span class="s1">&#39;failure_icon&#39;</span><span class="p">;</span>
+
+					<span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="p">(</span><span class="nx">rules</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">])</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="p">{</span>
+						<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">&#39;_text&#39;</span><span class="p">,</span> <span class="s1">&#39;_test_result&#39;</span><span class="p">)).</span><span class="nx">removeClass</span><span class="p">().</span><span class="nx">addClass</span><span class="p">(</span><span class="nx">icon</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
+					<span class="p">}</span>
+					<span class="k">if</span> <span class="p">(</span><span class="nx">valid</span><span class="p">)</span> <span class="p">{</span>
+						<span class="nx">that</span><span class="p">.</span><span class="nx">set_wym_values</span><span class="p">(</span>
+							<span class="nx">val</span><span class="p">,</span>
+							<span class="nx">val</span><span class="p">,</span>
+							<span class="p">(</span><span class="nx">web_address_target_blank</span><span class="p">.</span><span class="nx">checked</span> <span class="o">?</span> <span class="s1">&#39;_blank&#39;</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+						<span class="p">);</span>
+
+						<span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="p">(</span><span class="nx">rules</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">])</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="p">{</span>
+							<span class="kd">var</span> <span class="nx">test_result_elm</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">&#39;_text&#39;</span><span class="p">,</span> <span class="s1">&#39;_test_result&#39;</span><span class="p">));</span>
+							<span class="k">if</span> <span class="p">(</span><span class="nx">test_result_elm</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+								<span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">after</span><span class="p">(</span><span class="s1">&#39;&lt;span id=&quot;&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">&#39;_text&#39;</span><span class="p">,</span> <span class="s1">&#39;_test_result&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&lt;/span&gt;&#39;</span><span class="p">);</span>
+								<span class="nx">test_result_elm</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">&#39;_text&#39;</span><span class="p">,</span> <span class="s1">&#39;_test_result&#39;</span><span class="p">));</span>
+							<span class="p">}</span>
+							<span class="nx">test_result_elm</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">().</span><span class="nx">addClass</span><span class="p">(</span><span class="nx">icon</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
+						<span class="p">}</span>
+					<span class="p">}</span>
+				<span class="p">};</span>
+
+			<span class="nx">web_address_text</span><span class="p">.</span><span class="nx">keyup</span><span class="p">(</span><span class="nx">validate</span><span class="p">);</span>
+			<span class="nx">web_address_text</span><span class="p">.</span><span class="nx">change</span><span class="p">(</span><span class="nx">validate</span><span class="p">);</span>
+
+			<span class="nx">web_address_target_blank</span><span class="p">.</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+				<span class="nx">parent</span><span class="p">.</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;wym_target&#39;</span><span class="p">).</span><span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">checked</span> <span class="o">?</span> <span class="s1">&#39;_blank&#39;</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+			<span class="p">});</span>
+		<span class="p">},</span>
+
+		<span class="nx">email_tab</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+			<span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+				<span class="nx">rules</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">validation_rules</span><span class="p">.</span><span class="nx">email_address</span> <span class="o">||</span> <span class="p">{},</span>
+				<span class="nx">validate</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+					<span class="kd">var</span> <span class="nx">default_subject</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#email_default_subject_text&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(),</span>
+						<span class="nx">default_body</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#email_default_body_text&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(),</span>
+						<span class="nx">mailto</span> <span class="o">=</span> <span class="s1">&#39;mailto:&#39;</span> <span class="o">+</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#email_address_text&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(),</span>
+						<span class="nx">modifier</span> <span class="o">=</span> <span class="s1">&#39;?&#39;</span><span class="p">,</span>
+						<span class="nx">valid</span> <span class="o">=</span> <span class="p">(</span><span class="o">!</span><span class="nx">rules</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">||</span> <span class="nx">cms</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">validateControl</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">rules</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">],</span> <span class="kc">true</span><span class="p">))</span> <span class="o">?</span> <span class="kc">true</span> <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+						<span class="nx">icon</span> <span class="o">=</span> <span class="nx">valid</span> <span class="o">?</span> <span class="s1">&#39;success_icon&#39;</span> <span class="o">:</span> <span class="s1">&#39;failure_icon&#39;</span><span class="p">;</span>
+
+					<span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="p">(</span><span class="nx">rules</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">])</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="p">{</span>
+						<span class="kd">var</span> <span class="nx">test_result_elm</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">&#39;_text&#39;</span><span class="p">,</span> <span class="s1">&#39;_test_result&#39;</span><span class="p">));</span>
+						<span class="nx">test_result_elm</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">().</span><span class="nx">addClass</span><span class="p">(</span><span class="nx">icon</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
+					<span class="p">}</span>
+
+					<span class="k">if</span> <span class="p">(</span><span class="nx">valid</span><span class="p">)</span> <span class="p">{</span>
+						<span class="k">if</span> <span class="p">(</span><span class="nx">default_subject</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+							<span class="nx">mailto</span> <span class="o">+=</span> <span class="nx">modifier</span> <span class="o">+</span> <span class="s1">&#39;subject=&#39;</span> <span class="o">+</span> <span class="nx">default_subject</span><span class="p">;</span>
+							<span class="nx">modifier</span> <span class="o">=</span> <span class="s1">&#39;&amp;&#39;</span><span class="p">;</span>
+						<span class="p">}</span>
+
+						<span class="k">if</span> <span class="p">(</span><span class="nx">default_body</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+							<span class="nx">mailto</span> <span class="o">+=</span> <span class="nx">modifier</span> <span class="o">+</span> <span class="s1">&#39;body=&#39;</span> <span class="o">+</span> <span class="nx">default_body</span><span class="p">;</span>
+							<span class="nx">modifier</span> <span class="o">=</span> <span class="s1">&#39;&amp;&#39;</span><span class="p">;</span>
+						<span class="p">}</span>
+
+						<span class="nx">that</span><span class="p">.</span><span class="nx">set_wym_values</span><span class="p">(</span><span class="nx">mailto</span><span class="p">,</span> <span class="nx">mailto</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="s1">&#39;mailto:&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">));</span>
+					<span class="p">}</span>
+				<span class="p">};</span>
+
+			<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#email_address_text, #email_default_subject_text, #email_default_body_text&#39;</span><span class="p">).</span><span class="nx">keyup</span><span class="p">(</span><span class="nx">validate</span><span class="p">);</span>
+			<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#email_address_text, #email_default_subject_text, #email_default_body_text&#39;</span><span class="p">).</span><span class="nx">change</span><span class="p">(</span><span class="nx">validate</span><span class="p">);</span>
+		<span class="p">},</span>
+
+		<span class="nx">set_wym_values</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">title</span><span class="p">,</span> <span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="nx">parent</span><span class="p">)</span> <span class="p">{</span>
+				<span class="kd">var</span> <span class="nx">wym_href</span> <span class="o">=</span> <span class="nx">parent</span><span class="p">.</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;wym_href&#39;</span><span class="p">),</span>
+					<span class="nx">wym_title</span> <span class="o">=</span> <span class="nx">parent</span><span class="p">.</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;wym_title&#39;</span><span class="p">),</span>
+					<span class="nx">wym_target</span> <span class="o">=</span> <span class="nx">parent</span><span class="p">.</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;wym_target&#39;</span><span class="p">);</span>
+
+				<span class="nx">target</span> <span class="o">=</span> <span class="nx">target</span> <span class="o">||</span> <span class="kc">null</span><span class="p">;</span>
+
+				<span class="k">if</span> <span class="p">(</span><span class="nx">wym_href</span> <span class="o">!==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">url</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+					<span class="nx">wym_href</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">url</span><span class="p">;</span>
+				<span class="p">}</span>
+				<span class="k">if</span> <span class="p">(</span><span class="nx">wym_title</span> <span class="o">!==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">title</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+					<span class="nx">wym_title</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">title</span><span class="p">;</span>
+				<span class="p">}</span>
+				<span class="k">if</span> <span class="p">(</span><span class="nx">wym_target</span> <span class="o">!==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">target</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+					<span class="nx">wym_target</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">target</span><span class="p">;</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">},</span>
+
+		<span class="nx">disable_submit</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+			<span class="k">this</span><span class="p">.</span><span class="nx">submit_button</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;disabled&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s1">&#39;disabled&#39;</span><span class="p">);</span>
+		<span class="p">},</span>
+
+		<span class="nx">enable_submit</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+			<span class="k">this</span><span class="p">.</span><span class="nx">submit_button</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;disabled&#39;</span><span class="p">,</span> <span class="kc">false</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s1">&#39;disabled&#39;</span><span class="p">);</span>
+		<span class="p">},</span>
+
+		<span class="nx">init_submit_button</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+			<span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+
+			<span class="k">this</span><span class="p">.</span><span class="nx">submit_button</span><span class="p">.</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">that</span><span class="p">.</span><span class="nx">submit_loader_off</span><span class="p">();</span>
+				<span class="k">if</span> <span class="p">(</span><span class="nx">that</span><span class="p">.</span><span class="nx">validate_active_tab</span><span class="p">())</span> <span class="p">{</span>
+					<span class="nx">that</span><span class="p">.</span><span class="nx">submit_loader_on</span><span class="p">();</span>
+					<span class="nx">that</span><span class="p">.</span><span class="nx">submit_link_choice</span><span class="p">();</span>
+				<span class="p">}</span>
+			<span class="p">});</span>
+		<span class="p">},</span>
+
+		<span class="nx">init</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+			<span class="k">try</span> <span class="p">{</span>
+				<span class="k">this</span><span class="p">.</span><span class="nx">submit_button</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#submit_button&#39;</span><span class="p">);</span>
+				<span class="k">this</span><span class="p">.</span><span class="nx">page_tab</span><span class="p">();</span>
+				<span class="k">this</span><span class="p">.</span><span class="nx">web_tab</span><span class="p">();</span>
+				<span class="k">this</span><span class="p">.</span><span class="nx">email_tab</span><span class="p">();</span>
+				<span class="k">this</span><span class="p">.</span><span class="nx">resource_tab</span><span class="p">();</span>
+				<span class="k">this</span><span class="p">.</span><span class="nx">init_tabs</span><span class="p">();</span>
+				<span class="k">this</span><span class="p">.</span><span class="nx">init_submit_button</span><span class="p">();</span>
+				<span class="k">this</span><span class="p">.</span><span class="nx">initialised</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+			<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+				<span class="c1">// @todo</span>
+				<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">};</span>
+
+	<span class="nx">cms</span><span class="p">.</span><span class="nx">extendObject</span><span class="p">(</span><span class="nx">cms</span><span class="p">.</span><span class="nx">dialog</span><span class="p">.</span><span class="nx">LinkDialog</span><span class="p">,</span> <span class="nx">cms</span><span class="p">.</span><span class="nx">Dialog</span><span class="p">);</span>
+<span class="p">}(</span><span class="nx">REFINERYCMS</span><span class="p">,</span> <span class="nb">window</span><span class="p">));</span>
+</pre></div>
+                    </div>
+			</div>
+		</div>
+		<div class="yui-b">
+            <div class="nav">
+
+                    <div id="moduleList" class="module">
+                        <h4>Modules</h4>
+                        <ul class="content">
+                                <li class="selected"><a href="module_refinerycms.html" title="refinerycms">refinerycms</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="classList" class="module">
+                        <h4>Classes</h4>
+                        <ul class="content">
+                                <li class=""><a href="Dialog.html" title="Dialog">Dialog</a></li>
+                                <li class=""><a href="ImageDialog.html" title="ImageDialog">ImageDialog</a></li>
+                                <li class=""><a href="LinkDialog.html" title="LinkDialog">LinkDialog</a></li>
+                                <li class=""><a href="REFINERYCMS.html" title="REFINERYCMS">REFINERYCMS</a></li>
+                                <li class=""><a href="TestDialog.html" title="TestDialog">TestDialog</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="fileList" class="module">
+                        <h4>Files</h4>
+                        <ul class="content">        
+                                <li class=""><a href="dialog.js.html" title="dialog.js">dialog.js</a></li>
+                                <li class=""><a href="dialog_image.js.html" title="dialog_image.js">dialog_image.js</a></li>
+                                <li class="selected"><a href="dialog_link.js.html" title="dialog_link.js">dialog_link.js</a></li>
+                                <li class=""><a href="dialog_test.js.html" title="dialog_test.js">dialog_test.js</a></li>
+                                <li class=""><a href="form.js.html" title="form.js">form.js</a></li>
+                                <li class=""><a href="refinerycms.js.html" title="refinerycms.js">refinerycms.js</a></li>
+                        </ul>
+                    </div>
+
+
+
+
+
+            </div>
+		</div>
+	</div>
+	<div id="ft">
+        <hr />
+        Copyright &copy; 2011 Yahoo! Inc. All rights reserved.
+	</div>
+</div>
+<script type="text/javascript">
+    ALL_YUI_PROPS = [{"url": "Dialog.html#method_addEvent", "access": "", "host": "Dialog", "type": "method", "name": "addEvent"}, {"url": "Dialog.html#method_disable_submit", "access": "", "host": "Dialog", "type": "method", "name": "disable_submit"}, {"url": "Dialog.html#method_enable_submit", "access": "", "host": "Dialog", "type": "method", "name": "enable_submit"}, {"url": "REFINERYCMS.html#method_extendObject", "access": "", "host": "REFINERYCMS", "type": "method", "name": "extendObject"}, {"url": "REFINERYCMS.html#method_namespace", "access": "", "host": "REFINERYCMS", "type": "method", "name": "namespace"}];
+</script>
+</body>
+</html>
