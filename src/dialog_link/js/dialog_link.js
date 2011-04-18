@@ -57,32 +57,67 @@ REFINERYCMS.dialog.LinkDialog.prototype = {
 		$(parent.document.getElementById('wym_dialog_submit')).click();
 	},
 
+	//parse a URL to form an object of properties
+	parse_url: function (url) {
+		//save the unmodified url to href property
+		//so that the object we get back contains
+		//all the same properties as the built-in location object
+		var loc = {
+			'href' : url
+		};
+
+		//split the URL by single-slashes to get the component parts
+		var parts = url.replace('//', '/').split('/');
+
+		//store the protocol and host
+		loc.protocol = parts[0];
+		loc.host = parts[1];
+
+		//extract any port number from the host
+		//from which we derive the port and hostname
+		parts[1] = parts[1].split(':');
+		loc.hostname = parts[1][0];
+		loc.port = parts[1].length > 1 ? parts[1][1] : '';
+
+		//splice and join the remainder to get the pathname
+		parts.splice(0, 2);
+		// ensure we don't destroy absolute urls like /system/images/whatever.jpg
+		loc.pathname = (loc.href[0] == '/' ? ("/" + loc.host) : '');
+		loc.pathname += '/' + parts.join('/');
+
+		//extract any hash and remove from the pathname
+		loc.pathname = loc.pathname.split('#');
+		loc.hash = loc.pathname.length > 1 ? '#' + loc.pathname[1] : '';
+		loc.pathname = loc.pathname[0];
+
+		//extract any search query and remove from the pathname
+		loc.pathname = loc.pathname.split('?');
+		loc.search = loc.pathname.length > 1 ? '?' + loc.pathname[1] : '';
+		loc.pathname = loc.pathname[0];
+
+		var options = url.split('?')[1];
+		loc.options = options;
+
+		//return the final object
+		return loc;
+	},
+
 	resource_tab: function () {
-		// ??
-//			$('#submit_button').click(function (e) {
-//				var resource_selected = $('#existing_resource_area_content li.linked a'),
-//				resourceUrl = null,
-//				relevant_href = null;
-//
-//				e.preventDefault();
-//				if (resource_selected.length > 0) {
-//					resourceUrl = parseURL(resource_selected.attr('href'));
-//					relevant_href = resourceUrl.pathname;
-//
-//					// Add any alternate resource stores that need a absolute URL in the regex below
-//					if (resourceUrl.hostname.match(/s3.amazonaws.com/)) {
-//						relevant_href = resourceUrl.protocol + '//' + resourceUrl.host + relevant_href;
-//					}
-//
-//					if (typeof (resource_picker.callback) == 'function') {
-//						resource_picker.callback({
-//							id: resource_selected.attr('id').replace('resource_', ''),
-//							href: relevant_href,
-//							html: resource_selected.html()
-//						});
-//					}
-//				}
-//			});
+		var that = this;
+		$('#resources_list').delegate('li', 'click', function (e) {
+			var elm = $(this),
+				resource_selected = elm.children('a'),
+				resource_url = that.parse_url(resource_selected.attr('href'));
+				relevant_href = resource_url.pathname;
+
+				// Add any alternate resource stores that need a absolute URL in the regex below
+				if (resource_url.hostname.match(/s3.amazonaws.com/)) {
+					relevant_href = resource_url.protocol + '//' + resource_url.host + relevant_href;
+				}
+				$('li.linked').removeClass('linked');
+				elm.addClass('linked');
+				that.set_wym_values(relevant_href, resource_selected.attr('rel'), '');
+		});	
 	},
 
 	//Same for resources tab
