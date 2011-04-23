@@ -25,12 +25,11 @@ REFINERYCMS = {
 
 	strings: [],
 	
-	// just until creating a better
-	// @todo
+	// @todo move to i18n object
 	translate: function (string) {
 		var t = this.getTranslations(),
-			l = arguments.length,
-			rgxp_tpl = /{([a-zA-Z0-9_]+)}/;
+			args_length = arguments.length,
+			rgxp_tpl = /{[a-zA-Z0-9_]+}/g;
 
 		if (typeof t[string] === 'undefined') {
 			return string;
@@ -40,10 +39,24 @@ REFINERYCMS = {
 			return t[string].call(arguments);
 		}
 
-		if (l > 1 && typeof t[string] === 'string') {
-			var tmp_str = t[string];
-			for (var i = 1; i < l;i++) {
-				tmp_str = tmp_str.replace(rgxp_tpl, arguments[i]);
+		if (args_length > 1 && typeof t[string] === 'string') {
+			var tmp_str = t[string],
+				tmp_matches = tmp_str.match(rgxp_tpl),
+				tmp_match = '';
+				
+			if (tmp_matches.length > 0) {
+				// najdeme v prekladoch
+				for (var j = 0; j < tmp_matches.length; j++) {
+					tmp_match = tmp_matches[j].substring(1, tmp_matches[j].length - 1);
+					if (typeof (t[tmp_match]) !== 'undefined') {
+						tmp_str = tmp_str.replace('{' + tmp_match + '}', t[tmp_match]);
+					}
+				}
+
+				// najdeme v argumentoch
+				for (var i = 1; i < args_length; i++) {
+					tmp_str = tmp_str.replace(rgxp_tpl, arguments[i]);
+				}
 			}
 			
 			return tmp_str;
@@ -136,7 +149,7 @@ REFINERYCMS.translations = {
 		'r_quote' : '\u201C'
 	},
 	'en' : {
-		'tpl': 'jurko {zbojnik}',
+		'tpl': 'jurko {l_quote}{zbojnik}',
 		'fnc': function() {return 2},
 		'prev' : 'Prev',
 		'next' : 'Next',

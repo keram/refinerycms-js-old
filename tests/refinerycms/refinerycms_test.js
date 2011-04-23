@@ -54,7 +54,7 @@
 
 			Assert.areEqual(cms.translate('prev'), 'Prev');
 			Assert.areEqual(cms.translate('fnc'), 2);
-			Assert.areEqual('jurko janosik', cms.translate('tpl', 'janosik'));
+			Assert.areEqual('jurko “janosik', cms.translate('tpl', 'janosik'));
 		},
 
 		testExtend : function () {
