@@ -48,6 +48,15 @@
 			Assert.isObject(cms.test);
 		},
 
+		testTranslations : function () {
+			var Assert = YUITest.Assert;
+
+
+			Assert.areEqual(cms.translate('prev'), 'Prev');
+			Assert.areEqual(cms.translate('fnc'), 2);
+			Assert.areEqual('jurko janosik', cms.translate('tpl', 'janosik'));
+		},
+
 		testExtend : function () {
 			var Assert = YUITest.Assert;
 			
