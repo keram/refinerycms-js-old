@@ -30,10 +30,6 @@ REFINERYCMS.dialog.ImageDialog.prototype = {
 		'image-url': [{op: ':filled', msg: 'Url must be filled'}, {op: ':url', msg: 'Is not valid url'}]
 	},
 
-	submit_image_choice: function () {
-		$(parent.document.getElementById(REFINERYCMS.editor.config.dialog_submit_class)).click();
-	},
-
 	set_image: function (image) {
 		var that = this,
 			existing_image_size_area = $('#existing_image_size_area'),
@@ -69,7 +65,7 @@ REFINERYCMS.dialog.ImageDialog.prototype = {
 		submit_button.click(function (e) {
 			e.preventDefault();
 			that.submit_loader_on();
-			that.submit_image_choice();
+			REFINERYCMS.editor.dialog_submit();
 		});
 
 		existing_image_size_area.find('a').click(function (e) {
@@ -117,7 +113,7 @@ REFINERYCMS.dialog.ImageDialog.prototype = {
 
 			if (valid) {
 				REFINERYCMS.editor.set_image_values(url_image_val, alt_image_val, alt_image_val, null);
-				that.submit_image_choice();
+				REFINERYCMS.editor.dialog_submit();
 			}
 		});
 

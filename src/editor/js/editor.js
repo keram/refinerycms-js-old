@@ -1,6 +1,7 @@
-
 /**
- * Editor abstract rozhranie
+ * vseobecne rezhranie pre editor
+ * (moze to byt wymeditor alebo hocijaky, dolezite aby implementoval tieto metody)
+ * potom, default: wymeditor
  *
  * @author     keraM marek@keram.name http//keram.name
  * @copyright  Copyright (C) 2011
@@ -8,13 +9,9 @@
  * @version   0.1
  * @class     Editor
  */
-
-
-// vseobecne rezhranie pre editor (moze to byt wymeditor alebo hocijaky, dolezite aby implementoval tieto metody potom, default: wymeditor
 REFINERYCMS.editor = {
 	config: {
-		iframe_class: 'wym_iframe_body',
-		dialog_submit_class: 'wym_dialog_submit'
+		iframe_class: 'wym_iframe_body'
 	},
 
 	set_image_values: function (img_src, img_alt, img_title, geometry) {
@@ -69,10 +66,16 @@ REFINERYCMS.editor = {
 		}
 	},
 
+	is_dialog_active: function () {
+		return $(document.body).hasClass(this.config.iframe_class);
+	},
+
 	// @todo
+	// in page: hook into edtior to instruct it to select this new tab again once it has loaded.
 	onload_functions: {
 		push: function () {}
 	},
 
+	// in page: turn the new textarea into a editor.
 	init: function () {}
 };
