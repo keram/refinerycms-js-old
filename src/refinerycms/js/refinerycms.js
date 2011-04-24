@@ -149,8 +149,6 @@ REFINERYCMS.translations = {
 		'r_quote' : '\u201C'
 	},
 	'en' : {
-		'tpl': 'jurko {l_quote}{zbojnik}',
-		'fnc': function() {return 2},
 		'prev' : 'Prev',
 		'next' : 'Next',
 		'from' : 'From',

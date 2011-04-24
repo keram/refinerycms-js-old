@@ -98,9 +98,9 @@ REFINERYCMS.Dialog.prototype = {
 
 	close: function () {
 		var the_body, the_dialog;
-		// if there's a wymeditor involved don't try to close the dialog as wymeditor will.
+		// if there's a editor involved don't try to close the dialog as editor will.
 		// but we need this? (keram)
-		if (!$(document.body).hasClass('wym_iframe_body')) {
+		if (!$(document.body).hasClass(REFINERYCMS.editor.config.iframe_class)) {
 			the_body = this.iframed() ? $(parent.document.body) : $(document.body);
 			the_dialog = the_body.find('.ui-dialog-content');
 

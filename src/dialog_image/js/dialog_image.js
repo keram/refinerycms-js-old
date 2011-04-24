@@ -1,5 +1,5 @@
 /**
- * Dialog object handling with Wymeditor images
+ * Dialog object handling with editor images
  *
  * @author     keraM marek@keram.name http//keram.name
  * @copyright  Copyright (C) 2011
@@ -31,7 +31,7 @@ REFINERYCMS.dialog.ImageDialog.prototype = {
 	},
 
 	submit_image_choice: function () {
-		$(parent.document.getElementById('wym_dialog_submit')).click();
+		$(parent.document.getElementById(REFINERYCMS.editor.config.dialog_submit_class)).click();
 	},
 
 	set_image: function (image) {
@@ -49,31 +49,7 @@ REFINERYCMS.dialog.ImageDialog.prototype = {
 				img_src = resize ? img.attr('data-' + size) : img.attr('data-original');
 
 			img.parent().addClass('selected');
-			that.set_wym_values(img_src, img.attr('alt'), img.attr('title'), geometry);
-		}
-	},
-
-	set_wym_values: function (img_src, img_alt, img_title, geometry) {
-		if (parent) {
-			var wym_src = parent.document.getElementById('wym_src'),
-				wym_alt = parent.document.getElementById('wym_alt'),
-				wym_title = parent.document.getElementById('wym_title'),
-				wym_size = parent.document.getElementById('wym_size');
-
-			geometry = geometry || null;
-
-			if (wym_src !== null && img_src !== null) {
-				wym_src.value = img_src;
-			}
-			if (wym_alt !== null && img_alt !== null) {
-				wym_alt.value = img_alt;
-			}
-			if (wym_title !== null && img_title !== null) {
-				wym_title.value = img_title;
-			}
-			if (wym_size !== null && geometry !== null) {
-				wym_size.value = geometry.replace(/[<>=]/g, '');
-			}
+			REFINERYCMS.editor.set_image_values(img_src, img.attr('alt'), img.attr('title'), geometry);
 		}
 	},
 
@@ -140,7 +116,7 @@ REFINERYCMS.dialog.ImageDialog.prototype = {
 			e.preventDefault();
 
 			if (valid) {
-				that.set_wym_values(url_image_val, alt_image_val, alt_image_val, null);
+				REFINERYCMS.editor.set_image_values(url_image_val, alt_image_val, alt_image_val, null);
 				that.submit_image_choice();
 			}
 		});
@@ -151,7 +127,7 @@ REFINERYCMS.dialog.ImageDialog.prototype = {
 		try {
 			this.init_actions();
 			this.init_tabs();
-			// wymeditor do this
+			// editor do this
 			// this.init_close();
 			this.initialised = true;
 		} catch (e) {

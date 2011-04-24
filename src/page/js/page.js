@@ -11,12 +11,6 @@
 REFINERYCMS.page = {
 	initialised: false,
 	tabs: null,
-	strings: {
-		'new_page_part_dialog_title': 'Create Content Section',
-		'not_entered_title': 'You have not entered a title for the content section, please enter one.',
-		'sure_delete_page_part': 'This will remove the content section {l_quote}{section_title}{r_quote} immediately. \nAre you sure?',
-		'title_already_exists': 'A content section with that title already exists, please choose another.'
-	},
 
 	show_options: function () {
 		$('#toggle_advanced_options').click(function(e) {
@@ -39,10 +33,10 @@ REFINERYCMS.page = {
 		});
 	},
 
-	page_part_dialog: function () {
+	page_part_editor: function () {
 		var that = this,
 			new_page_part_title = $('#new_page_part_title'),
-			new_page_part_dialog = $('#new_page_part_dialog'),
+			new_page_part_editor = $('#new_page_part_editor'),
 			new_page_part_index = $('#new_page_part_index'),
 			page_part_editors = $('#page_part_editors'),
 			add_page_part = $('#add_page_part'),
@@ -52,8 +46,8 @@ REFINERYCMS.page = {
 			delete_page_part = $('#delete_page_part');
 
 
-		new_page_part_dialog.dialog({
-			title: that.strings.new_page_part_dialog_title,
+		new_page_part_editor.editor({
+			title: I18n.t('refinerycms.page.new_page_part_editor_title', 'Create Content Section'),
 			modal: true,
 			resizable: false,
 			autoOpen: false,
@@ -63,7 +57,7 @@ REFINERYCMS.page = {
 
 		add_page_part.click(function(e) {
 			e.preventDefault();
-			new_page_part_dialog.dialog('open');
+			new_page_part_editor.editor('open');
 		});
 
 		new_page_part_save.click(function(e) {
@@ -85,43 +79,48 @@ REFINERYCMS.page = {
 						that.tabs.tabs('add', '#page_part_new_' + new_page_part_index.val(), part_title);
 						that.tabs.tabs('select', new_page_part_index.val());
 
-						// hook into wymedtior to instruct it to select this new tab again once it has loaded.
-						WYMeditor.onload_functions.push(function() {
+						// hook into edtior to instruct it to select this new tab again once it has loaded.
+						REFINERYCMS.editor.onload_functions.push(function() {
 							$('#page_part_new_' + new_page_part_index.val()).appendTo(page_part_editors);
 							that.tabs.tabs('select', new_page_part_index.val());
 						});
 
-						// turn the new textarea into a wymeditor.
-						WYMeditor.init();
+						// turn the new textarea into a editor.
+						REFINERYCMS.editor.init();
 
 						// Wipe the title and increment the index counter by one.
 						new_page_part_index.val(parseInt(new_page_part_index.val(), 10) + 1);
 						new_page_part_title.val('');
 
-						new_page_part_dialog.dialog('close');
-						new_page_part_dialog.remove();
+						new_page_part_editor.editor('close');
+						new_page_part_editor.remove();
 					}
 					);
 				} else {
-					alert(that.strings.title_already_exists);
+					alert(I18n.t('refinerycms.page.title_already_exists', { defaultValue: 'A content section with that title already exists, please choose another.'}));
 				}
 			} else {
-				alert(that.strings.not_entered_title);
+				alert(I18n.t('refinerycms.page.not_entered_title', { defaultValue: 'You have not entered a title for the content section, please enter one.'}));
 			}
 		});
 
 		new_page_part_cancel.click(function(e) {
 			e.preventDefault();
-			new_page_part_dialog.dialog('close');
+			new_page_part_editor.editor('close');
 			new_page_part_title.val('');
 		});
 
 		delete_page_part.click(function(e) {
 			e.preventDefault();
-			//
-			// todo template
-			// if (confirm(that.strings.confirm_delete, $('#page_parts .ui-tabs-selected a').text())) {
-			if (confirm(that.strings.confirm_delete)) {
+			var confirmed = confirm(I18n.t(
+				'refinerycms.page.confirm_delete',
+				{
+					defaultValue: 'This will remove the content section "{section_title}" immediately. \nAre you sure?',
+					section_title: $('#page_parts .ui-tabs-selected a').text()
+				}
+			));
+
+			if (confirmed) {
 				var tabId = that.tabs.tabs('option', 'selected');
 				$.ajax({
 					url: that.del_part_url + '/' + $('#page_parts_attributes_' + tabId + '_id').val(),
@@ -154,7 +153,7 @@ REFINERYCMS.page = {
 		tabs.find('.page_part.field').not(part_shown).addClass('ui-tabs-hide');
 
 		if (this.enable_parts) {
-			this.page_part_dialog();
+			this.page_part_editor();
 		}
 		this.initialised = true;
 	}
