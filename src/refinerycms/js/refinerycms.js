@@ -142,7 +142,7 @@ REFINERYCMS = {
 					tooltip.animate({
 						top: tt_offset.top - 20,
 						opacity: 0
-					}, 125, 'swing', function(){
+					}, 125, 'swing', function () {
 						active_elm.remove();
 					});
 					if ((nib_offset = (nib = $('.tooltip-nib')).offset()) == null) {
@@ -154,7 +154,7 @@ REFINERYCMS = {
 					nib.animate({
 						top: nib_offset.top - 20,
 						opacity: 0
-					}, 125, 'swing', function(){
+					}, 125, 'swing', function () {
 						active_elm.remove();
 					});
 				}
@@ -172,5 +172,31 @@ REFINERYCMS = {
 				$elements.removeAttr('alt');
 			}
 		});
+	},
+
+	init_flash_messages: function () {
+		var elm = $('#flash');
+		elm.css({
+			'opacity': 0
+			, 'visibility':'visible'
+		}).animate({'opacity': '1'}, 550);
+
+		$('#flash_close').click(function(e) {
+			try {
+				$('#flash').animate({
+				 'opacity': 0,
+				 'visibility': 'hidden'
+				}, 330, function() {
+					elm.hide();
+				});
+			} catch(ex) {
+				elm.hide();
+			}
+			e.preventDefault();
+		});
+		
+		if (elm.hasClass('.flash_message')) {
+			elm.prependTo('#records');
+		}
 	}
 };
