@@ -53,12 +53,6 @@ REFINERYCMS.menu = {
 			itemTag: this.menu.children(':first').get(0).tagName.toLowerCase()
 		});
 
-		if (this.menu.outerWidth() < $('#page_container').outerWidth()) {
-			$("#page_container:not('.login #page_container')").corner('5px tr');
-		} else {
-			$("#page_container:not('.login #page_container')").uncorner();
-		}
-
 		//Initial status disabled
 		this.menu.sortable('disable');
 
@@ -69,7 +63,5 @@ REFINERYCMS.menu = {
 		this.menu.find('#menu_reorder_done').click(function(e){
 			that.reorder(e, false);
 		});
-
-		this.menu.find('a').corner('top 5px');
 	}
 };
