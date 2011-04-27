@@ -65,7 +65,7 @@ REFINERYCMS.page = {
 			e.preventDefault();
 
 			if (part_title.length > 0) {
-				var tab_title = part_title.toLowerCase().replace(" ", "_");
+				var tab_title = part_title.toLowerCase().replace(' ', '_');
 
 				if ($('#part_' + tab_title).size() === 0) {
 					$.get(that.new_part_url, {

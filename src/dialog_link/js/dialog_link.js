@@ -78,7 +78,7 @@ REFINERYCMS.dialog.LinkDialog.prototype = {
 		//splice and join the remainder to get the pathname
 		parts.splice(0, 2);
 		// ensure we don't destroy absolute urls like /system/images/whatever.jpg
-		loc.pathname = (loc.href[0] == '/' ? ("/" + loc.host) : '');
+		loc.pathname = (loc.href[0] == '/' ? ('/' + loc.host) : '');
 		loc.pathname += '/' + parts.join('/');
 
 		//extract any hash and remove from the pathname
@@ -230,6 +230,7 @@ REFINERYCMS.dialog.LinkDialog.prototype = {
 	init: function () {
 		try {
 			this.submit_button = $('#submit_button');
+			this.init_submit_loader();
 			this.page_tab();
 			this.web_tab();
 			this.email_tab();

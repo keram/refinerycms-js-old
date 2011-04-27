@@ -34,7 +34,7 @@ REFINERYCMS = {
 	namespace: function () {
 		var a = arguments, o = null, i, j, d;
 		for (i = 0; i < a.length; i = i + 1) {
-			d = a[i].split(".");
+			d = a[i].split('.');
 
 			o = window;
 			for (j = 0; j < d.length; j = j + 1) {
@@ -82,12 +82,15 @@ REFINERYCMS = {
 				if (e.type == 'mouseenter' || e.type == 'mouseover') {
 					active_elm.oneTime(350, 'tooltip', $.proxy(function() {
 						$('.tooltip').remove();
-						var tooltip = $("<div class='tooltip'><div><span></span></div></div>").appendTo('#tooltip_container');
-						tooltip.find("span").html(active_elm.attr('tooltip'));
+						var tooltip_container = $('#tooltip_container'),
+							tooltip = $('<div class="tooltip"><div><span></span></div></div>').appendTo(tooltip_container),
+							tooltip_nib_image = $.browser.msie ? 'tooltip-nib.gif' : 'tooltip-nib.png',
+							nib = $('<img src="/images/refinery/"' + tooltip_nib_image + '" class="tooltip-nib""/>').appendTo(tooltip_container),
+							required_left_offset = null,
+							tooltip_offset = null,
+							tooltip_outer_width = null;
 
-						tooltip_nib_image = $.browser.msie ? 'tooltip-nib.gif' : 'tooltip-nib.png';
-						nib = $("<img src='/images/refinery/"+tooltip_nib_image+"' class='tooltip-nib'/>").appendTo('#tooltip_container');
-
+						tooltip.find('span').html(active_elm.attr('tooltip'));
 						tooltip.css({
 							'opacity': 0,
 							'maxWidth': '300px'
@@ -96,8 +99,8 @@ REFINERYCMS = {
 						required_left_offset = active_elm.offset().left - (tooltip.outerWidth() / 2) + (active_elm.outerWidth() / 2);
 						tooltip.css('left', (required_left_offset > 0 ? required_left_offset : 0));
 
-						var tooltip_offset = tooltip.offset();
-						var tooltip_outer_width = tooltip.outerWidth();
+						tooltip_offset = tooltip.offset();
+						tooltip_outer_width = tooltip.outerWidth();
 						if (tooltip_offset && (tooltip_offset.left + tooltip_outer_width) > (window_width = $(window).width())) {
 							tooltip.css('left', window_width - tooltip_outer_width);
 						}
@@ -110,6 +113,7 @@ REFINERYCMS = {
 							'opacity': 0
 						});
 
+						// accidental assigment?
 						if (tooltip_offset = tooltip.offset()) {
 							nib.css({
 								'left': active_elm.offset().left + (active_elm.outerWidth() / 2) - 5,
@@ -183,7 +187,7 @@ REFINERYCMS = {
 
 		$('#flash_close').click(function(e) {
 			try {
-				$('#flash').animate({
+				elm.animate({
 				 'opacity': 0,
 				 'visibility': 'hidden'
 				}, 330, function() {

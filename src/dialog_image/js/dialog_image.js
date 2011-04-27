@@ -41,7 +41,7 @@ REFINERYCMS.dialog.ImageDialog.prototype = {
 			var existing_image_area_content_selected_a = existing_image_size_area.find('li.selected a');
 			var geometry = existing_image_area_content_selected_a.attr('data-geometry'),
 				size = existing_image_area_content_selected_a.attr('data-size'),
-				resize = $("#wants_to_resize_image").is(':checked'),
+				resize = $('#wants_to_resize_image').is(':checked'),
 				img_src = resize ? img.attr('data-' + size) : img.attr('data-original');
 
 			img.parent().addClass('selected');
@@ -77,7 +77,7 @@ REFINERYCMS.dialog.ImageDialog.prototype = {
 		});
 
 		wants_to_resize_image.change(function () {
-			if ($(this).is(":checked")) {
+			if ($(this).is(':checked')) {
 				existing_image_size_area.find('li:first a').click();
 			} else {
 				existing_image_size_area.find('li').removeClass('selected');
@@ -121,6 +121,7 @@ REFINERYCMS.dialog.ImageDialog.prototype = {
 
 	init: function () {
 		try {
+			this.init_submit_loader();
 			this.init_actions();
 			this.init_tabs();
 			// editor do this

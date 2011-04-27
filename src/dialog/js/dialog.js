@@ -19,6 +19,7 @@ REFINERYCMS.Dialog.prototype = {
 	callback: null,
 	active_area: null,
 	initialised: false,
+	submit_loader: null, // wheel wiiii
 
 	validation_rules: [],
 
@@ -55,11 +56,15 @@ REFINERYCMS.Dialog.prototype = {
 	enable_submit: function () { },
 
 	submit_loader_off: function () {
-		$('img.save-loader').remove();
+		this.submit_loader.hide();
 	},
 
 	submit_loader_on: function () {
-		$('<img src="/images/refinery/ajax-loader.gif" width="16" height="16" class="save-loader" />').appendTo($('div.form-actions-left'));
+		this.submit_loader.show();
+	},
+
+	init_submit_loader: function () {
+		$('<img src="/images/refinery/ajax-loader.gif" width="16" height="16" style="display:none; class="save-loader" />').appendTo($('div.form-actions-left'));
 	},
 
 	switch_area: function (area) {

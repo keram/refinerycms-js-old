@@ -266,7 +266,7 @@ REFINERYCMS.form.toggleControl = function (elem, rules, firsttime) {
 REFINERYCMS.form.toggle = function (id, visible) {
 	var elem = document.getElementById(id);
 	if (elem) {
-		elem.style.display = visible ? "" : "none";
+		elem.style.display = visible ? '' : 'none';
 	}
 };
 

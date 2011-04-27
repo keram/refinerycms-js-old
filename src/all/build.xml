@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project name="RefineryCMS" default="local">
-    <property environment="env" />
-
-    <property file="build.properties" />
-
-    <import file="${builddir}/refinerycms/bootstrap.xml" 
-            description="Default Build Properties and Targets" />
-</project>
