@@ -6,6 +6,7 @@
 * @copyright  Copyright (C) 2011
 * @author     keraM marek@keram.name http//keram.name
 * @license    MIT
+* @class      page
 */
 
 REFINERYCMS.page = {
@@ -158,3 +159,4 @@ REFINERYCMS.page = {
 		this.initialised = true;
 	}
 };
+

@@ -3,11 +3,10 @@
  *
  * @author     keraM marek@keram.name http//keram.name
  * @copyright  Copyright (C) 2011
- * @version   0.1
- * @class     ImageDialog
+ * @version    0.1
+ * @class      ImageDialog
  * @license    MIT
  */
-
 
 /*global REFINERYCMS, window, $, parent, console */
 

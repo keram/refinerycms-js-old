@@ -3,8 +3,8 @@
  *
  * @author     keraM marek@keram.name http//keram.name
  * @copyright  Copyright (C) 2011
- * @version   0.1
- * @class     LinkDialog
+ * @version    0.1
+ * @class      LinkDialog
  * @license    MIT
  */
 
