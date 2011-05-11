@@ -7,6 +7,7 @@
 * @package    refinerycms-js
 * @copyright  Copyright (C) 2011
 * @author     keraM marek@keram.name http//keram.name
+* @class      form
 * @license    MIT
 */
 

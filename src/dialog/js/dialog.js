@@ -19,6 +19,7 @@ REFINERYCMS.Dialog.prototype = {
 	callback: null,
 	active_area: null,
 	initialised: false,
+	modal: false, // who knows ;-)
 	submit_loader: null, // wheel wiiii
 
 	validation_rules: [],
