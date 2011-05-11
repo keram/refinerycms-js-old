@@ -1,0 +1,267 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>API: refinerycms   page.js  (YUI Library)</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1303886239.15" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1303886239.15" />
+
+    <script type="text/javascript" src="assets/api-js?stamp=1303886239.15"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1303886239.15"></script>
+</head>
+
+<body id="yahoo-com">
+
+<div id="doc3" class="yui-t2">
+	<div id="hd">
+        <h1><a href="http://developer.yahoo.com/yui/" title="RefineryCMS js library">RefineryCMS js library</a></h1>
+        <h3>refinerycms&nbsp; <span class="subtitle">1.0.0</span></h3>
+        <a href="./index.html" title="RefineryCMS js library">RefineryCMS js library</a> 
+            &gt; <a href="./module_refinerycms.html" title="refinerycms">refinerycms</a>
+                
+                 &gt; page.js (source view) 
+        <form onsubmit="return false">
+            <div id="propertysearch">
+                Search: <input autocomplete="off" id="searchinput" />
+                <div id="searchresults">
+                    &nbsp;
+                </div>
+            </div>
+        </form>
+	</div>
+
+	<div id="bd">
+		<div id="yui-main">
+			<div class="yui-b">
+            <form action="#" name="yui-classopts-form" method="get" id="yui-classopts-form">
+                <fieldset>
+                    <legend>Filters</legend>
+                <span class="classopts"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
+                <span class="classopts"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
+                <span class="classopts"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
+                </fieldset>
+            </form>
+
+                    <div id="srcout">
+                        <style>
+                            #doc3 .classopts { display:none; }
+                        </style>
+<div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm">*</span>
+<span class="cm">* @todo Description</span>
+<span class="cm">* @version    $Id$</span>
+<span class="cm">* @package    refinerycms-js</span>
+<span class="cm">* @copyright  Copyright (C) 2011</span>
+<span class="cm">* @author     keraM marek@keram.name http//keram.name</span>
+<span class="cm">* @license    MIT</span>
+<span class="cm">* @class      page</span>
+<span class="cm">*/</span>
+
+<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">page</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="nx">initialised</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+	<span class="nx">tabs</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+
+	<span class="nx">show_options</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#toggle_advanced_options&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+			<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#more_options&#39;</span><span class="p">).</span><span class="nx">animate</span><span class="p">({</span>
+				<span class="nx">opacity</span><span class="o">:</span> <span class="s1">&#39;toggle&#39;</span><span class="p">,</span>
+				<span class="nx">height</span><span class="o">:</span> <span class="s1">&#39;toggle&#39;</span>
+			<span class="p">},</span> <span class="mi">250</span><span class="p">);</span>
+
+			<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;html,body&#39;</span><span class="p">).</span><span class="nx">animate</span><span class="p">({</span>
+				<span class="nx">scrollTop</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#toggle_advanced_options&#39;</span><span class="p">).</span><span class="nx">parent</span><span class="p">().</span><span class="nx">offset</span><span class="p">().</span><span class="nx">top</span>
+			<span class="p">},</span> <span class="mi">250</span><span class="p">);</span>
+		<span class="p">});</span>
+	<span class="p">},</span>
+
+	<span class="nx">title_type</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_custom_title&#39;</span><span class="p">).</span><span class="nx">parents</span><span class="p">(</span><span class="s1">&#39;.field&#39;</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;input:radio&#39;</span><span class="p">).</span><span class="nx">change</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+			<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#custom_title_text, #custom_title_image&#39;</span><span class="p">).</span><span class="nx">hide</span><span class="p">();</span>
+			<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#custom_title_&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">value</span><span class="p">).</span><span class="nx">show</span><span class="p">();</span>
+		<span class="p">});</span>
+	<span class="p">},</span>
+
+	<span class="nx">page_part_editor</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+			<span class="nx">new_page_part_title</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#new_page_part_title&#39;</span><span class="p">),</span>
+			<span class="nx">new_page_part_editor</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#new_page_part_editor&#39;</span><span class="p">),</span>
+			<span class="nx">new_page_part_index</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#new_page_part_index&#39;</span><span class="p">),</span>
+			<span class="nx">page_part_editors</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_part_editors&#39;</span><span class="p">),</span>
+			<span class="nx">add_page_part</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#add_page_part&#39;</span><span class="p">),</span>
+			<span class="nx">new_page_part_save</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#new_page_part_save&#39;</span><span class="p">),</span>
+			<span class="nx">submit_continue_button</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#submit_continue_button&#39;</span><span class="p">),</span>
+			<span class="nx">new_page_part_cancel</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#new_page_part_cancel&#39;</span><span class="p">),</span>
+			<span class="nx">delete_page_part</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#delete_page_part&#39;</span><span class="p">);</span>
+
+
+		<span class="nx">new_page_part_editor</span><span class="p">.</span><span class="nx">editor</span><span class="p">({</span>
+			<span class="nx">title</span><span class="o">:</span> <span class="nx">I18n</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span><span class="s1">&#39;refinerycms.page.new_page_part_editor_title&#39;</span><span class="p">,</span> <span class="s1">&#39;Create Content Section&#39;</span><span class="p">),</span>
+			<span class="nx">modal</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+			<span class="nx">resizable</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+			<span class="nx">autoOpen</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+			<span class="nx">width</span><span class="o">:</span> <span class="mi">600</span><span class="p">,</span>
+			<span class="nx">height</span><span class="o">:</span> <span class="mi">200</span>
+		<span class="p">});</span>
+
+		<span class="nx">add_page_part</span><span class="p">.</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+			<span class="nx">new_page_part_editor</span><span class="p">.</span><span class="nx">editor</span><span class="p">(</span><span class="s1">&#39;open&#39;</span><span class="p">);</span>
+		<span class="p">});</span>
+
+		<span class="nx">new_page_part_save</span><span class="p">.</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+			<span class="kd">var</span> <span class="nx">part_title</span> <span class="o">=</span> <span class="nx">new_page_part_title</span><span class="p">.</span><span class="nx">val</span><span class="p">();</span>
+			<span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+
+			<span class="k">if</span> <span class="p">(</span><span class="nx">part_title</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+				<span class="kd">var</span> <span class="nx">tab_title</span> <span class="o">=</span> <span class="nx">part_title</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">().</span><span class="nx">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">);</span>
+
+				<span class="k">if</span> <span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#part_&#39;</span> <span class="o">+</span> <span class="nx">tab_title</span><span class="p">).</span><span class="nx">size</span><span class="p">()</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+					<span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">that</span><span class="p">.</span><span class="nx">new_part_url</span><span class="p">,</span> <span class="p">{</span>
+						<span class="nx">title</span><span class="o">:</span> <span class="nx">part_title</span><span class="p">,</span>
+						<span class="nx">part_index</span><span class="o">:</span> <span class="nx">new_page_part_index</span><span class="p">.</span><span class="nx">val</span><span class="p">(),</span>
+						<span class="nx">body</span><span class="o">:</span> <span class="s1">&#39;&#39;</span>
+					<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+						<span class="nx">submit_continue_button</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
+						<span class="c1">// Add a new tab for the new content section.</span>
+						<span class="nx">$</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">appendTo</span><span class="p">(</span><span class="nx">page_part_editors</span><span class="p">);</span>
+						<span class="nx">that</span><span class="p">.</span><span class="nx">tabs</span><span class="p">.</span><span class="nx">tabs</span><span class="p">(</span><span class="s1">&#39;add&#39;</span><span class="p">,</span> <span class="s1">&#39;#page_part_new_&#39;</span> <span class="o">+</span> <span class="nx">new_page_part_index</span><span class="p">.</span><span class="nx">val</span><span class="p">(),</span> <span class="nx">part_title</span><span class="p">);</span>
+						<span class="nx">that</span><span class="p">.</span><span class="nx">tabs</span><span class="p">.</span><span class="nx">tabs</span><span class="p">(</span><span class="s1">&#39;select&#39;</span><span class="p">,</span> <span class="nx">new_page_part_index</span><span class="p">.</span><span class="nx">val</span><span class="p">());</span>
+
+						<span class="c1">// hook into edtior to instruct it to select this new tab again once it has loaded.</span>
+						<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">editor</span><span class="p">.</span><span class="nx">onload_functions</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+							<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_part_new_&#39;</span> <span class="o">+</span> <span class="nx">new_page_part_index</span><span class="p">.</span><span class="nx">val</span><span class="p">()).</span><span class="nx">appendTo</span><span class="p">(</span><span class="nx">page_part_editors</span><span class="p">);</span>
+							<span class="nx">that</span><span class="p">.</span><span class="nx">tabs</span><span class="p">.</span><span class="nx">tabs</span><span class="p">(</span><span class="s1">&#39;select&#39;</span><span class="p">,</span> <span class="nx">new_page_part_index</span><span class="p">.</span><span class="nx">val</span><span class="p">());</span>
+						<span class="p">});</span>
+
+						<span class="c1">// turn the new textarea into a editor.</span>
+						<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">editor</span><span class="p">.</span><span class="nx">init</span><span class="p">();</span>
+
+						<span class="c1">// Wipe the title and increment the index counter by one.</span>
+						<span class="nx">new_page_part_index</span><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">new_page_part_index</span><span class="p">.</span><span class="nx">val</span><span class="p">(),</span> <span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+						<span class="nx">new_page_part_title</span><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+
+						<span class="nx">new_page_part_editor</span><span class="p">.</span><span class="nx">editor</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">);</span>
+						<span class="nx">new_page_part_editor</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
+					<span class="p">}</span>
+					<span class="p">);</span>
+				<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+					<span class="nx">alert</span><span class="p">(</span><span class="nx">I18n</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span><span class="s1">&#39;refinerycms.page.title_already_exists&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">defaultValue</span><span class="o">:</span> <span class="s1">&#39;A content section with that title already exists, please choose another.&#39;</span><span class="p">}));</span>
+				<span class="p">}</span>
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+				<span class="nx">alert</span><span class="p">(</span><span class="nx">I18n</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span><span class="s1">&#39;refinerycms.page.not_entered_title&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">defaultValue</span><span class="o">:</span> <span class="s1">&#39;You have not entered a title for the content section, please enter one.&#39;</span><span class="p">}));</span>
+			<span class="p">}</span>
+		<span class="p">});</span>
+
+		<span class="nx">new_page_part_cancel</span><span class="p">.</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+			<span class="nx">new_page_part_editor</span><span class="p">.</span><span class="nx">editor</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">);</span>
+			<span class="nx">new_page_part_title</span><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span>
+		<span class="p">});</span>
+
+		<span class="nx">delete_page_part</span><span class="p">.</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+			<span class="kd">var</span> <span class="nx">confirmed</span> <span class="o">=</span> <span class="nx">confirm</span><span class="p">(</span><span class="nx">I18n</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span>
+				<span class="s1">&#39;refinerycms.page.confirm_delete&#39;</span><span class="p">,</span>
+				<span class="p">{</span>
+					<span class="nx">defaultValue</span><span class="o">:</span> <span class="s1">&#39;This will remove the content section &quot;{section_title}&quot; immediately. \nAre you sure?&#39;</span><span class="p">,</span>
+					<span class="nx">section_title</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_parts .ui-tabs-selected a&#39;</span><span class="p">).</span><span class="nx">text</span><span class="p">()</span>
+				<span class="p">}</span>
+			<span class="p">));</span>
+
+			<span class="k">if</span> <span class="p">(</span><span class="nx">confirmed</span><span class="p">)</span> <span class="p">{</span>
+				<span class="kd">var</span> <span class="nx">tabId</span> <span class="o">=</span> <span class="nx">that</span><span class="p">.</span><span class="nx">tabs</span><span class="p">.</span><span class="nx">tabs</span><span class="p">(</span><span class="s1">&#39;option&#39;</span><span class="p">,</span> <span class="s1">&#39;selected&#39;</span><span class="p">);</span>
+				<span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+					<span class="nx">url</span><span class="o">:</span> <span class="nx">that</span><span class="p">.</span><span class="nx">del_part_url</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_parts_attributes_&#39;</span> <span class="o">+</span> <span class="nx">tabId</span> <span class="o">+</span> <span class="s1">&#39;_id&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">(),</span>
+					<span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;DELETE&#39;</span>
+				<span class="p">});</span>
+				<span class="nx">that</span><span class="p">.</span><span class="nx">tabs</span><span class="p">.</span><span class="nx">tabs</span><span class="p">(</span><span class="s1">&#39;remove&#39;</span><span class="p">,</span> <span class="nx">tabId</span><span class="p">);</span>
+				<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_parts_attributes_&#39;</span> <span class="o">+</span> <span class="nx">tabId</span> <span class="o">+</span> <span class="s1">&#39;_id&#39;</span><span class="p">).</span><span class="nx">remove</span><span class="p">();</span>
+				<span class="nx">submit_continue_button</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
+			<span class="p">}</span>
+		<span class="p">});</span>
+	<span class="p">},</span>
+
+	<span class="nx">init</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">enable_parts</span><span class="p">,</span> <span class="nx">new_part_url</span><span class="p">,</span> <span class="nx">del_part_url</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">tabs</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page-tabs&#39;</span><span class="p">),</span>
+			<span class="nx">part_shown</span> <span class="o">=</span> <span class="nx">tabs</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;.page_part.field&#39;</span><span class="p">).</span><span class="nx">not</span><span class="p">(</span><span class="s1">&#39;.ui-tabs-hide&#39;</span><span class="p">);</span>
+
+		<span class="nx">tabs</span><span class="p">.</span><span class="nx">tabs</span><span class="p">({</span>
+			<span class="nx">tabTemplate</span><span class="o">:</span> <span class="s1">&#39;&lt;li&gt;&lt;a href=&quot;#{href}&quot;&gt;#{label}&lt;/a&gt;&lt;/li&gt;&#39;</span>
+		<span class="p">});</span>
+
+		<span class="nx">tabs</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;.page_part.field&#39;</span><span class="p">).</span><span class="nx">removeClass</span><span class="p">(</span><span class="s1">&#39;ui-tabs-hide&#39;</span><span class="p">);</span>
+
+		<span class="k">this</span><span class="p">.</span><span class="nx">enable_parts</span> <span class="o">=</span> <span class="nx">enable_parts</span><span class="p">;</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">new_part_url</span> <span class="o">=</span> <span class="nx">new_part_url</span><span class="p">;</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">del_part_url</span> <span class="o">=</span> <span class="nx">del_part_url</span><span class="p">;</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">show_options</span><span class="p">();</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">title_type</span><span class="p">();</span>
+
+		<span class="c1">// hide the tabs that are supposed to be hidden.</span>
+		<span class="nx">tabs</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;.page_part.field&#39;</span><span class="p">).</span><span class="nx">not</span><span class="p">(</span><span class="nx">part_shown</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="s1">&#39;ui-tabs-hide&#39;</span><span class="p">);</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">enable_parts</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">this</span><span class="p">.</span><span class="nx">page_part_editor</span><span class="p">();</span>
+		<span class="p">}</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">initialised</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+                    </div>
+			</div>
+		</div>
+		<div class="yui-b">
+            <div class="nav">
+
+                    <div id="moduleList" class="module">
+                        <h4>Modules</h4>
+                        <ul class="content">
+                                <li class="selected"><a href="module_refinerycms.html" title="refinerycms">refinerycms</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="classList" class="module">
+                        <h4>Classes</h4>
+                        <ul class="content">
+                                <li class=""><a href="Dialog.html" title="Dialog">Dialog</a></li>
+                                <li class=""><a href="Editor.html" title="Editor">Editor</a></li>
+                                <li class=""><a href="ImageDialog.html" title="ImageDialog">ImageDialog</a></li>
+                                <li class=""><a href="LinkDialog.html" title="LinkDialog">LinkDialog</a></li>
+                                <li class=""><a href="page.html" title="page">page</a></li>
+                                <li class=""><a href="REFINERYCMS.html" title="REFINERYCMS">REFINERYCMS</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="fileList" class="module">
+                        <h4>Files</h4>
+                        <ul class="content">        
+                                <li class=""><a href="dialog.js.html" title="dialog.js">dialog.js</a></li>
+                                <li class=""><a href="dialog_image.js.html" title="dialog_image.js">dialog_image.js</a></li>
+                                <li class=""><a href="dialog_link.js.html" title="dialog_link.js">dialog_link.js</a></li>
+                                <li class=""><a href="editor.js.html" title="editor.js">editor.js</a></li>
+                                <li class=""><a href="form.js.html" title="form.js">form.js</a></li>
+                                <li class=""><a href="menu.js.html" title="menu.js">menu.js</a></li>
+                                <li class="selected"><a href="page.js.html" title="page.js">page.js</a></li>
+                                <li class=""><a href="refinerycms.js.html" title="refinerycms.js">refinerycms.js</a></li>
+                        </ul>
+                    </div>
+
+
+
+
+
+            </div>
+		</div>
+	</div>
+	<div id="ft">
+        <hr />
+        Copyright &copy; 2011 Yahoo! Inc. All rights reserved.
+	</div>
+</div>
+<script type="text/javascript">
+    ALL_YUI_PROPS = [{"url": "Dialog.html#method_addEvent", "access": "", "host": "Dialog", "type": "method", "name": "addEvent"}, {"url": "Dialog.html#method_disable_submit", "access": "", "host": "Dialog", "type": "method", "name": "disable_submit"}, {"url": "Dialog.html#method_enable_submit", "access": "", "host": "Dialog", "type": "method", "name": "enable_submit"}, {"url": "REFINERYCMS.html#method_extendObject", "access": "", "host": "REFINERYCMS", "type": "method", "name": "extendObject"}, {"url": "Dialog.html#property_menu", "access": "", "host": "Dialog", "type": "property", "name": "menu"}, {"url": "REFINERYCMS.html#method_namespace", "access": "", "host": "REFINERYCMS", "type": "method", "name": "namespace"}];
+</script>
+</body>
+</html>

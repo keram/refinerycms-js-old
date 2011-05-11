@@ -1,6 +1,6 @@
 /**
  * The REFINERYCMS object is the single global object used by RefineryCMS.
- * 
+ *
  * @version    $Id$
  * @package    refinerycms-js
  * @copyright  Copyright (C) 2011
@@ -8,14 +8,16 @@
  * @license    MIT
  */
 
+/*global window, $ */
+
 /**
  * The REFINERYCMS global namespace object.
- * 
+ *
  * @title      REFINERYCMS Global object
  * @class      REFINERYCMS
  * @module     refinerycms
  * @required   jquery-1.5.2
- * @namespace  
+ * @namespace
  * @static
  */
 var REFINERYCMS = REFINERYCMS || {};
@@ -48,20 +50,20 @@ REFINERYCMS = {
 
 	/**
 	 * Extend Child object with Parent prototype
-	 * 
+	 *
 	 * @param {object} Child
 	 * @param {object} Parent
 	 */
 	extendObject: function (Child, Parent) {
 		var R = Child.prototype,
 			key = null;
-		
+
 		function Q() {}
-		
+
 		Q.prototype = Parent.prototype;
-		
+
 		Child.prototype = new Q();
-		
+
 		// adding back overriden methods and properties
 		for (key in R) {
 			if (R.hasOwnProperty(key)) {
@@ -71,24 +73,40 @@ REFINERYCMS = {
 
 		Child.prototype.constructor = Child;
 	},
-	
-	init_tooltips: function (args) {
-		$($(args != null ? args : 'a[title], span[title], #image_grid img[title], *[tooltip]')).not('.no-tooltip').each(function(index, element)
-		{
+
+	/**
+	 * Show on hover/mouseover styled tooltips over html elements
+	 *
+	 * @param {string} elements
+	 */
+	init_tooltips: function (elements) {
+		var elms = elements || 'a[title], span[title], #image_grid img[title], *[tooltip]',
+			tt_offset = null,
+			nib_offset = null,
+			tooltip = null,
+			$elements = null;
+		
+		$(elms).not('.no-tooltip').each(function (index, element) {
 			var elm = $(element);
 			// create tooltip on hover and destroy it on hoveroff.
-			elm.hover(function(e) {
-				var active_elm = $(this);
-				if (e.type == 'mouseenter' || e.type == 'mouseover') {
-					active_elm.oneTime(350, 'tooltip', $.proxy(function() {
+			elm.hover(function (e) {
+				var active_elm = $(this),
+					tooltip_container = $('#tooltip_container'),
+					tooltip = $('<div class="tooltip"><div><span></span></div></div>').appendTo(tooltip_container),
+					tooltip_nib_image = $.browser.msie ? 'tooltip-nib.gif' : 'tooltip-nib.png',
+					required_left_offset = null,
+					tooltip_offset = null,
+					tooltip_outer_width = null,
+					window_width = $(window).width(),
+					nib = $('<img />', {
+						'src': '/images/refinery/' + tooltip_nib_image,
+						'class': 'tooltip-nib'
+					}).appendTo(tooltip_container);
+				
+				// some crazy stuff here
+				if (e.type === 'mouseenter' || e.type === 'mouseover') {
+					active_elm.oneTime(350, 'tooltip', $.proxy(function () {
 						$('.tooltip').remove();
-						var tooltip_container = $('#tooltip_container'),
-							tooltip = $('<div class="tooltip"><div><span></span></div></div>').appendTo(tooltip_container),
-							tooltip_nib_image = $.browser.msie ? 'tooltip-nib.gif' : 'tooltip-nib.png',
-							nib = $('<img src="/images/refinery/"' + tooltip_nib_image + '" class="tooltip-nib""/>').appendTo(tooltip_container),
-							required_left_offset = null,
-							tooltip_offset = null,
-							tooltip_outer_width = null;
 
 						tooltip.find('span').html(active_elm.attr('tooltip'));
 						tooltip.css({
@@ -101,7 +119,7 @@ REFINERYCMS = {
 
 						tooltip_offset = tooltip.offset();
 						tooltip_outer_width = tooltip.outerWidth();
-						if (tooltip_offset && (tooltip_offset.left + tooltip_outer_width) > (window_width = $(window).width())) {
+						if (tooltip_offset && (tooltip_offset.left + tooltip_outer_width) > window_width) {
 							tooltip.css('left', window_width - tooltip_outer_width);
 						}
 
@@ -130,17 +148,17 @@ REFINERYCMS = {
 								top: nib.offset().top - 10,
 								opacity: 1
 							}, 200);
-						} catch(e) {
+						} catch (e) {
 							tooltip.show();
 							nib.show();
 						}
 					}, active_elm));
-				} else if (e.type == 'mouseleave' || e.type == 'mouseout') {
+				} else if (e.type === 'mouseleave' || e.type === 'mouseout') {
 					active_elm.stopTime('tooltip');
-					if ((tt_offset = (tooltip = $('.tooltip')).css('z-index', '-1').offset()) == null) {
+					if (!(tt_offset = (tooltip = $('.tooltip')).css('z-index', '-1').offset())) {
 						tt_offset = {
-							'top':0,
-							'left':0
+							'top': 0,
+							'left': 0
 						};
 					}
 					tooltip.animate({
@@ -149,10 +167,10 @@ REFINERYCMS = {
 					}, 125, 'swing', function () {
 						active_elm.remove();
 					});
-					if ((nib_offset = (nib = $('.tooltip-nib')).offset()) == null) {
+					if (!(nib_offset = (nib = $('.tooltip-nib')).offset())) {
 						nib_offset = {
-							'top':0,
-							'left':0
+							'top': 0,
+							'left': 0
 						};
 					}
 					nib.animate({
@@ -162,17 +180,17 @@ REFINERYCMS = {
 						active_elm.remove();
 					});
 				}
-			}).click(function(e) {
-				active_elm.stopTime('tooltip');
+			}).click(function (e) {
+				$(this).stopTime('tooltip');
 			});
 
-			if (elm.attr('tooltip') == null) {
+			if (!elm.attr('tooltip')) {
 				elm.attr('tooltip', elm.attr('title'));
 			}
 			// wipe clean the title on any children too.
 			$elements = elm.add(elm.children('img')).removeAttr('title');
 			// if we're unlucky and in Internet Explorer then we have to say goodbye to 'alt', too.
-			if ($.browser.msie){
+			if ($.browser.msie) {
 				$elements.removeAttr('alt');
 			}
 		});
@@ -181,24 +199,24 @@ REFINERYCMS = {
 	init_flash_messages: function () {
 		var elm = $('#flash');
 		elm.css({
-			'opacity': 0
-			, 'visibility':'visible'
+			'opacity': 0, 
+			'visibility': 'visible'
 		}).animate({'opacity': '1'}, 550);
 
-		$('#flash_close').click(function(e) {
+		$('#flash_close').click(function (e) {
 			try {
 				elm.animate({
-				 'opacity': 0,
-				 'visibility': 'hidden'
-				}, 330, function() {
+					'opacity': 0,
+					'visibility': 'hidden'
+				}, 330, function () {
 					elm.hide();
 				});
-			} catch(ex) {
+			} catch (ex) {
 				elm.hide();
 			}
 			e.preventDefault();
 		});
-		
+
 		if (elm.hasClass('.flash_message')) {
 			elm.prependTo('#records');
 		}
