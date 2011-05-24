@@ -1,0 +1,40 @@
+/* 
+    Document   : seo
+    Created on : May 24, 2011, 4:23:33 AM
+    Author     : keram
+    Description:
+        Styles for Seo analyzator renderer
+*/
+
+#seo-report {
+	clear: both;
+	border: solid 1px #ccc;
+	margin: 0px;
+	padding: 5px 20px 15px;
+	font-family: Arial, sans-serif;
+}
+
+/**
+ * temporary reset style
+ * @todo
+ */
+#seo-report * {
+	margin: 0px;
+	padding: 0px;
+}
+
+#seo-report  h2, #seo-report ul {
+	margin-bottom: 10px;
+}
+
+#seo-report .success {
+	color: green;
+}
+
+#seo-report .error {
+	color: red;
+}
+
+#seo-report ul {
+	list-style: none;
+}
