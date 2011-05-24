@@ -211,7 +211,8 @@ plusmínus řídili jeho vzpomínkách.',
 				seo.set_stop_on_first_error(true);
 				seo.render({
 					'holder' : $('#content-for-tests'),
-					'data' : seo.validate()
+					'validation_data' : seo.validate(),
+					'analysis_data' : seo.analyse()
 				});
 				
 				return false;

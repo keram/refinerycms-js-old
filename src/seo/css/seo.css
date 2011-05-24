@@ -10,7 +10,7 @@
 	clear: both;
 	border: solid 1px #ccc;
 	margin: 0px;
-	padding: 5px 20px 15px;
+	padding: 5px 20px;
 	font-family: Arial, sans-serif;
 }
 
@@ -37,4 +37,18 @@
 
 #seo-report ul {
 	list-style: none;
+}
+
+#seo-report h2 {
+	float: left;
+	margin-right: 20px;
+}
+
+#seo-report .button {
+	position: relative;
+	top: 5px;
+}
+
+#seo-report .content {
+	clear: both;
 }

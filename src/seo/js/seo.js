@@ -201,9 +201,19 @@ REFINERYCMS.plugin.Seo.prototype = {
 		return result;
 	},
 	
+	analyse: function () {
+		var that = this;
+			analyzer = REFINERYCMS.plugin.Seo.analyzer,
+			result = [],
+			elm = null;
+		
+		
+		return result;
+	},
+	
 	render: function (config) {
 		var decorator = REFINERYCMS.plugin.Seo.decorator;
-		
+
 		// put content to decorator
 		decorator.render(config);
 	},
@@ -274,7 +284,8 @@ REFINERYCMS.plugin.Seo.validators = {
 
 REFINERYCMS.plugin.Seo.decorator = {
 	title : 'Seo report',
-	data : [],
+	validation_data : [],
+	analysis_data : [],
 	holder : '',
 	report : '',
 	rendered : false,
@@ -293,10 +304,22 @@ REFINERYCMS.plugin.Seo.decorator = {
 			return header;
 		}
 		
-		return $('<div />', {
-			'class' : 'header',
-			'html' : $('<h2 />', {'text' : this.title})
+		header = $('<div />', {
+			'class' : 'header'
 		});
+
+		header.append(
+			$('<h2 />', {'text' : this.title})
+		);
+			
+		header.append(
+			$('<a />', {
+				'text' : 'Run',
+				'class' : 'button'
+			})
+		);
+			
+		return header;
 	},
 	
 	getWrapper: function () {
@@ -313,7 +336,6 @@ REFINERYCMS.plugin.Seo.decorator = {
 	getContent: function () {
 		var content = $('#' + this.report_id).find('.content');
 		if (content.length > 0) {
-			
 			content.html(this.buildContent());
 			return content;
 		}
@@ -329,29 +351,39 @@ REFINERYCMS.plugin.Seo.decorator = {
 		if (footer.length > 0) {
 			return footer;
 		}
-		
-		var btn = $('<a />', {
-			'text' : 'Run',
-			'class' : 'button'
-		});
+
 		
 		return $('<div />', {
 			'class' : 'footer',
-			'html' : btn
+			'html' : '&nbsp;'
 		});
 	},
 	
-	buildContent: function () {
+	
+	buildAnalysisContent: function () {
 		var that = this,
-			msg = '',
-			tmp_holder = $('<div />');
+			ul = '',
+			error_found = false,
+			analysis_holder = $('<div />', {'class' : 'analysis-content'});
 		
-		for (elm_key in this.data) {
-			var ul = $('<ul />');
-				error_found = false;
-			for (rule in this.data[elm_key]) {
-//				console.log('r ' + rule + ' k ' + elm_key + ' ' + this.data[elm_key][rule]);
-				if (!this.data[elm_key][rule]) {
+		analysis_holder.html('-t- todo analysis result');
+		
+		return analysis_holder;
+	},
+	
+	buildValidationContent: function () {
+		var that = this,
+			ul = '',
+			error_found = false,
+			validation_holder = $('<div />', {'class' : 'validation-content'});
+		
+		for (elm_key in this.validation_data) {
+			ul = $('<ul />');
+			error_found = false;
+			
+			for (rule in this.validation_data[elm_key]) {
+	//				console.log('r ' + rule + ' k ' + elm_key + ' ' + this.data[elm_key][rule]);
+				if (!this.validation_data[elm_key][rule]) {
 					error_found = true;
 					that.messages[elm_key] = that.messages[elm_key] || {};
 					msg = that.messages[elm_key][rule] || 'State of check rule "' + rule + '" in "' + elm_key + '" is false.';
@@ -361,7 +393,7 @@ REFINERYCMS.plugin.Seo.decorator = {
 					}).appendTo(ul);
 				}
 			}
-			
+
 			if (!error_found) {
 				$('<li />', {
 					'class' : 'success',
@@ -369,9 +401,20 @@ REFINERYCMS.plugin.Seo.decorator = {
 				}).appendTo(ul);
 			}
 			
-			tmp_holder.append(ul);
+			validation_holder.append(ul);
 		}
 		
+		return validation_holder;
+	},
+	
+	buildContent: function () {
+		var that = this,
+			msg = '',
+			tmp_holder = $('<div />');
+		
+		tmp_holder.append(this.buildValidationContent());
+		tmp_holder.append(this.buildAnalysisContent());
+
 		return tmp_holder;
 	},
 	
@@ -383,7 +426,9 @@ REFINERYCMS.plugin.Seo.decorator = {
 	
 	render: function (cfg) {
 		cfg = cfg || {};
-		this.data = cfg.data || [];
+		var that = this;
+		
+		this.validation_data = cfg.validation_data || [];
 				
 		this.holder = cfg.holder || $('#more_options');
 
@@ -394,12 +439,19 @@ REFINERYCMS.plugin.Seo.decorator = {
 			if (!this.rendered) {
 				this.report.append(this.getHeader());
 				this.report.append(this.getContent());
-				this.report.append(this.getFooter());
+//				this.report.append(this.getFooter());
 
-				this.holder.append(this.report);
+				this.holder.prepend(this.report);
 				this.rendered = true;
 			} else {
-				this.getContent();
+				if (cfg.fade) {
+					this.report.fadeOut('normal', function () {
+						that.getContent();
+						that.report.fadeIn();
+					})
+				} else {
+					this.getContent();
+				}
 			}
 		}
 	}
