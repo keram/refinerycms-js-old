@@ -11,310 +11,396 @@
 * @license    MIT
 */
 
-REFINERYCMS.namespace('REFINERYCMS.form');
+// @todo to string helpers
+if (typeof (camelize) == 'undefined' ) {
+	function camelize(s) {
+		return s.replace(/[_|-]+(\S)?/g, function(m, chr) {
+			return chr ? chr.toUpperCase() : '';
+		});
+	}
+}
+
+REFINERYCMS.namespace('REFINERYCMS.plugin.Seo');
+
+REFINERYCMS.plugin.Seo = function (config) {
+	var cls = this.getInstance();
+	cls.init(config);
+}
+
+REFINERYCMS.plugin.Seo.analyzer = { };
+REFINERYCMS.plugin.Seo.validators = { };
+REFINERYCMS.plugin.Seo.decorator = { };
 
 /**
- * Simple form validation.
- *
- * Copyright (c) 2004, 2011 David Grudl (http://davidgrudl.com)
+ * Class for handling everything between page and snippets
  */
+REFINERYCMS.plugin.Seo.prototype = {
+	instance: null,
+	keywords: [],
+	text: '',
+	text_words: [],
+	text_sentences: [],
+	elements: {},
+	
+	stop_on_first_error: true,
 
-REFINERYCMS.form.addEvent = function (element, on, callback) {
-	var original = element['on' + on];
-	element['on' + on] = function () {
-		if (typeof original === 'function' && original.apply(element, arguments) === false) {
+	validation_rules: {
+		meta_tag_keywords : {
+			'filled' : true,
+			'min_length': 10,
+			'max_length': 100,
+			'min_words_count' : 1,
+			'max_words_count' : 5
+		}
+	},
+
+	getInstance: function () {
+		if (this.instance === null) {
+			this.instance = this;
+		}
+		
+		return this.instance;
+	},
+
+	sanitize_word: function (word) {
+		var str = word || '',
+		t = '',
+		unsafe_chars = 'áäčďéěíĺľňóô öŕšťúů üýřžÁÄČĎÉĚÍĹĽŇÓÔ ÖŔŠŤÚŮ ÜÝŘŽ';
+		safe_chars = 'aacdeeillnoo orstuu uyrzAACDEEILLNOO ORSTUU UYRZ';
+
+		for(var i = str.length; i--;)
+		{
+			if (unsafe_chars.indexOf(str.charAt(i)) != -1) {
+				t += safe_chars.charAt(safe_chars.indexOf(str.charAt(i)));
+				continue;
+			}
+
+			t += str.charAt(i);
+		}
+
+		str = str.replace(/[.,_$\\\/!?{}\(\(]/, '');
+
+		return str;
+	},
+
+	sanitize_text: function (text) {
+		var txt = $.trim(text);
+		txt = txt.replace(/ /g, '%space%');
+		txt = txt.replace(/\s/g, '');
+		txt = txt.replace(/%space%/g, ' ');
+
+		return txt;
+	},
+
+	count_text_words: function () {
+		var words = this.get_text_words();
+
+		return words.length;
+	},
+
+	count_keywords: function () {
+		return this.keywords.length;
+	},
+
+	set_keywords: function (k) {
+		this.keywords = k;
+	},
+
+	set_text: function (t) {
+		this.text = this.sanitize_text(t);
+	},
+
+	set_validation_rules: function (rules) {
+		this.validation_rules = rules || this.validation_rules;
+	},
+	
+	set_stop_on_first_error: function (stop) {
+		this.stop_on_first_error = stop;
+	},
+
+	set_text_words: function () {
+		var words = this.text.split(' '),
+		word_regexp = /^[a-zA-Z0-9]?[a-zA-Z0-9\-]*/,
+		test = false,
+		word = '',
+		tmp_words = [];
+
+		for (var i = words.length; i--;) {
+			word = this.sanitize_word(words[i]);
+			if (word) {
+				tmp_words[tmp_words.length] = word;
+			}
+		}
+
+		this.text_words = tmp_words.reverse();
+	},
+
+	set_text_sentences: function () {
+		var text = this.text;
+		var res = [];
+
+		var split_by = function (str, splitter) {
+			str.split(splitter);
+		}
+
+		this.text_sentences = '';
+	},
+
+	get_keywords: function () {
+		return this.keywords;
+	},
+
+	get_text: function () {
+		return this.text;
+	},
+
+	get_text_words: function () {
+		return this.text_words;
+	},
+
+	get_text_sentences: function () {
+		return this.text_sentences;
+	},
+	
+	getElement: function(elm_key) {
+		if (!this.elements[elm_key]) {
+			this.elements[elm_key] = $('#' + elm_key);
+		}
+		
+		return this.elements[elm_key];
+	},
+	
+	setElement: function (elm, key, rules) {
+		this.elements[key] = elm;
+		
+		if (typeof (rules) !== 'undefined') {
+			this.validation_rules[key] = rules;
+		}
+	},
+
+	validate: function () {
+		var that = this;
+			validator = REFINERYCMS.plugin.Seo.validators,
+			result = [],
+			elm = null;
+		
+		for (elm_key in that.validation_rules) {
+			elm = that.getElement(elm_key);
+			if (elm.length > 0) {
+				result[elm_key] = [];
+				for (rule in that.validation_rules[elm_key]) {
+					result[elm_key][rule] = validator.testElm(elm, rule, that.validation_rules[elm_key][rule]);
+
+					if (!result[elm_key][rule] && that.stop_on_first_error) {
+						break;
+					}
+				}
+			}
+		}
+		
+		return result;
+	},
+	
+	render: function (config) {
+		var decorator = REFINERYCMS.plugin.Seo.decorator;
+		
+		// put content to decorator
+		decorator.render(config);
+	},
+
+	/**
+	 * Initialization
+	 * @param config Object
+	 */
+	init: function (config) {
+		config = config || {};
+		
+		this.set_keywords(config.keywords || []);
+		this.set_text(config.text || '');
+		this.set_text_words();
+		this.set_validation_rules(config.validation_rules || this.validation_rules);
+		this.set_stop_on_first_error(config.stop_on_first_error || this.stop_on_first_error);
+	}
+};
+
+REFINERYCMS.plugin.Seo.validators = {
+	
+	testElm: function (element, rule, args) {
+		var result = false,
+			elm = $(element),
+			fnc = this[camelize(rule)];
+			
+		if (typeof (fnc) == 'undefined') {
+			throw Error('Function for Validation rule "' + camelize(rule) + '" not extist');
 			return false;
 		}
-		return callback.apply(element, arguments);
-	};
-};
-
-
-REFINERYCMS.form.getValue = function (elem) {
-	var i, len;
-	if (!elem) {
-		return null;
-
-	} else if (!elem.nodeName) { // radio
-		for (i = 0, len = elem.length; i < len; i++) {
-			if (elem[i].checked) {
-				return elem[i].value;
-			}
+		
+		if (typeof (fnc) === 'function') {
+			result = fnc(args, elm.val());
 		}
-		return null;
+		
+		return result;
+	},
 
-	} else if (elem.nodeName.toLowerCase() === 'select') {
-		var index = elem.selectedIndex, options = elem.options;
+	maxWordsCount: function(arg, val) {
+		return val.split(',').length <= arg;
+	},
 
-		if (index < 0) {
-			return null;
+	minWordsCount: function(arg, val) {
+		return !!val && val.split(',').length >= arg;
+	},
 
-		} else if (elem.type === 'select-one') {
-			return options[index].value;
-		}
-
-		for (i = 0, values = [], len = options.length; i < len; i++) {
-			if (options[i].selected) {
-				values.push(options[i].value);
-			}
-		}
-		return values;
-
-	} else if (elem.type === 'checkbox') {
-		return elem.checked;
-
-	} else if (elem.type === 'radio') {
-		return REFINERYCMS.form.getValue(elem.form.elements[elem.name]);
-
-	} else {
-		return elem.value.replace(/^\s+|\s+$/g, '');
-	}
-};
-
-
-REFINERYCMS.form.validateControl = function (elem, rules, onlyCheck) {
-	var rules = rules || eval('[' + (elem.getAttribute('data-refinerycms-rules') || '') + ']');
-	for (var id = 0, len = rules.length; id < len; id++) {
-		var rule = rules[id], op = rule.op.match(/(~)?([^?]+)/);
-		rule.neg = op[1];
-		rule.op = op[2];
-		rule.condition = !!rule.rules;
-		var el = rule.control ? elem.form.elements[rule.control] : elem;
-
-		var success = REFINERYCMS.form.validateRule(el, rule.op, rule.arg);
-		if (success === null) { continue; }
-		if (rule.neg) { success = !success; }
-
-		if (rule.condition && success) {
-			if (!REFINERYCMS.form.validateControl(elem, rule.rules, onlyCheck)) {
-				return false;
-			}
-		} else if (!rule.condition && !success) {
-			if (el.disabled) { continue; }
-			if (!onlyCheck) {
-				REFINERYCMS.form.addError(el, rule.msg.replace('%value', REFINERYCMS.form.getValue(el)));
-			}
-			return false;
-		}
-	}
-	return true;
-};
-
-
-REFINERYCMS.form.validateForm = function (sender) {
-	var form = sender.form || sender;
-	if (form['REFINERYCMS.form-submittedBy'] && form['REFINERYCMS.form-submittedBy'].getAttribute('formnovalidate') !== null) {
-		return true;
-	}
-	for (var i = 0; i < form.elements.length; i++) {
-		var elem = form.elements[i];
-		if (!(elem.nodeName.toLowerCase() in {input:1, select:1, textarea:1}) || (elem.type in {hidden:1, submit:1, image:1, reset: 1}) || elem.disabled || elem.readonly) {
-			continue;
-		}
-		if (!REFINERYCMS.form.validateControl(elem)) {
-			return false;
-		}
-	}
-	return true;
-};
-
-
-REFINERYCMS.form.addError = function (elem, message) {
-	if (elem.focus) {
-		elem.focus();
-	}
-	if (message) {
-		alert(message);
-	}
-};
-
-
-REFINERYCMS.form.validateRule = function (elem, op, arg) {
-	var val = REFINERYCMS.form.getValue(elem);
-
-	if (elem.getAttribute) {
-		if (val === elem.getAttribute('data-refinerycms-empty-value')) { val = ''; }
-	}
-
-	if (op.charAt(0) === ':') {
-		op = op.substr(1);
-	}
-	op = op.replace('::', '_');
-	return REFINERYCMS.form.validators[op] ? REFINERYCMS.form.validators[op](elem, arg, val) : null;
-};
-
-REFINERYCMS.form.validators = {
-	filled: function(elem, arg, val) {
+	filled: function(arg, val) {
 		return val !== '' && val !== false && val !== null;
 	},
 
-	valid: function(elem, arg, val) {
-		return REFINERYCMS.form.validateControl(elem, null, true);
-	},
-
-	equal: function(elem, arg, val) {
-		if (arg === undefined) {
-			return null;
-		}
-		arg = REFINERYCMS.form.isArray(arg) ? arg : [arg];
-		for (var i = 0, len = arg.length; i < len; i++) {
-			if (val == (arg[i].control ? REFINERYCMS.form.getValue(elem.form.elements[arg[i].control]) : arg[i])) {
-				return true;
-			}
-		}
-		return false;
-	},
-
-	minLength: function(elem, arg, val) {
+	minLength: function(arg, val) {
 		return val.length >= arg;
 	},
 
-	maxLength: function(elem, arg, val) {
+	maxLength: function(arg, val) {
 		return val.length <= arg;
 	},
 
-	length: function(elem, arg, val) {
-		arg = REFINERYCMS.form.isArray(arg) ? arg : [arg, arg];
+	length: function(arg, val) {
+		arg = REFINERYCMS.plugin.Seo.validators.isArray(arg) ? arg : [arg, arg];
 		return (arg[0] === null || val.length >= arg[0]) && (arg[1] === null || val.length <= arg[1]);
 	},
 
-	email: function(elem, arg, val) {
-		return (/^[^@\s]+@[^@\s]+\.[a-z]{2,10}$/i).test(val);
-	},
-
-	url: function(elem, arg, val) {
-		return (/^.+\.[a-z]{2,6}(\/.*)?$/i).test(val);
-	},
-
-	regexp: function(elem, arg, val) {
-		var parts = typeof arg === 'string' ? arg.match(/^\/(.*)\/([imu]*)$/) : false;
-		if (parts) { try {
-			return (new RegExp(parts[1], parts[2].replace('u', ''))).test(val);
-		} catch (e) {} }
-	},
-
-	pattern: function(elem, arg, val) {
-		try {
-			return typeof arg === 'string' ? (new RegExp('^(' + arg + ')$')).test(val) : null;
-		} catch (e) {}
-	},
-
-	integer: function(elem, arg, val) {
-		return (/^-?[0-9]+$/).test(val);
-	},
-
-	'float': function(elem, arg, val) {
-		return (/^-?[0-9]*[.,]?[0-9]+$/).test(val);
-	},
-
-	range: function(elem, arg, val) {
-		return REFINERYCMS.form.isArray(arg) ? ((arg[0] === null || parseFloat(val) >= arg[0]) && (arg[1] === null || parseFloat(val) <= arg[1])) : null;
-	},
-
-	submitted: function(elem, arg, val) {
-		return elem.form['REFINERYCMS.form-submittedBy'] === elem;
+	isArray: function (arg) {
+		return Object.prototype.toString.call(arg) === '[object Array]';
 	}
 };
 
-
-REFINERYCMS.form.toggleForm = function (form) {
-	for (var i = 0; i < form.elements.length; i++) {
-		if (form.elements[i].nodeName.toLowerCase() in {input:1, select:1, textarea:1, button:1}) {
-			REFINERYCMS.form.toggleControl(form.elements[i]);
+REFINERYCMS.plugin.Seo.decorator = {
+	title : 'Seo report',
+	data : [],
+	holder : '',
+	report : '',
+	rendered : false,
+	report_id : 'seo-report',
+	
+	messages : {
+		'meta_tag_keywords' : {
+			'filled' : 'Meta tag keywords must be filled.'
+		},
+		'ok' : 'ok'
+	},
+	
+	getHeader: function () {
+		var header = $('#' + this.report_id).find('.header');
+		if (header.length > 0) {
+			return header;
 		}
-	}
-};
-
-
-REFINERYCMS.form.toggleControl = function (elem, rules, firsttime) {
-	rules = rules || eval('[' + (elem.getAttribute('data-refinerycms-rules') || '') + ']');
-	var has = false, __hasProp = Object.prototype.hasOwnProperty, handler = function () { REFINERYCMS.form.toggleForm(elem.form); };
-
-	for (var id = 0, len = rules.length; id < len; id++) {
-		var rule = rules[id], op = rule.op.match(/(~)?([^?]+)/);
-		rule.neg = op[1];
-		rule.op = op[2];
-		rule.condition = !!rule.rules;
-		if (!rule.condition) { continue; }
-
-		var el = rule.control ? elem.form.elements[rule.control] : elem;
-		var success = REFINERYCMS.form.validateRule(el, rule.op, rule.arg);
-		if (success === null) { continue; }
-		if (rule.neg) { success = !success; }
-
-		if (REFINERYCMS.form.toggleControl(elem, rule.rules, firsttime) || rule.toggle) {
-			has = true;
-			if (firsttime) {
-				if (!el.nodeName) { // radio
-					for (var i = 0; i < el.length; i++) {
-						REFINERYCMS.form.addEvent(el[i], 'click', handler);
-					}
-				} else if (el.nodeName.toLowerCase() === 'select') {
-					REFINERYCMS.form.addEvent(el, 'change', handler);
-				} else {
-					REFINERYCMS.form.addEvent(el, 'click', handler);
+		
+		return $('<div />', {
+			'class' : 'header',
+			'html' : $('<h2 />', {'text' : this.title})
+		});
+	},
+	
+	getWrapper: function () {
+		var wrapper = $('#' + this.report_id);
+		if (wrapper.length > 0) {
+			return wrapper;
+		}
+		
+		return $('<div />', {
+			'id' : this.report_id
+		});
+	},
+	
+	getContent: function () {
+		var content = $('#' + this.report_id).find('.content');
+		if (content.length > 0) {
+			
+			content.html(this.buildContent());
+			return content;
+		}
+		
+		return $('<div />', {
+			'class' : 'content',
+			'html' : this.buildContent()
+		});
+	},
+	
+	getFooter: function () {
+		var footer = $('#' + this.report_id).find('.footer');
+		if (footer.length > 0) {
+			return footer;
+		}
+		
+		var btn = $('<a />', {
+			'text' : 'Run',
+			'class' : 'button'
+		});
+		
+		return $('<div />', {
+			'class' : 'footer',
+			'html' : btn
+		});
+	},
+	
+	buildContent: function () {
+		var that = this,
+			msg = '',
+			tmp_holder = $('<div />');
+		
+		for (elm_key in this.data) {
+			var ul = $('<ul />');
+				error_found = false;
+			for (rule in this.data[elm_key]) {
+//				console.log('r ' + rule + ' k ' + elm_key + ' ' + this.data[elm_key][rule]);
+				if (!this.data[elm_key][rule]) {
+					error_found = true;
+					that.messages[elm_key] = that.messages[elm_key] || {};
+					msg = that.messages[elm_key][rule] || 'State of check rule "' + rule + '" in "' + elm_key + '" is false.';
+					$('<li />', {
+						'class' : 'error',
+						'text' : msg
+					}).appendTo(ul);
 				}
 			}
-			for (var id2 in rule.toggle || []) {
-				if (__hasProp.call(rule.toggle, id2)) { REFINERYCMS.form.toggle(id2, success ? rule.toggle[id2] : !rule.toggle[id2]); }
+			
+			if (!error_found) {
+				$('<li />', {
+					'class' : 'success',
+					'text' : elm_key + ': ' + that.messages['ok']
+				}).appendTo(ul);
+			}
+			
+			tmp_holder.append(ul);
+		}
+		
+		return tmp_holder;
+	},
+	
+	destroy: function () {
+		this.report.find('a').unbind('click');
+		this.report.remove();
+		this.report = '';
+	},
+	
+	render: function (cfg) {
+		cfg = cfg || {};
+		this.data = cfg.data || [];
+				
+		this.holder = cfg.holder || $('#more_options');
+
+		if (this.holder.length > 0) {
+			this.report = this.getWrapper();
+			// when is rendered only rewrite content data
+			
+			if (!this.rendered) {
+				this.report.append(this.getHeader());
+				this.report.append(this.getContent());
+				this.report.append(this.getFooter());
+
+				this.holder.append(this.report);
+				this.rendered = true;
+			} else {
+				this.getContent();
 			}
 		}
 	}
-	return has;
-};
-
-
-REFINERYCMS.form.toggle = function (id, visible) {
-	var elem = document.getElementById(id);
-	if (elem) {
-		elem.style.display = visible ? '' : 'none';
-	}
-};
-
-
-REFINERYCMS.form.initForm = function (form) {
-	form.noValidate = true;
-
-	REFINERYCMS.form.addEvent(form, 'submit', function() {
-		return REFINERYCMS.form.validateForm(form);
-	});
-
-	REFINERYCMS.form.addEvent(form, 'click', function(e) {
-		e = e || event;
-		var target = e.target || e.srcElement;
-		form['REFINERYCMS.form-submittedBy'] = (target.type in {submit:1, image:1}) ? target : null;
-	});
-
-	for (var i = 0; i < form.elements.length; i++) {
-		REFINERYCMS.form.toggleControl(form.elements[i], null, true);
-	}
-
-	if (/MSIE/.exec(navigator.userAgent)) {
-		var labels = {},
-			wheelHandler = function () { return false; },
-			clickHandler = function () { document.getElementById(this.htmlFor).focus(); return false; };
-
-		for (i = 0, elms = form.getElementsByTagName('label'); i < elms.length; i++) {
-			labels[elms[i].htmlFor] = elms[i];
-		}
-
-		for (i = 0, elms = form.getElementsByTagName('select'); i < elms.length; i++) {
-			REFINERYCMS.form.addEvent(elms[i], 'mousewheel', wheelHandler); // prevents accidental change in IE
-			if (labels[elms[i].htmlId]) {
-				REFINERYCMS.form.addEvent(labels[elms[i].htmlId], 'click', clickHandler); // prevents deselect in IE 5 - 6
-			}
-		}
-	}
-};
-
-
-REFINERYCMS.form.isArray = function (arg) {
-	return Object.prototype.toString.call(arg) === '[object Array]';
-};
-
-
-REFINERYCMS.form.addEvent(window, 'load', function () {
-	for (var i = 0; i < document.forms.length; i++) {
-		REFINERYCMS.form.initForm(document.forms[i]);
-	}
-});
+}

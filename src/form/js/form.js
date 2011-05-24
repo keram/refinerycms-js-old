@@ -100,7 +100,6 @@ REFINERYCMS.form.validateControl = function (elem, rules, onlyCheck) {
 	return true;
 };
 
-
 REFINERYCMS.form.validateForm = function (sender) {
 	var form = sender.form || sender;
 	if (form['REFINERYCMS.form-submittedBy'] && form['REFINERYCMS.form-submittedBy'].getAttribute('formnovalidate') !== null) {

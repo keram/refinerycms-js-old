@@ -1,0 +1,12 @@
+# SEO modul
+
+Alfa verzia "seo validatoru a analyzatoru" priamo v administracii refinery.
+
+## TODO
+
+- Dokumentacia
+- Dokoncit testy
+- Lepsi vypis sprav
+- Analyza textu
+- Analyza odkazov
+- Analyza keywords v texte
