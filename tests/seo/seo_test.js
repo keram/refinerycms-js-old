@@ -111,7 +111,7 @@ plusmínus řídili jeho vzpomínkách.',
 				meta_key_input = this.prepareKeywordInput();
 				validate = null;
 			
-			this.seo.set_validation_rules();
+//			this.seo.set_validation_rules();
 			this.seo.set_stop_on_first_error(false);
 			
 			validate = this.seo.validate();
@@ -138,7 +138,7 @@ plusmínus řídili jeho vzpomínkách.',
 				meta_key_input = this.prepareKeywordInput();
 				validate = null;
 			
-			this.seo.set_validation_rules();
+//			this.seo.set_validation_rules();
 			this.seo.set_stop_on_first_error(false);
 			
 			validate = this.seo.validate();
@@ -165,7 +165,7 @@ plusmínus řídili jeho vzpomínkách.',
 				meta_key_input = this.prepareKeywordInput();
 				validate = null;
 			
-			this.seo.set_validation_rules();
+//			this.seo.set_validation_rules();
 			this.seo.set_stop_on_first_error(false);
 			
 			validate = this.seo.validate();
@@ -207,7 +207,7 @@ plusmínus řídili jeho vzpomínkách.',
 			
 			
 			$('#seo-report a.button').bind('click', function () {
-				seo.set_validation_rules(null);
+//				seo.set_validation_rules(null);
 				seo.set_stop_on_first_error(true);
 				seo.render({
 					'holder' : $('#content-for-tests'),
@@ -223,6 +223,4 @@ plusmínus řídili jeho vzpomínkách.',
 	});
 
 	suite.add(refinerycmsSeoTestCase);
-
-
 })();

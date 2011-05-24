@@ -41,7 +41,7 @@ REFINERYCMS.plugin.Seo.prototype = {
 	text_words: [],
 	text_sentences: [],
 	elements: {},
-	
+
 	stop_on_first_error: true,
 
 	validation_rules: {
@@ -58,7 +58,7 @@ REFINERYCMS.plugin.Seo.prototype = {
 		if (this.instance === null) {
 			this.instance = this;
 		}
-		
+
 		return this.instance;
 	},
 
@@ -109,11 +109,11 @@ REFINERYCMS.plugin.Seo.prototype = {
 	set_text: function (t) {
 		this.text = this.sanitize_text(t);
 	},
+//
+//	set_validation_rules: function (rules) {
+//		this.validation_rules = rules || this.validation_rules;
+//	},
 
-	set_validation_rules: function (rules) {
-		this.validation_rules = rules || this.validation_rules;
-	},
-	
 	set_stop_on_first_error: function (stop) {
 		this.stop_on_first_error = stop;
 	},
@@ -161,18 +161,18 @@ REFINERYCMS.plugin.Seo.prototype = {
 	get_text_sentences: function () {
 		return this.text_sentences;
 	},
-	
+
 	getElement: function(elm_key) {
 		if (!this.elements[elm_key]) {
 			this.elements[elm_key] = $('#' + elm_key);
 		}
-		
+
 		return this.elements[elm_key];
 	},
-	
+
 	setElement: function (elm, key, rules) {
 		this.elements[key] = elm;
-		
+
 		if (typeof (rules) !== 'undefined') {
 			this.validation_rules[key] = rules;
 		}
@@ -183,7 +183,7 @@ REFINERYCMS.plugin.Seo.prototype = {
 			validator = REFINERYCMS.plugin.Seo.validators,
 			result = [],
 			elm = null;
-		
+
 		for (elm_key in that.validation_rules) {
 			elm = that.getElement(elm_key);
 			if (elm.length > 0) {
@@ -197,20 +197,19 @@ REFINERYCMS.plugin.Seo.prototype = {
 				}
 			}
 		}
-		
+
 		return result;
 	},
-	
+
 	analyse: function () {
 		var that = this;
 			analyzer = REFINERYCMS.plugin.Seo.analyzer,
 			result = [],
 			elm = null;
-		
-		
+
 		return result;
 	},
-	
+
 	render: function (config) {
 		var decorator = REFINERYCMS.plugin.Seo.decorator;
 
@@ -224,31 +223,31 @@ REFINERYCMS.plugin.Seo.prototype = {
 	 */
 	init: function (config) {
 		config = config || {};
-		
+
 		this.set_keywords(config.keywords || []);
 		this.set_text(config.text || '');
 		this.set_text_words();
-		this.set_validation_rules(config.validation_rules || this.validation_rules);
+//		this.set_validation_rules(config.validation_rules || this.validation_rules);
 		this.set_stop_on_first_error(config.stop_on_first_error || this.stop_on_first_error);
 	}
 };
 
 REFINERYCMS.plugin.Seo.validators = {
-	
+
 	testElm: function (element, rule, args) {
 		var result = false,
 			elm = $(element),
 			fnc = this[camelize(rule)];
-			
+
 		if (typeof (fnc) == 'undefined') {
 			throw Error('Function for Validation rule "' + camelize(rule) + '" not extist');
 			return false;
 		}
-		
+
 		if (typeof (fnc) === 'function') {
 			result = fnc(args, elm.val());
 		}
-		
+
 		return result;
 	},
 
@@ -290,20 +289,20 @@ REFINERYCMS.plugin.Seo.decorator = {
 	report : '',
 	rendered : false,
 	report_id : 'seo-report',
-	
+
 	messages : {
 		'meta_tag_keywords' : {
 			'filled' : 'Meta tag keywords must be filled.'
 		},
 		'ok' : 'ok'
 	},
-	
+
 	getHeader: function () {
 		var header = $('#' + this.report_id).find('.header');
 		if (header.length > 0) {
 			return header;
 		}
-		
+
 		header = $('<div />', {
 			'class' : 'header'
 		});
@@ -311,76 +310,76 @@ REFINERYCMS.plugin.Seo.decorator = {
 		header.append(
 			$('<h2 />', {'text' : this.title})
 		);
-			
+
 		header.append(
 			$('<a />', {
 				'text' : 'Run',
 				'class' : 'button'
 			})
 		);
-			
+
 		return header;
 	},
-	
+
 	getWrapper: function () {
 		var wrapper = $('#' + this.report_id);
 		if (wrapper.length > 0) {
 			return wrapper;
 		}
-		
+
 		return $('<div />', {
 			'id' : this.report_id
 		});
 	},
-	
+
 	getContent: function () {
 		var content = $('#' + this.report_id).find('.content');
 		if (content.length > 0) {
 			content.html(this.buildContent());
 			return content;
 		}
-		
+
 		return $('<div />', {
 			'class' : 'content',
 			'html' : this.buildContent()
 		});
 	},
-	
+
 	getFooter: function () {
 		var footer = $('#' + this.report_id).find('.footer');
 		if (footer.length > 0) {
 			return footer;
 		}
 
-		
+
 		return $('<div />', {
 			'class' : 'footer',
 			'html' : '&nbsp;'
 		});
 	},
-	
-	
+
+
 	buildAnalysisContent: function () {
 		var that = this,
 			ul = '',
 			error_found = false,
 			analysis_holder = $('<div />', {'class' : 'analysis-content'});
-		
+
 		analysis_holder.html('-t- todo analysis result');
-		
+
 		return analysis_holder;
 	},
-	
+
 	buildValidationContent: function () {
 		var that = this,
 			ul = '',
 			error_found = false,
 			validation_holder = $('<div />', {'class' : 'validation-content'});
-		
+
 		for (elm_key in this.validation_data) {
 			ul = $('<ul />');
 			error_found = false;
-			
+
 			for (rule in this.validation_data[elm_key]) {
 	//				console.log('r ' + rule + ' k ' + elm_key + ' ' + this.data[elm_key][rule]);
 				if (!this.validation_data[elm_key][rule]) {
@@ -400,42 +399,42 @@ REFINERYCMS.plugin.Seo.decorator = {
 					'text' : elm_key + ': ' + that.messages['ok']
 				}).appendTo(ul);
 			}
-			
+
 			validation_holder.append(ul);
 		}
-		
+
 		return validation_holder;
 	},
-	
+
 	buildContent: function () {
 		var that = this,
 			msg = '',
 			tmp_holder = $('<div />');
-		
+
 		tmp_holder.append(this.buildValidationContent());
 		tmp_holder.append(this.buildAnalysisContent());
 
 		return tmp_holder;
 	},
-	
+
 	destroy: function () {
 		this.report.find('a').unbind('click');
 		this.report.remove();
 		this.report = '';
 	},
-	
+
 	render: function (cfg) {
 		cfg = cfg || {};
 		var that = this;
-		
+
 		this.validation_data = cfg.validation_data || [];
-				
+
 		this.holder = cfg.holder || $('#more_options');
 
 		if (this.holder.length > 0) {
 			this.report = this.getWrapper();
 			// when is rendered only rewrite content data
-			
+
 			if (!this.rendered) {
 				this.report.append(this.getHeader());
 				this.report.append(this.getContent());
