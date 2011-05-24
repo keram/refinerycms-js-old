@@ -15,12 +15,14 @@ Alfa verzia "seo validatoru a analyzatoru" priamo v administracii refinery.
 
 1. run `bundle exec rake refinery:override view=pages/../admin/pages/_form.html`
 
-2. put into `app/admin/pages/_form.htm.erb` code:
+2. put this code into 
+
+`app/admin/pages/_form.htm.erb`
 
     <% content_for :javascripts do %>
-        <%= javascript_include_tag 'refinerycms' %>
-        <%= javascript_include_tag 'seo' %>
-        <%= javascript_include_tag 'seo-init' %>
+      <%= javascript_include_tag 'refinerycms' %>
+      <%= javascript_include_tag 'seo' %>
+      <%= javascript_include_tag 'seo-init' %>
     <% end %>
     <% content_for :stylesheets, stylesheet_link_tag('seo') %>
 
