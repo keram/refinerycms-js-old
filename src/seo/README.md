@@ -17,11 +17,11 @@ Alfa verzia "seo validatoru a analyzatoru" priamo v administracii refinery.
 
 2. put into `app/admin/pages/_form.htm.erb` code:
 
-	<% content_for :javascripts do %>
-	  <%= javascript_include_tag 'refinerycms' %>
-	  <%= javascript_include_tag 'seo' %>
-	  <%= javascript_include_tag 'seo-init' %>
-	<% end %>
-	<% content_for :stylesheets, stylesheet_link_tag('seo') %>
+    <% content_for :javascripts do %>
+        <%= javascript_include_tag 'refinerycms' %>
+        <%= javascript_include_tag 'seo' %>
+        <%= javascript_include_tag 'seo-init' %>
+    <% end %>
+    <% content_for :stylesheets, stylesheet_link_tag('seo') %>
 
 3. download these files and put to right place 
