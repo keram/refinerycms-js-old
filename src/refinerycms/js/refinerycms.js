@@ -222,3 +222,11 @@ REFINERYCMS = {
 		}
 	}
 };
+
+REFINERYCMS.String = {
+	camelize: function (s) {
+		return s.replace(/[_|-]+(\S)?/g, function(m, chr) {
+			return chr ? chr.toUpperCase() : '';
+		});
+	}
+}
