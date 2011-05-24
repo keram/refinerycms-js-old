@@ -15,9 +15,7 @@ Alfa verzia "seo validatoru a analyzatoru" priamo v administracii refinery.
 
 1. run `bundle exec rake refinery:override view=pages/../admin/pages/_form.html`
 
-2. put this code into 
-
-`app/admin/pages/_form.htm.erb`
+2. put this code into `app/admin/pages/_form.htm.erb`
 
     <% content_for :javascripts do %>
       <%= javascript_include_tag 'refinerycms' %>
