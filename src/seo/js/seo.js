@@ -21,8 +21,8 @@ REFINERYCMS.plugin.Seo = function (config) {
 	this.init(config);
 };
 
-REFINERYCMS.plugin.Seo.analyzer = { };
 REFINERYCMS.plugin.Seo.validators = { };
+REFINERYCMS.plugin.Seo.analyzers = { };
 REFINERYCMS.plugin.Seo.decorator = { };
 
 /**
@@ -39,7 +39,7 @@ REFINERYCMS.plugin.Seo.prototype = {
 	stop_on_first_error: true,
 
 	validation_rules: {
-		meta_tag_keywords : {
+		meta_tag_keywords: {
 			'filled': true,
 			'min_length': 10,
 			'max_length': 100,
@@ -143,8 +143,39 @@ REFINERYCMS.plugin.Seo.prototype = {
 	get_text_sentences: function () {
 		return this.text_sentences;
 	},
+	
+	/**
+	 * @todo decorate result
+	 * @todo ignorovanie diakritiky v texte
+	 */
+	get_highlighted_keywords: function () {
+		var t = this.get_text(),
+			k = this.get_keywords(),
+			rg = null,
+			r = '';
+		
+		k.sort(function (a, b) {
+			if ( a.length < b.length ) {
+				return -1;
+			}
+			if ( a.length > b.length ) {
+				return 1;
+			}
+			
+			return 0;
+		});
+		
+		for (i = k.length; i--;) {
+			rg = new RegExp('(' + k[i] + ')', 'ig');
+			t = t.replace(rg, '<span class="keyword-highlighted">$1</span>');
+		}
+		
+		r = t;
+		
+		return r;
+	},
 
-	getElement: function (elm_key) {
+	get_element: function (elm_key) {
 		if (!this.elements[elm_key]) {
 			this.elements[elm_key] = $('#' + elm_key);
 		}
@@ -152,7 +183,7 @@ REFINERYCMS.plugin.Seo.prototype = {
 		return this.elements[elm_key];
 	},
 
-	setElement: function (elm, key, rules) {
+	set_element: function (elm, key, rules) {
 		this.elements[key] = elm;
 
 		if (typeof (rules) !== 'undefined') {
@@ -169,7 +200,7 @@ REFINERYCMS.plugin.Seo.prototype = {
 			rule = null;
 
 		for (elm_key in that.validation_rules) {
-			elm = that.getElement(elm_key);
+			elm = that.get_element(elm_key);
 			if (elm.length > 0) {
 				result[elm_key] = [];
 				for (rule in that.validation_rules[elm_key]) {
@@ -187,10 +218,12 @@ REFINERYCMS.plugin.Seo.prototype = {
 
 	analyse: function () {
 		var that = this,
-			analyzer = REFINERYCMS.plugin.Seo.analyzer,
-			result = [],
-			elm = null;
-
+			analyzer = REFINERYCMS.plugin.Seo.analyzers,
+			result = [];
+		
+		analyzer.run();
+		result = analyzer.getReport();
+		
 		return result;
 	},
 
@@ -255,7 +288,7 @@ REFINERYCMS.plugin.Seo.validators = {
 	},
 
 	length: function (arg, val) {
-		arg = REFINERYCMS.plugin.Seo.validators.isArray(arg) ? arg : [arg, arg];
+		arg = REFINERYCMS.plugin.Seo.validators.isArray(arg) ? arg: [arg, arg];
 		return (arg[0] === null || val.length >= arg[0]) && (arg[1] === null || val.length <= arg[1]);
 	},
 
@@ -264,15 +297,41 @@ REFINERYCMS.plugin.Seo.validators = {
 	}
 };
 
+
+REFINERYCMS.plugin.Seo.analyzers = {
+	
+	keywordsInTitle: function () {
+		
+	},
+	
+	keywordsInDescription: function () {
+		
+	},
+	
+	keywordsInText: function () {
+		
+	},
+	
+	getReport: function () {
+		var result = [];
+		
+		return result;
+	},
+	
+	run: function () {
+		
+	}
+}
+
 REFINERYCMS.plugin.Seo.decorator = {
-	title : 'Seo report',
-	validation_data : [],
-	analysis_data : [],
-	holder : '',
-	report : '',
-	rendered : false,
-	report_id : 'seo-report',
-	messages : {
+	title: 'Seo report',
+	validation_data: [],
+	analysis_data: [],
+	holder: '',
+	report: '',
+	rendered: false,
+	report_id: 'seo-report',
+	messages: {
 		'meta_tag_keywords': {
 			'filled': 'Meta tag keywords must be filled.'
 		},

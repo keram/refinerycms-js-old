@@ -41,14 +41,14 @@ $(function () {
 
 		var onchange = function () {
 			seo.render({
-				'data': seo.validate()
+				'validation_data': seo.validate()
 			});
 		};
 
 		seo.setElement(elm_keywords, 'meta_tag_keywords', keywords_rules);
 		seo.setElement(elm_browser_title, 'browser_title', title_rules);
 		seo.setElement(elm_description, 'meta_tag_description', description_rules);
-		seo.set_validation_rules(null);
+//		seo.set_validation_rules(null);
 		seo.set_stop_on_first_error(true);
 
 		elm_keywords.bind('change', onchange);

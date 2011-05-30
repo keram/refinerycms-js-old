@@ -46,7 +46,6 @@ REFINERYCMS.page = {
 			new_page_part_cancel = $('#new_page_part_cancel'),
 			delete_page_part = $('#delete_page_part');
 
-
 		new_page_part_editor.editor({
 			title: I18n.t('refinerycms.page.new_page_part_editor_title', 'Create Content Section'),
 			modal: true,

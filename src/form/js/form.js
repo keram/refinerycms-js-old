@@ -73,15 +73,16 @@ REFINERYCMS.form.getValue = function (elem) {
 
 
 REFINERYCMS.form.validateControl = function (elem, rules, onlyCheck) {
-	var rules = rules || eval('[' + (elem.getAttribute('data-refinerycms-rules') || '') + ']');
+	rules = rules || eval('[' + (elem.getAttribute('data-refinerycms-rules') || '') + ']');
+	
 	for (var id = 0, len = rules.length; id < len; id++) {
 		var rule = rules[id], op = rule.op.match(/(~)?([^?]+)/);
-		rule.neg = op[1];
-		rule.op = op[2];
-		rule.condition = !!rule.rules;
-		var el = rule.control ? elem.form.elements[rule.control] : elem;
-
-		var success = REFINERYCMS.form.validateRule(el, rule.op, rule.arg);
+			rule.neg = op[1];
+			rule.op = op[2];
+			rule.condition = !!rule.rules,
+			el = rule.control ? elem.form.elements[rule.control] : elem,
+			success = REFINERYCMS.form.validateRule(el, rule.op, rule.arg);
+			
 		if (success === null) { continue; }
 		if (rule.neg) { success = !success; }
 

@@ -92,7 +92,7 @@ plusmínus řídili jeho vzpomínkách.',
 		},
 
 		testSeoValidatorMetaTagKeywordsFilled : function () {
-			var Assert = YUITest.Assert;	
+			var Assert = YUITest.Assert,
 				meta_key_input = this.prepareKeywordInput();
 				validate = this.seo.validate();
 
@@ -107,7 +107,7 @@ plusmínus řídili jeho vzpomínkách.',
 		},
 
 		testSeoValidatorMetaTagKeywordsMinLength : function () {
-			var Assert = YUITest.Assert;	
+			var Assert = YUITest.Assert,
 				meta_key_input = this.prepareKeywordInput();
 				validate = null;
 			
@@ -161,7 +161,7 @@ plusmínus řídili jeho vzpomínkách.',
 		},
 
 		testSeoValidatorKeywordsCount : function () {
-			var Assert = YUITest.Assert;	
+			var Assert = YUITest.Assert,
 				meta_key_input = this.prepareKeywordInput();
 				validate = null;
 			
@@ -189,13 +189,9 @@ plusmínus řídili jeho vzpomínkách.',
 		},
 		
 		testSeoValidatorRenderer : function () {
-			var Assert = YUITest.Assert;	
+			var Assert = YUITest.Assert,
 				meta_key_input = this.prepareKeywordInput(),
 				seo = this.seo;
-
-			
-			// todo test
-			Assert.isTrue(true);
 			
 			// test filled correct value
 			meta_key_input.val('lorempsiufdsam');
@@ -207,7 +203,6 @@ plusmínus řídili jeho vzpomínkách.',
 			
 			
 			$('#seo-report a.button').bind('click', function () {
-//				seo.set_validation_rules(null);
 				seo.set_stop_on_first_error(true);
 				seo.render({
 					'holder' : $('#content-for-tests'),
@@ -218,7 +213,45 @@ plusmínus řídili jeho vzpomínkách.',
 				return false;
 			});
 			
+			
+			Assert.isTrue(!!$('#seo-report').html().match(/Seo report/));
+			
+			$('#seo-report').remove();
 			meta_key_input.val('');
+		},
+		
+		testEmptyDataAnalyzeReturnObject : function () {
+			var Assert = YUITest.Assert,	
+				meta_key_input = this.prepareKeywordInput(),
+				seo = this.seo,
+				analyse = seo.analyse();
+			
+			Assert.isTrue(typeof (analyse) == 'object');
+			Assert.isTrue(analyse.length === 0);
+		},
+		
+		testSeoValidatorKeywordsHiglighter : function () {
+			var Assert = YUITest.Assert,
+				validation = null,
+				ht = null,
+				seo = this.seo;
+			
+			// test filled correct value
+			seo.set_text('janiccka');
+			
+			ht1 = seo.get_highlighted_keywords();
+			
+			Assert.areEqual('janiccka', ht1);
+			
+			// test filled correct value
+			seo.set_text('Nice relaxed and, to Trilian shrugged and researchers backpack ringing rap on the trilian bulldozer drivers.');
+			
+			ht2 = seo.get_highlighted_keywords();
+			
+			Assert.areEqual('Nice relaxed and, to <span class="keyword-highlighted">Trilian</span> shrugged and researchers backpack ringing rap on the <span class="keyword-highlighted">trilian</span> bulldozer drivers.', ht2);
+			
+			$('#content-for-tests').html(ht2);
+			
 		}
 	});
 

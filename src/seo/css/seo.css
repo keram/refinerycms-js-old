@@ -52,3 +52,8 @@
 #seo-report .content {
 	clear: both;
 }
+
+.keyword-highlighted {
+	color: #FF9831 !important;
+	font-weight: bold;
+}
