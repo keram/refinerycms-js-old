@@ -47,6 +47,7 @@
 #seo-report .button {
 	position: relative;
 	top: 5px;
+	margin-right: 20px;
 }
 
 #seo-report .content {
@@ -56,4 +57,33 @@
 .keyword-highlighted {
 	color: #FF9831 !important;
 	font-weight: bold;
+	font-size: 120%;
+}
+
+#seo-keywords-highlight-popup {
+	display: none;
+	border: solid 1px;
+	margin: 0px;
+	padding: 0px;
+	padding: 20px;
+	width: 900px;
+	position: fixed;
+	z-index: 10;
+	top: 20px;
+	background: #fff;
+}
+
+p .keyword-highlighted {
+/*	font-size: 14px;*/
+}
+
+#seo-keywords-highlight-popup .header {
+	position: relative;
+
+}
+
+#seo-keywords-highlight-popup .close_dialog {
+	position: absolute;
+	top: 0px;
+	right: 0px;
 }

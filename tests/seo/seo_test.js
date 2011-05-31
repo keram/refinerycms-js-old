@@ -133,6 +133,32 @@ plusmínus řídili jeho vzpomínkách.',
 			meta_key_input.val('');
 		},
 
+		testSeoValidatorMetaTagKeywordsWordMinLength : function () {
+			var Assert = YUITest.Assert,
+				meta_key_input = this.prepareKeywordInput();
+				validate = null;
+			
+			this.seo.validation_rules['meta_tag_keywords']['min_word_length'] = 3;
+			this.seo.set_stop_on_first_error(false);
+			
+			validate = this.seo.validate();
+			
+			// test empty value
+			Assert.isFalse(validate['meta_tag_keywords']['min_length']);
+			
+			// test incorect second word
+			meta_key_input.val('lorem, i, dolor');
+			validate = this.seo.validate();
+			Assert.isFalse(validate['meta_tag_keywords']['min_word_length']);		
+
+			// clear
+			meta_key_input.val('');
+			
+			this.seo.validation_rules['meta_tag_keywords']['min_word_length'] = null;
+			delete this.seo.validation_rules['meta_tag_keywords']['min_word_length'];
+			
+		},
+
 		testSeoValidatorMetaTagKeywordsMaxLength : function () {
 			var Assert = YUITest.Assert;	
 				meta_key_input = this.prepareKeywordInput();
@@ -244,11 +270,11 @@ plusmínus řídili jeho vzpomínkách.',
 			Assert.areEqual('janiccka', ht1);
 			
 			// test filled correct value
-			seo.set_text('Nice relaxed and, to Trilian shrugged and researchers backpack ringing rap on the trilian bulldozer drivers.');
+			seo.set_text('Nice anglie relaxed and, to Trilian shrugged and researchers backpack ringing rap on the trilian bulldozer drivers.');
 			
 			ht2 = seo.get_highlighted_keywords();
 			
-			Assert.areEqual('Nice relaxed and, to <span class="keyword-highlighted">Trilian</span> shrugged and researchers backpack ringing rap on the <span class="keyword-highlighted">trilian</span> bulldozer drivers.', ht2);
+			Assert.areEqual('Nice <span class="keyword-highlighted">anglie</span> relaxed and, to <span class="keyword-highlighted">Trilian</span> shrugged and researchers backpack ringing rap on the <span class="keyword-highlighted">trilian</span> bulldozer drivers.', ht2);
 			
 			$('#content-for-tests').html(ht2);
 			

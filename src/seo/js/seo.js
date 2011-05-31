@@ -42,6 +42,7 @@ REFINERYCMS.plugin.Seo.prototype = {
 		meta_tag_keywords: {
 			'filled': true,
 			'min_length': 10,
+//			'min_word_length': 3,
 			'max_length': 100,
 			'min_words_count': 1,
 			'max_words_count': 5
@@ -148,9 +149,9 @@ REFINERYCMS.plugin.Seo.prototype = {
 	 * @todo decorate result
 	 * @todo ignorovanie diakritiky v texte
 	 */
-	get_highlighted_keywords: function () {
-		var t = this.get_text(),
-			k = this.get_keywords(),
+	get_highlighted_keywords: function (text, keywords) {
+		var t = text || this.get_text(),
+			k = keywords || this.get_keywords(),
 			rg = null,
 			r = '';
 		
@@ -226,6 +227,42 @@ REFINERYCMS.plugin.Seo.prototype = {
 		
 		return result;
 	},
+	
+	/**
+	 * @todo
+	 */
+	highlight: function () {
+		var hcfg = {},
+			texts = [],
+			hd = REFINERYCMS.plugin.Seo.higlightDecorator;
+		
+		// required
+		title_text = {'label' : 'Title', 'body' : this.get_highlighted_keywords($('#page_title').val()) };
+		page_body = {'label' : 'Page body', 'body' : this.get_highlighted_keywords($('#page_parts_attributes_0_body').val()) };
+		
+		texts = [title_text, page_body];
+
+		// optional
+		if ($('#page_parts_attributes_1_body').length > 0  &&  $('#page_parts_attributes_1_body').val() !== '') {
+			page_sidebar = {'label' : 'Page sidebar', 'body' : this.get_highlighted_keywords($('#page_parts_attributes_1_body').val()) };
+			texts.push(page_sidebar);
+		}
+		
+		if ($('#page_browser_title').length > 0 && $('#page_browser_title').val() !== '') {
+			browser_title_text = {'label' : 'Browser title', 'body' : this.get_highlighted_keywords($('#page_browser_title').val()) };
+			texts.push(browser_title_text);
+		}
+		
+		if ($('#page_meta_description').length > 0 && $('#page_meta_description').val() !== '') {
+			meta_desc_text = {'label' : 'Meta description', 'body' : this.get_highlighted_keywords($('#page_meta_description').val()) };
+			texts.push(meta_desc_text);
+		}
+		
+		hcfg.texts = texts;
+		hcfg.holder = $('#page_container');
+		
+		return hd.render(hcfg);
+	},
 
 	render: function (config) {
 		var decorator = REFINERYCMS.plugin.Seo.decorator;
@@ -281,6 +318,21 @@ REFINERYCMS.plugin.Seo.validators = {
 
 	minLength: function (arg, val) {
 		return val.length >= arg;
+	},
+
+	minWordLength: function (arg, val, separator) {
+		var s = separator || ', ';
+		var arr = val.split(s);
+		
+		if (arr.length > 0) {
+			for (var i = arr.length; i--;) {
+				if (arr[i].length <= arg) {
+					return false;
+				}
+			}
+		}
+		
+		return true;
 	},
 
 	maxLength: function (arg, val) {
@@ -354,7 +406,16 @@ REFINERYCMS.plugin.Seo.decorator = {
 
 		header.append(
 			$('<a />', {
-				'text': 'Run',
+				'id': 'run-seo-validator',
+				'text': 'Validate',
+				'class': 'button'
+			})
+		);
+
+		header.append(
+			$('<a />', {
+				'id': 'run-seo-highlighter',
+				'text': 'Highlight keywords',
 				'class': 'button'
 			})
 		);
@@ -406,7 +467,7 @@ REFINERYCMS.plugin.Seo.decorator = {
 			error_found = false,
 			analysis_holder = $('<div />', {'class': 'analysis-content'});
 
-		analysis_holder.html('-t- todo analysis result');
+//		analysis_holder.html('-t- todo analysis result');
 
 		return analysis_holder;
 	},
@@ -495,6 +556,151 @@ REFINERYCMS.plugin.Seo.decorator = {
 				} else {
 					this.getContent();
 				}
+			}
+		}
+	}
+};
+
+REFINERYCMS.plugin.Seo.higlightDecorator = {
+	title: 'Highlighted keywords on page',
+	texts: [],
+	holder: '',
+	report: '',
+	rendered: false,
+	report_id: 'seo-keywords-highlight-popup',
+	messages: {
+		'meta_tag_keywords': {
+			'filled': 'Meta tag keywords must be filled.'
+		},
+		'ok': 'ok'
+	},
+
+	getHeader: function () {
+		var that = this,
+			header = $('#' + this.report_id).find('.header');
+		if (header.length > 0) {
+			return header;
+		}
+
+		header = $('<div />', {
+			'class': 'header'
+		});
+
+		header.append(
+			$('<h2 />', {'text': this.title})
+		);
+		
+		var close_button = $('<a />', {
+			'text' : 'Close popup',
+			'class' : 'button close_dialog',
+			'href' : '#test'
+		});
+		
+		close_button.bind('click', function () {
+			that.report.hide();
+		});
+		
+		header.append(
+			close_button
+		);
+			
+		return header;
+	},
+
+	getWrapper: function () {
+		var wrapper = $('#' + this.report_id);
+		if (wrapper.length > 0) {
+			return wrapper;
+		}
+		
+		return $('<div />', {
+			'id': this.report_id
+		});
+	},
+
+	getContent: function () {
+		var content = $('#' + this.report_id).find('.content');
+		if (content.length > 0) {
+			content.html(this.buildContent());
+			return content;
+		}
+		
+		return $('<div />', {
+			'class': 'content',
+			'html': this.buildContent()
+		});
+	},
+
+	getFooter: function () {
+		return $('<div />', {
+			'class': 'footer',
+			'html': '&nbsp;'
+		});
+	},
+
+	buildHighlightContent: function () {
+		var that = this,
+			block,
+			higlight_holder = $('<div />', {'class': 'higlight-content'});
+		
+		$.each(this.texts, function () {	
+			block = $('<div />', {
+				'html' : $('<h3 />', {'html': this.label})
+			});
+			
+			block.append($('<div />', {'html' : this.body}));
+
+			higlight_holder.append(block);
+		});
+
+		return higlight_holder;
+	},
+
+	buildContent: function () {
+		var that = this,
+			msg = '',
+			tmp_holder = $('<div />');
+
+		tmp_holder.append(this.buildHighlightContent());
+
+		return tmp_holder;
+	},
+
+	destroy: function () {
+		this.report.find('a').unbind('click');
+		this.report.remove();
+		this.report = '';
+	},
+
+	render: function (cfg) {
+		cfg = cfg || {};
+		var that = this;
+
+		this.texts = cfg.texts || [];
+
+		this.holder = cfg.holder || $('body');
+
+		if (this.holder.length > 0) {
+			this.report = this.getWrapper();
+			// when is rendered only rewrite content data
+
+			if (!this.rendered) {
+				this.report.append(this.getHeader());
+				this.report.append(this.getContent());
+				this.holder.prepend(this.report);
+				this.report.show();
+				this.rendered = true;
+			} else {
+				if (cfg.fade) {
+					this.report.fadeOut('normal', function () {
+						that.getContent();
+						that.report.fadeIn();
+					});
+				} else {
+					this.getContent();
+				}
+				
+				this.report.show();
 			}
 		}
 	}
