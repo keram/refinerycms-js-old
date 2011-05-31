@@ -166,10 +166,19 @@ REFINERYCMS.plugin.Seo.prototype = {
 			return 0;
 		});
 		
+//		for (i = k.length; i--;) {
+//			rg = new RegExp('(' + k[i] + ')', 'ig');
+//			t = t.replace(rg, '<span class="keyword-highlighted">$1</span>');
+//		}
+//				
 		for (i = k.length; i--;) {
 			rg = new RegExp('(' + k[i] + ')', 'ig');
-			t = t.replace(rg, '<span class="keyword-highlighted">$1</span>');
+			t = t.replace(rg, '%%HIGHLIGHT%%$1%%\/HIGHLIGHT%%');
 		}
+		
+//		t = t.replace('%%highlight%%', '<span class="higlight-keyword">');
+		t = t.replace(/%%HIGHLIGHT%%/g, '<span class="keyword-highlighted">');
+		t = t.replace(/%%\/HIGHLIGHT%%/g, '</span>');
 		
 		r = t;
 		
