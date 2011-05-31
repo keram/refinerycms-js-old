@@ -74,7 +74,6 @@ $(function () {
 			var kw = '',
 				v = seo.validate();
 			
-			
 			// wymeditor smells
 			$.each(WYMeditor.INSTANCES, function(index, wym) {
 			  wym.update();

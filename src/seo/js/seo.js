@@ -26,9 +26,36 @@ REFINERYCMS.plugin.Seo.analyzers = { };
 REFINERYCMS.plugin.Seo.decorator = { };
 
 /**
+ * @todo build translations
+ */
+REFINERYCMS.namespace('I18n.translations.cs.refinerycms.plugin.seo');
+I18n.translations.cs.refinerycms.plugin.seo = {
+	'seo_report' : 'SEO report',
+	'run_validator' : 'Bez Forest!',
+	'run_highlighter' : 'Zapni stromcek',
+	'close_popup' : 'Zavri okno',
+	'highlighted_keywords_on_page' : 'Zvyraznene klickove slova na stranke',
+	'part' : {
+		'title' : 'Nazev',
+		'page_body' : 'Body'
+	},
+	'validators' : {
+		'filled' : 'element musi byt vyplneny',
+		'min_words_count' : 'minimalny pocet slov',
+		'function_not_exists' : 'Valida\u010dní funkce {{fnc}} nenalezena.',
+		'state_rule_false' : 'Pravidlo {{rule}} hlasi chybu v elemente {{elm}}.',
+		'state_ok' : 'sicko v porátku',
+		'meta_tag_keywords' : 'meta tag klicove slova',
+		'meta_tag_description' : 'meta tag description',
+		'browser_title' : 'titulok prehliadaca'
+	}
+};
+
+/**
  * Class for handling everything between page and snippets
  */
 REFINERYCMS.plugin.Seo.prototype = {
+	title: 'seo_report',
 	instance: null,
 	keywords: [],
 	text: '',
@@ -246,8 +273,8 @@ REFINERYCMS.plugin.Seo.prototype = {
 			hd = REFINERYCMS.plugin.Seo.higlightDecorator;
 		
 		// required
-		title_text = {'label' : 'Title', 'body' : this.get_highlighted_keywords($('#page_title').val()) };
-		page_body = {'label' : 'Page body', 'body' : this.get_highlighted_keywords($('#page_parts_attributes_0_body').val()) };
+		title_text = {'label' : I18n.t('refinerycms.plugin.seo.part.title', {defaultValue : 'Title'}), 'body' : this.get_highlighted_keywords($('#page_title').val()) };
+		page_body = {'label' : I18n.t('refinerycms.plugin.seo.part.page_body', {defaultValue : 'Page body'}), 'body' : this.get_highlighted_keywords($('#page_parts_attributes_0_body').val()) };
 		
 		texts = [title_text, page_body];
 
@@ -289,8 +316,7 @@ REFINERYCMS.plugin.Seo.prototype = {
 
 		this.set_keywords(config.keywords || []);
 		this.set_text(config.text || '');
-		this.set_text_words();
-//		this.set_validation_rules(config.validation_rules || this.validation_rules);
+		this.set_text_words();2
 		this.set_stop_on_first_error(config.stop_on_first_error || this.stop_on_first_error);
 	}
 };
@@ -303,7 +329,10 @@ REFINERYCMS.plugin.Seo.validators = {
 			fnc = this[REFINERYCMS.String.camelize(rule)];
 
 		if (typeof (fnc) === 'undefined') {
-			throw new Error('Function for Validation rule "' + REFINERYCMS.String.camelize(rule) + '" not extist');
+			throw new Error(I18n.t('refinerycms.plugin.seo.validators.function_not_exists', {
+				defaultValue: "Function for Validation rule {{fnc}} not exists.", 
+				fnc: REFINERYCMS.String.camelize(rule)
+			}));
 		}
 
 		if (typeof (fnc) === 'function') {
@@ -385,19 +414,12 @@ REFINERYCMS.plugin.Seo.analyzers = {
 }
 
 REFINERYCMS.plugin.Seo.decorator = {
-	title: 'Seo report',
 	validation_data: [],
 	analysis_data: [],
 	holder: '',
 	report: '',
 	rendered: false,
 	report_id: 'seo-report',
-	messages: {
-		'meta_tag_keywords': {
-			'filled': 'Meta tag keywords must be filled.'
-		},
-		'ok': 'ok'
-	},
 
 	getHeader: function () {
 		var header = $('#' + this.report_id).find('.header');
@@ -410,13 +432,13 @@ REFINERYCMS.plugin.Seo.decorator = {
 		});
 
 		header.append(
-			$('<h2 />', {'text': this.title})
+			$('<h2 />', {'text': I18n.t('refinerycms.plugin.seo.seo_report', {defaultValue : 'Seo report'})})
 		);
 
 		header.append(
 			$('<a />', {
 				'id': 'run-seo-validator',
-				'text': 'Validate',
+				'text': I18n.t('refinerycms.plugin.seo.run_validator', {defaultValue : 'Validate'}),
 				'class': 'button'
 			})
 		);
@@ -424,7 +446,7 @@ REFINERYCMS.plugin.Seo.decorator = {
 		header.append(
 			$('<a />', {
 				'id': 'run-seo-highlighter',
-				'text': 'Highlight keywords',
+				'text': I18n.t('refinerycms.plugin.seo.run_highlighter', {defaultValue : 'Highlight keywords'}),
 				'class': 'button'
 			})
 		);
@@ -476,8 +498,6 @@ REFINERYCMS.plugin.Seo.decorator = {
 			error_found = false,
 			analysis_holder = $('<div />', {'class': 'analysis-content'});
 
-//		analysis_holder.html('-t- todo analysis result');
-
 		return analysis_holder;
 	},
 
@@ -487,7 +507,6 @@ REFINERYCMS.plugin.Seo.decorator = {
 			error_found = false,
 			elm_key = null,
 			rule = null,
-			msg = null,
 			validation_holder = $('<div />', {'class': 'validation-content'});
 
 		for (elm_key in this.validation_data) {
@@ -498,11 +517,14 @@ REFINERYCMS.plugin.Seo.decorator = {
 	//				console.log('r ' + rule + ' k ' + elm_key + ' ' + this.data[elm_key][rule]);
 				if (!this.validation_data[elm_key][rule]) {
 					error_found = true;
-					that.messages[elm_key] = that.messages[elm_key] || {};
-					msg = that.messages[elm_key][rule] || 'State of check rule "' + rule + '" in "' + elm_key + '" is false.';
+					
 					$('<li />', {
 						'class': 'error',
-						'text': msg
+						'text': I18n.t('refinerycms.plugin.seo.validators.state_rule_false', {
+							defaultValue: "State of check rule {{rule}} in  {{elm}} is false.", 
+							rule: I18n.t('refinerycms.plugin.seo.validators.' + rule, {defaultValue : rule }), 
+							elm:  I18n.t('refinerycms.plugin.seo.validators.' + elm_key, {defaultValue : elm_key})
+						})
 					}).appendTo(ul);
 				}
 			}
@@ -510,7 +532,7 @@ REFINERYCMS.plugin.Seo.decorator = {
 			if (!error_found) {
 				$('<li />', {
 					'class': 'success',
-					'text': elm_key + ': ' + that.messages.ok
+					'text': I18n.t('refinerycms.plugin.seo.validators.' + elm_key) + ': ' + I18n.t('refinerycms.plugin.seo.validators.state_ok','ok')
 				}).appendTo(ul);
 			}
 
@@ -521,9 +543,7 @@ REFINERYCMS.plugin.Seo.decorator = {
 	},
 
 	buildContent: function () {
-		var that = this,
-			msg = '',
-			tmp_holder = $('<div />');
+		var tmp_holder = $('<div />');
 
 		tmp_holder.append(this.buildValidationContent());
 		tmp_holder.append(this.buildAnalysisContent());
@@ -571,18 +591,11 @@ REFINERYCMS.plugin.Seo.decorator = {
 };
 
 REFINERYCMS.plugin.Seo.higlightDecorator = {
-	title: 'Highlighted keywords on page',
 	texts: [],
 	holder: '',
 	report: '',
 	rendered: false,
 	report_id: 'seo-keywords-highlight-popup',
-	messages: {
-		'meta_tag_keywords': {
-			'filled': 'Meta tag keywords must be filled.'
-		},
-		'ok': 'ok'
-	},
 
 	getHeader: function () {
 		var that = this,
@@ -596,11 +609,11 @@ REFINERYCMS.plugin.Seo.higlightDecorator = {
 		});
 
 		header.append(
-			$('<h2 />', {'text': this.title})
+			$('<h2 />', {'text': I18n.t('refinerycms.plugin.seo.highlighted_keywords_on_page', {defaultValue : 'Highlighted keywords on page'})})
 		);
 		
 		var close_button = $('<a />', {
-			'text' : 'Close popup',
+			'text' : I18n.t('refinerycms.plugin.seo.close_popup', {defaultValue : 'Close popup'}),
 			'class' : 'button close_dialog',
 			'href' : '#test'
 		});
@@ -666,9 +679,7 @@ REFINERYCMS.plugin.Seo.higlightDecorator = {
 	},
 
 	buildContent: function () {
-		var that = this,
-			msg = '',
-			tmp_holder = $('<div />');
+		var tmp_holder = $('<div />');
 
 		tmp_holder.append(this.buildHighlightContent());
 
@@ -714,3 +725,4 @@ REFINERYCMS.plugin.Seo.higlightDecorator = {
 		}
 	}
 };
+

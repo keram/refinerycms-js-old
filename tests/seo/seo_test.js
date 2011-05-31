@@ -245,8 +245,9 @@ plusmínus řídili jeho vzpomínkách.',
 				return false;
 			});
 			
+			console.log($('#seo-report').html());
 			
-			Assert.isTrue(!!$('#seo-report').html().match(/Seo report/));
+			Assert.isTrue(!!$('#seo-report').html().match(/validation-content/));
 			
 			$('#seo-report').remove();
 			meta_key_input.val('');
