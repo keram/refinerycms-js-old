@@ -139,15 +139,21 @@ plusmínus řídili jeho vzpomínkách.',
 				validate = null;
 			
 			this.seo.validation_rules['meta_tag_keywords']['min_word_length'] = 3;
+			
 			this.seo.set_stop_on_first_error(false);
-			
-			validate = this.seo.validate();
-			
-			// test empty value
-			Assert.isFalse(validate['meta_tag_keywords']['min_length']);
-			
+		
 			// test incorect second word
 			meta_key_input.val('lorem, i, dolor');
+			validate = this.seo.validate();
+			Assert.isFalse(validate['meta_tag_keywords']['min_word_length']);		
+			
+			// test corect
+			meta_key_input.val('lorem, michal, dolor');
+			validate = this.seo.validate();
+			Assert.isTrue(validate['meta_tag_keywords']['min_word_length']);		
+			
+			// test changed criteria thus should by false
+			this.seo.validation_rules['meta_tag_keywords']['min_word_length'] = 7;
 			validate = this.seo.validate();
 			Assert.isFalse(validate['meta_tag_keywords']['min_word_length']);		
 
