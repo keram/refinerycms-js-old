@@ -31,23 +31,23 @@ REFINERYCMS.plugin.Seo.decorator = { };
 REFINERYCMS.namespace('I18n.translations.cs.refinerycms.plugin.seo');
 I18n.translations.cs.refinerycms.plugin.seo = {
 	'seo_report' : 'SEO report',
-	'run_validator' : 'Bez Forest!',
-	'run_highlighter' : 'Zapni stromcek',
-	'close_popup' : 'Zavri okno',
-	'highlighted_keywords_on_page' : 'Zvyraznene klickove slova na stranke',
+	'run_validator' : 'Spustit validátor!',
+	'run_highlighter' : 'Zapnout zvýraznění',
+	'close_popup' : 'Zavřít okno',
+	'highlighted_keywords_on_page' : 'Zvýrazněné klíčové slova na stránce',
 	'part' : {
-		'title' : 'Nazev',
-		'page_body' : 'Body'
+		'title' : 'Název',
+		'page_body' : 'Tělo'
 	},
 	'validators' : {
-		'filled' : 'element musi byt vyplneny',
-		'min_words_count' : 'minimalny pocet slov',
-		'function_not_exists' : 'Valida\u010dní funkce {{fnc}} nenalezena.',
-		'state_rule_false' : 'Pravidlo {{rule}} hlasi chybu v elemente {{elm}}.',
-		'state_ok' : 'sicko v porátku',
-		'meta_tag_keywords' : 'meta tag klicove slova',
+		'filled' : 'políčko musí být vyplněné',
+		'min_words_count' : 'minimální počet slov',
+		'function_not_exists' : 'Validační funkce {{fnc}} nenalezena.',
+		'state_rule_false' : 'Pravidlo {{rule}} hlasí chybu v políčku {{elm}}.',
+		'state_ok' : 'Všechno v pořádku',
+		'meta_tag_keywords' : 'meta tag klíčové slova',
 		'meta_tag_description' : 'meta tag description',
-		'browser_title' : 'titulok prehliadaca'
+		'browser_title' : 'Titulek prohlížeče'
 	}
 };
 
