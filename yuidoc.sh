@@ -25,7 +25,7 @@ version=1.0.0
 
 # The version of YUI the project is using.  This effects the output for
 # YUI configuration attributes.  This should start with '2' or '3'.
-yuiversion=2
+yuiversion=3
 
 ##############################################################################
 # clear env
