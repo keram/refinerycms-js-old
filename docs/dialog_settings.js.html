@@ -2,7 +2,7 @@
 <html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-	<title>API: refinerycms   (YUI Library)</title>
+	<title>API: refinerycms   dialog_settings.js  (YUI Library)</title>
 
 	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css" />
 	<link rel="stylesheet" type="text/css" href="assets/api.css" />
@@ -20,7 +20,7 @@
         <a href="./index.html" title="RefineryCMS js library">RefineryCMS js library</a> 
             &gt; <a href="./module_refinerycms.html" title="refinerycms">refinerycms</a>
                 
-                
+                 &gt; dialog_settings.js (source view) 
         <form onsubmit="return false">
             <div id="propertysearch">
                 Search: <input autocomplete="off" id="searchinput" />
@@ -43,44 +43,68 @@
                 </fieldset>
             </form>
 
-                   
-                    <h3>Module: refinerycms
-                    
+                    <div id="srcout">
+                        <style>
+                            #doc3 .classopts { display:none; }
+                        </style>
+                        <div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * Dialog object handling with default functionality</span>
+<span class="cm"> *</span>
+<span class="cm"> * @author     keraM marek@keram.name http//keram.name</span>
+<span class="cm"> * @copyright  Copyright (C) 2011</span>
+<span class="cm"> * @version    0.1</span>
+<span class="cm"> * @class      SettingsDialog</span>
+<span class="cm"> * @license    MIT</span>
+<span class="cm"> */</span>
 
+<span class="cm">/*global REFINERYCMS, window, $, parent, console */</span>
 
-                    </h3>
-                    <div class="description summary">
-                        The REFINERYCMS global namespace object.
+<span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">namespace</span><span class="p">(</span><span class="s1">&#39;REFINERYCMS.dialog&#39;</span><span class="p">);</span>
+
+<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">dialog</span><span class="p">.</span><span class="nx">SettingsDialog</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s1">&#39;SettingsDialog&#39;</span><span class="p">;</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">version</span> <span class="o">=</span> <span class="s1">&#39;0.1&#39;</span><span class="p">;</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">callback</span> <span class="o">=</span> <span class="nx">callback</span> <span class="o">||</span> <span class="kc">null</span><span class="p">;</span>
+
+	<span class="k">this</span><span class="p">.</span><span class="nx">init</span><span class="p">();</span>
+<span class="p">};</span>
+
+<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">dialog</span><span class="p">.</span><span class="nx">SettingsDialog</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="c1">// @todo i18n</span>
+	<span class="nx">validation_rules</span><span class="o">:</span> <span class="p">{</span>
+		<span class="s1">&#39;refinery_setting_name&#39;</span><span class="o">:</span> <span class="p">[</span>
+			<span class="p">{</span>
+				<span class="s1">&#39;op&#39;</span><span class="o">:</span> <span class="s1">&#39;:filled&#39;</span><span class="p">,</span>
+				<span class="s1">&#39;msg&#39;</span><span class="o">:</span> <span class="s1">&#39;Email must be filled&#39;</span>
+			<span class="p">}</span>
+		<span class="p">],</span>
+		<span class="s1">&#39;refinery_setting_value&#39;</span><span class="o">:</span> <span class="p">[</span>	<span class="p">]</span>
+	<span class="p">},</span>
+
+	<span class="nx">init</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="k">try</span> <span class="p">{</span>
+			<span class="k">this</span><span class="p">.</span><span class="nx">submit_button</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#submit_button&#39;</span><span class="p">);</span>
+			<span class="k">this</span><span class="p">.</span><span class="nx">init_submit_loader</span><span class="p">();</span>
+			<span class="k">this</span><span class="p">.</span><span class="nx">page_tab</span><span class="p">();</span>
+			<span class="k">this</span><span class="p">.</span><span class="nx">web_tab</span><span class="p">();</span>
+			<span class="k">this</span><span class="p">.</span><span class="nx">email_tab</span><span class="p">();</span>
+			<span class="k">this</span><span class="p">.</span><span class="nx">resource_tab</span><span class="p">();</span>
+			<span class="k">this</span><span class="p">.</span><span class="nx">init_tabs</span><span class="p">();</span>
+			<span class="k">this</span><span class="p">.</span><span class="nx">init_submit_button</span><span class="p">();</span>
+			<span class="k">this</span><span class="p">.</span><span class="nx">initialised</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+			<span class="c1">// @todo</span>
+			<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">extendObject</span><span class="p">(</span><span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">dialog</span><span class="p">.</span><span class="nx">LinkDialog</span><span class="p">,</span> <span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">Dialog</span><span class="p">);</span>
+</pre></div>
+
                     </div>
-
-
-
-                <div class="yui-gc">
-                    <div class="yui-u first">
-
-                            <p>This module contains the following classes:</p>
-                            <script>
-                            //var YUI_CLASS_LIST = [{"extends": {"superclass": {}, "events": {}, "configs": {}, "properties": {}, "methods": {}}, "description": "Dialog object handling with default functionality", "guessedname": "Dialog", "name": "Dialog"}, {"extends": {"superclass": {}, "events": {}, "configs": {}, "properties": {}, "methods": {}}, "description": "vseobecne rezhranie pre editor\n(moze to byt wymeditor alebo hocijaky, dolezite aby implementoval tieto metody)\npotom, default: wymeditor", "guessedname": "Editor", "name": "Editor"}, {"extends": {"superclass": {}, "events": {}, "configs": {}, "properties": {}, "methods": {}}, "description": "The REFINERYCMS form object for client side validating forms in REFINERYCMS.\nBased on REFINERYCMS.formForms https://github.com/REFINERYCMS.form/REFINERYCMS.form/raw/master/client-side/forms/REFINERYCMS.formForms.js", "guessedname": "form", "name": "form"}, {"extends": {"superclass": {}, "events": {}, "configs": {}, "properties": {}, "methods": {}}, "description": "Dialog object handling with editor images", "guessedname": "ImageDialog", "name": "ImageDialog"}, {"extends": {"superclass": {}, "events": {}, "configs": {}, "properties": {}, "methods": {}}, "description": "Dialog object handling with default functionality", "guessedname": "LinkDialog", "name": "LinkDialog"}, {"extends": {"superclass": {}, "events": {}, "configs": {}, "properties": {}, "methods": {}}, "description": "", "guessedname": "page", "name": "page"}, {"extends": {"superclass": {}, "events": {}, "configs": {}, "properties": {}, "methods": {}}, "description": "The REFINERYCMS global namespace object.", "guessedname": "REFINERYCMS", "name": "REFINERYCMS"}, {"extends": {"superclass": {}, "events": {}, "configs": {}, "properties": {}, "methods": {}}, "description": "Class for handling everything between page and snippets", "guessedname": "Seo", "name": "Seo"}, {"extends": {"superclass": {}, "events": {}, "configs": {}, "properties": {}, "methods": {}}, "description": "Dialog object handling with default functionality", "guessedname": "SettingsDialog", "name": "SettingsDialog"}];
-                            </script>
-                            <div id="splash_classList">
-                                <ul>
-                                    <li><a href="Dialog.html" title="Dialog" id="class_0">Dialog</a></li>
-                                    <li><a href="Editor.html" title="Editor" id="class_1">Editor</a></li>
-                                    <li><a href="form.html" title="form" id="class_2">form</a></li>
-                                    <li><a href="ImageDialog.html" title="ImageDialog" id="class_3">ImageDialog</a></li>
-                                    <li><a href="LinkDialog.html" title="LinkDialog" id="class_4">LinkDialog</a></li>
-                                    <li><a href="page.html" title="page" id="class_5">page</a></li>
-                                    <li><a href="REFINERYCMS.html" title="REFINERYCMS" id="class_6">REFINERYCMS</a></li>
-                                    <li><a href="Seo.html" title="Seo" id="class_7">Seo</a></li>
-                                    <li><a href="SettingsDialog.html" title="SettingsDialog" id="class_8">SettingsDialog</a></li>
-                                </ul>
-                            </div>
-                    </div>
-                    <div class="yui-u">
-
-                        </div>
-                </div>
-
 			</div>
 		</div>
 		<div class="yui-b">
@@ -114,7 +138,7 @@
                                 <li class=""><a href="dialog.js.html" title="dialog.js">dialog.js</a></li>
                                 <li class=""><a href="dialog_image.js.html" title="dialog_image.js">dialog_image.js</a></li>
                                 <li class=""><a href="dialog_link.js.html" title="dialog_link.js">dialog_link.js</a></li>
-                                <li class=""><a href="dialog_settings.js.html" title="dialog_settings.js">dialog_settings.js</a></li>
+                                <li class="selected"><a href="dialog_settings.js.html" title="dialog_settings.js">dialog_settings.js</a></li>
                                 <li class=""><a href="editor.js.html" title="editor.js">editor.js</a></li>
                                 <li class=""><a href="form.js.html" title="form.js">form.js</a></li>
                                 <li class=""><a href="menu.js.html" title="menu.js">menu.js</a></li>

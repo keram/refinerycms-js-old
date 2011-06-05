@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>API: refinerycms   refinerycms.js  (YUI Library)</title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1303886239.15" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1303886239.15" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1303886239.15"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1303886239.15"></script>
+    <script type="text/javascript" src="assets/api-js"></script>
+    <script type="text/javascript" src="assets/ac-js"></script>
 </head>
 
 <body id="yahoo-com">
@@ -47,9 +47,9 @@
                         <style>
                             #doc3 .classopts { display:none; }
                         </style>
-<div class="highlight"><pre><span class="cm">/**</span>
+                        <div class="highlight"><pre><span class="cm">/**</span>
 <span class="cm"> * The REFINERYCMS object is the single global object used by RefineryCMS.</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * @version    $Id$</span>
 <span class="cm"> * @package    refinerycms-js</span>
 <span class="cm"> * @copyright  Copyright (C) 2011</span>
@@ -57,14 +57,16 @@
 <span class="cm"> * @license    MIT</span>
 <span class="cm"> */</span>
 
+<span class="cm">/*global window, $ */</span>
+
 <span class="cm">/**</span>
 <span class="cm"> * The REFINERYCMS global namespace object.</span>
-<span class="cm"> * </span>
+<span class="cm"> *</span>
 <span class="cm"> * @title      REFINERYCMS Global object</span>
 <span class="cm"> * @class      REFINERYCMS</span>
 <span class="cm"> * @module     refinerycms</span>
 <span class="cm"> * @required   jquery-1.5.2</span>
-<span class="cm"> * @namespace  </span>
+<span class="cm"> * @namespace</span>
 <span class="cm"> * @static</span>
 <span class="cm"> */</span>
 <span class="kd">var</span> <span class="nx">REFINERYCMS</span> <span class="o">=</span> <span class="nx">REFINERYCMS</span> <span class="o">||</span> <span class="p">{};</span>
@@ -82,11 +84,11 @@
 <span class="cm">	 */</span>
 	<span class="nx">namespace</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
 		<span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">arguments</span><span class="p">,</span> <span class="nx">o</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">j</span><span class="p">,</span> <span class="nx">d</span><span class="p">;</span>
-		<span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">a</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
 			<span class="nx">d</span> <span class="o">=</span> <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
 
 			<span class="nx">o</span> <span class="o">=</span> <span class="nb">window</span><span class="p">;</span>
-			<span class="k">for</span> <span class="p">(</span><span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">d</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">j</span> <span class="o">=</span> <span class="nx">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">for</span> <span class="p">(</span><span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">d</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
 				<span class="nx">o</span><span class="p">[</span><span class="nx">d</span><span class="p">[</span><span class="nx">j</span><span class="p">]]</span> <span class="o">=</span> <span class="nx">o</span><span class="p">[</span><span class="nx">d</span><span class="p">[</span><span class="nx">j</span><span class="p">]]</span> <span class="o">||</span> <span class="p">{};</span>
 				<span class="nx">o</span> <span class="o">=</span> <span class="nx">o</span><span class="p">[</span><span class="nx">d</span><span class="p">[</span><span class="nx">j</span><span class="p">]];</span>
 			<span class="p">}</span>
@@ -97,20 +99,20 @@
 
 	<span class="cm">/**</span>
 <span class="cm">	 * Extend Child object with Parent prototype</span>
-<span class="cm">	 * </span>
+<span class="cm">	 *</span>
 <span class="cm">	 * @param {object} Child</span>
 <span class="cm">	 * @param {object} Parent</span>
 <span class="cm">	 */</span>
 	<span class="nx">extendObject</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">Child</span><span class="p">,</span> <span class="nx">Parent</span><span class="p">)</span> <span class="p">{</span>
 		<span class="kd">var</span> <span class="nx">R</span> <span class="o">=</span> <span class="nx">Child</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
 			<span class="nx">key</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-		
+
 		<span class="kd">function</span> <span class="nx">Q</span><span class="p">()</span> <span class="p">{}</span>
-		
+
 		<span class="nx">Q</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nx">Parent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span>
-		
+
 		<span class="nx">Child</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Q</span><span class="p">();</span>
-		
+
 		<span class="c1">// adding back overriden methods and properties</span>
 		<span class="k">for</span> <span class="p">(</span><span class="nx">key</span> <span class="k">in</span> <span class="nx">R</span><span class="p">)</span> <span class="p">{</span>
 			<span class="k">if</span> <span class="p">(</span><span class="nx">R</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">key</span><span class="p">))</span> <span class="p">{</span>
@@ -120,24 +122,40 @@
 
 		<span class="nx">Child</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">constructor</span> <span class="o">=</span> <span class="nx">Child</span><span class="p">;</span>
 	<span class="p">},</span>
-	
-	<span class="nx">init_tooltips</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">$</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">args</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="nx">args</span> <span class="o">:</span> <span class="s1">&#39;a[title], span[title], #image_grid img[title], *[tooltip]&#39;</span><span class="p">)).</span><span class="nx">not</span><span class="p">(</span><span class="s1">&#39;.no-tooltip&#39;</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">element</span><span class="p">)</span>
-		<span class="p">{</span>
+
+	<span class="cm">/**</span>
+<span class="cm">	 * Show on hover/mouseover styled tooltips over html elements</span>
+<span class="cm">	 *</span>
+<span class="cm">	 * @param {string} elements</span>
+<span class="cm">	 */</span>
+	<span class="nx">init_tooltips</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">elements</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">elms</span> <span class="o">=</span> <span class="nx">elements</span> <span class="o">||</span> <span class="s1">&#39;a[title], span[title], #image_grid img[title], *[tooltip]&#39;</span><span class="p">,</span>
+			<span class="nx">tt_offset</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+			<span class="nx">nib_offset</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+			<span class="nx">tooltip</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+			<span class="nx">$elements</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+		
+		<span class="nx">$</span><span class="p">(</span><span class="nx">elms</span><span class="p">).</span><span class="nx">not</span><span class="p">(</span><span class="s1">&#39;.no-tooltip&#39;</span><span class="p">).</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">index</span><span class="p">,</span> <span class="nx">element</span><span class="p">)</span> <span class="p">{</span>
 			<span class="kd">var</span> <span class="nx">elm</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">);</span>
 			<span class="c1">// create tooltip on hover and destroy it on hoveroff.</span>
-			<span class="nx">elm</span><span class="p">.</span><span class="nx">hover</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-				<span class="kd">var</span> <span class="nx">active_elm</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
-				<span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="s1">&#39;mouseenter&#39;</span> <span class="o">||</span> <span class="nx">e</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="s1">&#39;mouseover&#39;</span><span class="p">)</span> <span class="p">{</span>
-					<span class="nx">active_elm</span><span class="p">.</span><span class="nx">oneTime</span><span class="p">(</span><span class="mi">350</span><span class="p">,</span> <span class="s1">&#39;tooltip&#39;</span><span class="p">,</span> <span class="nx">$</span><span class="p">.</span><span class="nx">proxy</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+			<span class="nx">elm</span><span class="p">.</span><span class="nx">hover</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+				<span class="kd">var</span> <span class="nx">active_elm</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">),</span>
+					<span class="nx">tooltip_container</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#tooltip_container&#39;</span><span class="p">),</span>
+					<span class="nx">tooltip</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div class=&quot;tooltip&quot;&gt;&lt;div&gt;&lt;span&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&#39;</span><span class="p">).</span><span class="nx">appendTo</span><span class="p">(</span><span class="nx">tooltip_container</span><span class="p">),</span>
+					<span class="nx">tooltip_nib_image</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">browser</span><span class="p">.</span><span class="nx">msie</span> <span class="o">?</span> <span class="s1">&#39;tooltip-nib.gif&#39;</span> <span class="o">:</span> <span class="s1">&#39;tooltip-nib.png&#39;</span><span class="p">,</span>
+					<span class="nx">required_left_offset</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+					<span class="nx">tooltip_offset</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+					<span class="nx">tooltip_outer_width</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+					<span class="nx">window_width</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">width</span><span class="p">(),</span>
+					<span class="nx">nib</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;img /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span>
+						<span class="s1">&#39;src&#39;</span><span class="o">:</span> <span class="s1">&#39;/images/refinery/&#39;</span> <span class="o">+</span> <span class="nx">tooltip_nib_image</span><span class="p">,</span>
+						<span class="s1">&#39;class&#39;</span><span class="o">:</span> <span class="s1">&#39;tooltip-nib&#39;</span>
+					<span class="p">}).</span><span class="nx">appendTo</span><span class="p">(</span><span class="nx">tooltip_container</span><span class="p">);</span>
+				
+				<span class="c1">// some crazy stuff here</span>
+				<span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="s1">&#39;mouseenter&#39;</span> <span class="o">||</span> <span class="nx">e</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="s1">&#39;mouseover&#39;</span><span class="p">)</span> <span class="p">{</span>
+					<span class="nx">active_elm</span><span class="p">.</span><span class="nx">oneTime</span><span class="p">(</span><span class="mi">350</span><span class="p">,</span> <span class="s1">&#39;tooltip&#39;</span><span class="p">,</span> <span class="nx">$</span><span class="p">.</span><span class="nx">proxy</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
 						<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.tooltip&#39;</span><span class="p">).</span><span class="nx">remove</span><span class="p">();</span>
-						<span class="kd">var</span> <span class="nx">tooltip_container</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#tooltip_container&#39;</span><span class="p">),</span>
-							<span class="nx">tooltip</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div class=&quot;tooltip&quot;&gt;&lt;div&gt;&lt;span&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&#39;</span><span class="p">).</span><span class="nx">appendTo</span><span class="p">(</span><span class="nx">tooltip_container</span><span class="p">),</span>
-							<span class="nx">tooltip_nib_image</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">browser</span><span class="p">.</span><span class="nx">msie</span> <span class="o">?</span> <span class="s1">&#39;tooltip-nib.gif&#39;</span> <span class="o">:</span> <span class="s1">&#39;tooltip-nib.png&#39;</span><span class="p">,</span>
-							<span class="nx">nib</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;img src=&quot;/images/refinery/&quot;&#39;</span> <span class="o">+</span> <span class="nx">tooltip_nib_image</span> <span class="o">+</span> <span class="s1">&#39;&quot; class=&quot;tooltip-nib&quot;&quot;/&gt;&#39;</span><span class="p">).</span><span class="nx">appendTo</span><span class="p">(</span><span class="nx">tooltip_container</span><span class="p">),</span>
-							<span class="nx">required_left_offset</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
-							<span class="nx">tooltip_offset</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
-							<span class="nx">tooltip_outer_width</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
 
 						<span class="nx">tooltip</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;span&#39;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="nx">active_elm</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;tooltip&#39;</span><span class="p">));</span>
 						<span class="nx">tooltip</span><span class="p">.</span><span class="nx">css</span><span class="p">({</span>
@@ -150,7 +168,7 @@
 
 						<span class="nx">tooltip_offset</span> <span class="o">=</span> <span class="nx">tooltip</span><span class="p">.</span><span class="nx">offset</span><span class="p">();</span>
 						<span class="nx">tooltip_outer_width</span> <span class="o">=</span> <span class="nx">tooltip</span><span class="p">.</span><span class="nx">outerWidth</span><span class="p">();</span>
-						<span class="k">if</span> <span class="p">(</span><span class="nx">tooltip_offset</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">tooltip_offset</span><span class="p">.</span><span class="nx">left</span> <span class="o">+</span> <span class="nx">tooltip_outer_width</span><span class="p">)</span> <span class="o">&gt;</span> <span class="p">(</span><span class="nx">window_width</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">width</span><span class="p">()))</span> <span class="p">{</span>
+						<span class="k">if</span> <span class="p">(</span><span class="nx">tooltip_offset</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">tooltip_offset</span><span class="p">.</span><span class="nx">left</span> <span class="o">+</span> <span class="nx">tooltip_outer_width</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nx">window_width</span><span class="p">)</span> <span class="p">{</span>
 							<span class="nx">tooltip</span><span class="p">.</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="nx">window_width</span> <span class="o">-</span> <span class="nx">tooltip_outer_width</span><span class="p">);</span>
 						<span class="p">}</span>
 
@@ -179,17 +197,17 @@
 								<span class="nx">top</span><span class="o">:</span> <span class="nx">nib</span><span class="p">.</span><span class="nx">offset</span><span class="p">().</span><span class="nx">top</span> <span class="o">-</span> <span class="mi">10</span><span class="p">,</span>
 								<span class="nx">opacity</span><span class="o">:</span> <span class="mi">1</span>
 							<span class="p">},</span> <span class="mi">200</span><span class="p">);</span>
-						<span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+						<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
 							<span class="nx">tooltip</span><span class="p">.</span><span class="nx">show</span><span class="p">();</span>
 							<span class="nx">nib</span><span class="p">.</span><span class="nx">show</span><span class="p">();</span>
 						<span class="p">}</span>
 					<span class="p">},</span> <span class="nx">active_elm</span><span class="p">));</span>
-				<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="s1">&#39;mouseleave&#39;</span> <span class="o">||</span> <span class="nx">e</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="s1">&#39;mouseout&#39;</span><span class="p">)</span> <span class="p">{</span>
+				<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="s1">&#39;mouseleave&#39;</span> <span class="o">||</span> <span class="nx">e</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="s1">&#39;mouseout&#39;</span><span class="p">)</span> <span class="p">{</span>
 					<span class="nx">active_elm</span><span class="p">.</span><span class="nx">stopTime</span><span class="p">(</span><span class="s1">&#39;tooltip&#39;</span><span class="p">);</span>
-					<span class="k">if</span> <span class="p">((</span><span class="nx">tt_offset</span> <span class="o">=</span> <span class="p">(</span><span class="nx">tooltip</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.tooltip&#39;</span><span class="p">)).</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;z-index&#39;</span><span class="p">,</span> <span class="s1">&#39;-1&#39;</span><span class="p">).</span><span class="nx">offset</span><span class="p">())</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+					<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">tt_offset</span> <span class="o">=</span> <span class="p">(</span><span class="nx">tooltip</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.tooltip&#39;</span><span class="p">)).</span><span class="nx">css</span><span class="p">(</span><span class="s1">&#39;z-index&#39;</span><span class="p">,</span> <span class="s1">&#39;-1&#39;</span><span class="p">).</span><span class="nx">offset</span><span class="p">()))</span> <span class="p">{</span>
 						<span class="nx">tt_offset</span> <span class="o">=</span> <span class="p">{</span>
-							<span class="s1">&#39;top&#39;</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span>
-							<span class="s1">&#39;left&#39;</span><span class="o">:</span><span class="mi">0</span>
+							<span class="s1">&#39;top&#39;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+							<span class="s1">&#39;left&#39;</span><span class="o">:</span> <span class="mi">0</span>
 						<span class="p">};</span>
 					<span class="p">}</span>
 					<span class="nx">tooltip</span><span class="p">.</span><span class="nx">animate</span><span class="p">({</span>
@@ -198,10 +216,10 @@
 					<span class="p">},</span> <span class="mi">125</span><span class="p">,</span> <span class="s1">&#39;swing&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
 						<span class="nx">active_elm</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
 					<span class="p">});</span>
-					<span class="k">if</span> <span class="p">((</span><span class="nx">nib_offset</span> <span class="o">=</span> <span class="p">(</span><span class="nx">nib</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.tooltip-nib&#39;</span><span class="p">)).</span><span class="nx">offset</span><span class="p">())</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+					<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">nib_offset</span> <span class="o">=</span> <span class="p">(</span><span class="nx">nib</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;.tooltip-nib&#39;</span><span class="p">)).</span><span class="nx">offset</span><span class="p">()))</span> <span class="p">{</span>
 						<span class="nx">nib_offset</span> <span class="o">=</span> <span class="p">{</span>
-							<span class="s1">&#39;top&#39;</span><span class="o">:</span><span class="mi">0</span><span class="p">,</span>
-							<span class="s1">&#39;left&#39;</span><span class="o">:</span><span class="mi">0</span>
+							<span class="s1">&#39;top&#39;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+							<span class="s1">&#39;left&#39;</span><span class="o">:</span> <span class="mi">0</span>
 						<span class="p">};</span>
 					<span class="p">}</span>
 					<span class="nx">nib</span><span class="p">.</span><span class="nx">animate</span><span class="p">({</span>
@@ -211,17 +229,17 @@
 						<span class="nx">active_elm</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
 					<span class="p">});</span>
 				<span class="p">}</span>
-			<span class="p">}).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-				<span class="nx">active_elm</span><span class="p">.</span><span class="nx">stopTime</span><span class="p">(</span><span class="s1">&#39;tooltip&#39;</span><span class="p">);</span>
+			<span class="p">}).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">stopTime</span><span class="p">(</span><span class="s1">&#39;tooltip&#39;</span><span class="p">);</span>
 			<span class="p">});</span>
 
-			<span class="k">if</span> <span class="p">(</span><span class="nx">elm</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;tooltip&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">elm</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;tooltip&#39;</span><span class="p">))</span> <span class="p">{</span>
 				<span class="nx">elm</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;tooltip&#39;</span><span class="p">,</span> <span class="nx">elm</span><span class="p">.</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">));</span>
 			<span class="p">}</span>
 			<span class="c1">// wipe clean the title on any children too.</span>
 			<span class="nx">$elements</span> <span class="o">=</span> <span class="nx">elm</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">elm</span><span class="p">.</span><span class="nx">children</span><span class="p">(</span><span class="s1">&#39;img&#39;</span><span class="p">)).</span><span class="nx">removeAttr</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">);</span>
 			<span class="c1">// if we&#39;re unlucky and in Internet Explorer then we have to say goodbye to &#39;alt&#39;, too.</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">$</span><span class="p">.</span><span class="nx">browser</span><span class="p">.</span><span class="nx">msie</span><span class="p">){</span>
+			<span class="k">if</span> <span class="p">(</span><span class="nx">$</span><span class="p">.</span><span class="nx">browser</span><span class="p">.</span><span class="nx">msie</span><span class="p">)</span> <span class="p">{</span>
 				<span class="nx">$elements</span><span class="p">.</span><span class="nx">removeAttr</span><span class="p">(</span><span class="s1">&#39;alt&#39;</span><span class="p">);</span>
 			<span class="p">}</span>
 		<span class="p">});</span>
@@ -230,30 +248,39 @@
 	<span class="nx">init_flash_messages</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
 		<span class="kd">var</span> <span class="nx">elm</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#flash&#39;</span><span class="p">);</span>
 		<span class="nx">elm</span><span class="p">.</span><span class="nx">css</span><span class="p">({</span>
-			<span class="s1">&#39;opacity&#39;</span><span class="o">:</span> <span class="mi">0</span>
-			<span class="p">,</span> <span class="s1">&#39;visibility&#39;</span><span class="o">:</span><span class="s1">&#39;visible&#39;</span>
+			<span class="s1">&#39;opacity&#39;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span> 
+			<span class="s1">&#39;visibility&#39;</span><span class="o">:</span> <span class="s1">&#39;visible&#39;</span>
 		<span class="p">}).</span><span class="nx">animate</span><span class="p">({</span><span class="s1">&#39;opacity&#39;</span><span class="o">:</span> <span class="s1">&#39;1&#39;</span><span class="p">},</span> <span class="mi">550</span><span class="p">);</span>
 
-		<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#flash_close&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#flash_close&#39;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
 			<span class="k">try</span> <span class="p">{</span>
 				<span class="nx">elm</span><span class="p">.</span><span class="nx">animate</span><span class="p">({</span>
-				 <span class="s1">&#39;opacity&#39;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
-				 <span class="s1">&#39;visibility&#39;</span><span class="o">:</span> <span class="s1">&#39;hidden&#39;</span>
-				<span class="p">},</span> <span class="mi">330</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+					<span class="s1">&#39;opacity&#39;</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+					<span class="s1">&#39;visibility&#39;</span><span class="o">:</span> <span class="s1">&#39;hidden&#39;</span>
+				<span class="p">},</span> <span class="mi">330</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
 					<span class="nx">elm</span><span class="p">.</span><span class="nx">hide</span><span class="p">();</span>
 				<span class="p">});</span>
-			<span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">ex</span><span class="p">)</span> <span class="p">{</span>
+			<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">ex</span><span class="p">)</span> <span class="p">{</span>
 				<span class="nx">elm</span><span class="p">.</span><span class="nx">hide</span><span class="p">();</span>
 			<span class="p">}</span>
 			<span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
 		<span class="p">});</span>
-		
+
 		<span class="k">if</span> <span class="p">(</span><span class="nx">elm</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span><span class="s1">&#39;.flash_message&#39;</span><span class="p">))</span> <span class="p">{</span>
 			<span class="nx">elm</span><span class="p">.</span><span class="nx">prependTo</span><span class="p">(</span><span class="s1">&#39;#records&#39;</span><span class="p">);</span>
 		<span class="p">}</span>
 	<span class="p">}</span>
 <span class="p">};</span>
+
+<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nb">String</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="nx">camelize</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">s</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">s</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/[_|-]+(\S)?/g</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">m</span><span class="p">,</span> <span class="nx">chr</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">chr</span> <span class="o">?</span> <span class="nx">chr</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">()</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+		<span class="p">});</span>
+	<span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
+
                     </div>
 			</div>
 		</div>
@@ -272,10 +299,13 @@
                         <ul class="content">
                                 <li class=""><a href="Dialog.html" title="Dialog">Dialog</a></li>
                                 <li class=""><a href="Editor.html" title="Editor">Editor</a></li>
+                                <li class=""><a href="form.html" title="form">form</a></li>
                                 <li class=""><a href="ImageDialog.html" title="ImageDialog">ImageDialog</a></li>
                                 <li class=""><a href="LinkDialog.html" title="LinkDialog">LinkDialog</a></li>
                                 <li class=""><a href="page.html" title="page">page</a></li>
                                 <li class=""><a href="REFINERYCMS.html" title="REFINERYCMS">REFINERYCMS</a></li>
+                                <li class=""><a href="Seo.html" title="Seo">Seo</a></li>
+                                <li class=""><a href="SettingsDialog.html" title="SettingsDialog">SettingsDialog</a></li>
                         </ul>
                     </div>
 
@@ -285,11 +315,14 @@
                                 <li class=""><a href="dialog.js.html" title="dialog.js">dialog.js</a></li>
                                 <li class=""><a href="dialog_image.js.html" title="dialog_image.js">dialog_image.js</a></li>
                                 <li class=""><a href="dialog_link.js.html" title="dialog_link.js">dialog_link.js</a></li>
+                                <li class=""><a href="dialog_settings.js.html" title="dialog_settings.js">dialog_settings.js</a></li>
                                 <li class=""><a href="editor.js.html" title="editor.js">editor.js</a></li>
                                 <li class=""><a href="form.js.html" title="form.js">form.js</a></li>
                                 <li class=""><a href="menu.js.html" title="menu.js">menu.js</a></li>
                                 <li class=""><a href="page.js.html" title="page.js">page.js</a></li>
                                 <li class="selected"><a href="refinerycms.js.html" title="refinerycms.js">refinerycms.js</a></li>
+                                <li class=""><a href="seo-init.js.html" title="seo-init.js">seo-init.js</a></li>
+                                <li class=""><a href="seo.js.html" title="seo.js">seo.js</a></li>
                         </ul>
                     </div>
 
@@ -306,7 +339,8 @@
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "Dialog.html#method_addEvent", "access": "", "host": "Dialog", "type": "method", "name": "addEvent"}, {"url": "Dialog.html#method_disable_submit", "access": "", "host": "Dialog", "type": "method", "name": "disable_submit"}, {"url": "Dialog.html#method_enable_submit", "access": "", "host": "Dialog", "type": "method", "name": "enable_submit"}, {"url": "REFINERYCMS.html#method_extendObject", "access": "", "host": "REFINERYCMS", "type": "method", "name": "extendObject"}, {"url": "Dialog.html#property_menu", "access": "", "host": "Dialog", "type": "property", "name": "menu"}, {"url": "REFINERYCMS.html#method_namespace", "access": "", "host": "REFINERYCMS", "type": "method", "name": "namespace"}];
+
+    var ALL_YUI_PROPS = [{"url": "form.html#method_addEvent", "access": "", "host": "form", "type": "method", "name": "addEvent"}, {"url": "Dialog.html#method_disable_submit", "access": "", "host": "Dialog", "type": "method", "name": "disable_submit"}, {"url": "Dialog.html#method_enable_submit", "access": "", "host": "Dialog", "type": "method", "name": "enable_submit"}, {"url": "REFINERYCMS.html#method_extendObject", "access": "", "host": "REFINERYCMS", "type": "method", "name": "extendObject"}, {"url": "Seo.html#method_get_highlighted_keywords", "access": "", "host": "Seo", "type": "method", "name": "get_highlighted_keywords"}, {"url": "Seo.html#method_init", "access": "", "host": "Seo", "type": "method", "name": "init"}, {"url": "REFINERYCMS.html#method_init_tooltips", "access": "", "host": "REFINERYCMS", "type": "method", "name": "init_tooltips"}, {"url": "REFINERYCMS.html#method_namespace", "access": "", "host": "REFINERYCMS", "type": "method", "name": "namespace"}];
 </script>
 </body>
 </html>

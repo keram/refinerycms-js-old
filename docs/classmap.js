@@ -1,4 +1,4 @@
-YAHOO.env.classMap = {"LinkDialog": "refinerycms", "ImageDialog": "refinerycms", "Editor": "refinerycms", "Dialog": "refinerycms", "REFINERYCMS": "refinerycms", "page": "refinerycms"};
+YAHOO.env.classMap = {"form": "refinerycms", "LinkDialog": "refinerycms", "ImageDialog": "refinerycms", "Editor": "refinerycms", "Dialog": "refinerycms", "Seo": "refinerycms", "REFINERYCMS": "refinerycms", "page": "refinerycms", "SettingsDialog": "refinerycms"};
 
 YAHOO.env.resolveClass = function(className) {
     var a=className.split('.'), ns=YAHOO.env.classMap;

@@ -1,0 +1,800 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>API: refinerycms   seo.js  (YUI Library)</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css" />
+
+    <script type="text/javascript" src="assets/api-js"></script>
+    <script type="text/javascript" src="assets/ac-js"></script>
+</head>
+
+<body id="yahoo-com">
+
+<div id="doc3" class="yui-t2">
+	<div id="hd">
+        <h1><a href="http://developer.yahoo.com/yui/" title="RefineryCMS js library">RefineryCMS js library</a></h1>
+        <h3>refinerycms&nbsp; <span class="subtitle">1.0.0</span></h3>
+        <a href="./index.html" title="RefineryCMS js library">RefineryCMS js library</a> 
+            &gt; <a href="./module_refinerycms.html" title="refinerycms">refinerycms</a>
+                
+                 &gt; seo.js (source view) 
+        <form onsubmit="return false">
+            <div id="propertysearch">
+                Search: <input autocomplete="off" id="searchinput" />
+                <div id="searchresults">
+                    &nbsp;
+                </div>
+            </div>
+        </form>
+	</div>
+
+	<div id="bd">
+		<div id="yui-main">
+			<div class="yui-b">
+            <form action="#" name="yui-classopts-form" method="get" id="yui-classopts-form">
+                <fieldset>
+                    <legend>Filters</legend>
+                <span class="classopts"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
+                <span class="classopts"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
+                <span class="classopts"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
+                </fieldset>
+            </form>
+
+                    <div id="srcout">
+                        <style>
+                            #doc3 .classopts { display:none; }
+                        </style>
+                        <div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm">* The REFINERYCMS form object for client side validating forms in REFINERYCMS.</span>
+<span class="cm">* Based on REFINERYCMS.formForms https://github.com/REFINERYCMS.form/REFINERYCMS.form/raw/master/client-side/forms/REFINERYCMS.formForms.js</span>
+<span class="cm">*</span>
+<span class="cm">*</span>
+<span class="cm">* @version    $Id$</span>
+<span class="cm">* @package    refinerycms-js</span>
+<span class="cm">* @copyright  Copyright (C) 2011</span>
+<span class="cm">* @author     keraM marek@keram.name http//keram.name</span>
+<span class="cm">* @license    MIT</span>
+<span class="cm">*/</span>
+
+<span class="cm">/*global REFINERYCMS, Object, Error, window, $, parent, console, I18n */</span>
+
+<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">namespace</span><span class="p">(</span><span class="s1">&#39;REFINERYCMS.plugin.Seo&#39;</span><span class="p">);</span>
+
+<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Seo</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">init</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Seo</span><span class="p">.</span><span class="nx">validators</span> <span class="o">=</span> <span class="p">{</span> <span class="p">};</span>
+<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Seo</span><span class="p">.</span><span class="nx">analyzers</span> <span class="o">=</span> <span class="p">{</span> <span class="p">};</span>
+<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Seo</span><span class="p">.</span><span class="nx">decorator</span> <span class="o">=</span> <span class="p">{</span> <span class="p">};</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Class for handling everything between page and snippets</span>
+<span class="cm"> * @class      Seo</span>
+<span class="cm"> */</span>
+<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Seo</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="nx">title</span><span class="o">:</span> <span class="s1">&#39;seo_report&#39;</span><span class="p">,</span>
+	<span class="nx">instance</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+	<span class="nx">keywords</span><span class="o">:</span> <span class="p">[],</span>
+	<span class="nx">text</span><span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+	<span class="nx">text_words</span><span class="o">:</span> <span class="p">[],</span>
+	<span class="nx">text_sentences</span><span class="o">:</span> <span class="p">[],</span>
+	<span class="nx">elements</span><span class="o">:</span> <span class="p">{},</span>
+
+	<span class="nx">stop_on_first_error</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+
+	<span class="nx">validation_rules</span><span class="o">:</span> <span class="p">{</span>
+		<span class="nx">meta_tag_keywords</span><span class="o">:</span> <span class="p">{</span>
+			<span class="s1">&#39;filled&#39;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+			<span class="s1">&#39;min_length&#39;</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+			<span class="s1">&#39;min_word_length&#39;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+			<span class="s1">&#39;max_length&#39;</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+			<span class="s1">&#39;min_words_count&#39;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+			<span class="s1">&#39;max_words_count&#39;</span><span class="o">:</span> <span class="mi">5</span>
+		<span class="p">}</span>
+	<span class="p">},</span>
+
+	<span class="nx">sanitize_word</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">word</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">str</span> <span class="o">=</span> <span class="nx">word</span> <span class="o">||</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+			<span class="nx">t</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+			<span class="nx">i</span> <span class="o">=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+			<span class="nx">unsafe_chars</span> <span class="o">=</span> <span class="s1">&#39;áäčďéěíĺľňóô öŕšťúů üýřžÁÄČĎÉĚÍĹĽŇÓÔ ÖŔŠŤÚŮ ÜÝŘŽ&#39;</span><span class="p">,</span>
+			<span class="nx">safe_chars</span> <span class="o">=</span> <span class="s1">&#39;aacdeeillnoo orstuu uyrzAACDEEILLNOO ORSTUU UYRZ&#39;</span><span class="p">;</span>
+
+		<span class="k">while</span> <span class="p">(</span><span class="nx">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="nx">unsafe_chars</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">i</span><span class="p">))</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">t</span> <span class="o">+=</span> <span class="nx">safe_chars</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">safe_chars</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">str</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">i</span><span class="p">)));</span>
+				<span class="k">continue</span><span class="p">;</span>
+			<span class="p">}</span>
+
+			<span class="nx">t</span> <span class="o">+=</span> <span class="nx">str</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+		<span class="p">}</span>
+
+		<span class="nx">t</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/[.,_$\\\/!?{}\(\(]/</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
+
+		<span class="k">return</span> <span class="nx">t</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">sanitize_text</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">text</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">txt</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">trim</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
+		<span class="nx">txt</span> <span class="o">=</span> <span class="nx">txt</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/ /g</span><span class="p">,</span> <span class="s1">&#39;%space%&#39;</span><span class="p">);</span>
+		<span class="nx">txt</span> <span class="o">=</span> <span class="nx">txt</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/\s/g</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
+		<span class="nx">txt</span> <span class="o">=</span> <span class="nx">txt</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/%space%/g</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">);</span>
+
+		<span class="k">return</span> <span class="nx">txt</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">count_text_words</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">get_text_words</span><span class="p">().</span><span class="nx">length</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">count_keywords</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">keywords</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">set_keywords</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">k</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">keywords</span> <span class="o">=</span> <span class="nx">k</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">set_text</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">sanitize_text</span><span class="p">(</span><span class="nx">t</span><span class="p">);</span>
+	<span class="p">},</span>
+
+	<span class="nx">set_stop_on_first_error</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">stop</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">stop_on_first_error</span> <span class="o">=</span> <span class="nx">stop</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">set_text_words</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">words</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">text</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">),</span>
+			<span class="nx">i</span> <span class="o">=</span> <span class="nx">words</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+			<span class="nx">word</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+			<span class="nx">tmp_words</span> <span class="o">=</span> <span class="p">[];</span>
+
+		<span class="k">while</span> <span class="p">(</span><span class="nx">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">word</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">sanitize_word</span><span class="p">(</span><span class="nx">words</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+			<span class="k">if</span> <span class="p">(</span><span class="nx">word</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">tmp_words</span><span class="p">[</span><span class="nx">tmp_words</span><span class="p">.</span><span class="nx">length</span><span class="p">]</span> <span class="o">=</span> <span class="nx">word</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="k">this</span><span class="p">.</span><span class="nx">text_words</span> <span class="o">=</span> <span class="nx">tmp_words</span><span class="p">.</span><span class="nx">reverse</span><span class="p">();</span>
+	<span class="p">},</span>
+
+	<span class="nx">set_text_sentences</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">text</span><span class="p">,</span>
+			<span class="nx">res</span> <span class="o">=</span> <span class="p">[],</span>
+			<span class="nx">split_by</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">str</span><span class="p">,</span> <span class="nx">splitter</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">str</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="nx">splitter</span><span class="p">);</span>
+			<span class="p">};</span>
+
+		<span class="k">this</span><span class="p">.</span><span class="nx">text_sentences</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">get_keywords</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">keywords</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">get_text</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">text</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">get_text_words</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">text_words</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">get_text_sentences</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">text_sentences</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="cm">/**</span>
+<span class="cm">	 * @todo decorate result</span>
+<span class="cm">	 * @todo ignorovanie diakritiky v texte</span>
+<span class="cm">	 */</span>
+	<span class="nx">get_highlighted_keywords</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="nx">keywords</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nx">text</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">get_text</span><span class="p">(),</span>
+			<span class="nx">k</span> <span class="o">=</span> <span class="nx">keywords</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">get_keywords</span><span class="p">(),</span>
+			<span class="nx">i</span> <span class="o">=</span> <span class="nx">k</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+			<span class="nx">rg</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+			<span class="nx">r</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+
+		<span class="nx">k</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+			<span class="p">}</span>
+			<span class="k">if</span> <span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+			<span class="p">}</span>
+
+			<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="p">});</span>
+
+		<span class="k">while</span> <span class="p">(</span><span class="nx">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">rg</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="nx">k</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span><span class="p">,</span> <span class="s1">&#39;ig&#39;</span><span class="p">);</span>
+			<span class="nx">t</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="nx">rg</span><span class="p">,</span> <span class="s1">&#39;%%HIGHLIGHT%%$1%%\/HIGHLIGHT%%&#39;</span><span class="p">);</span>
+		<span class="p">}</span>
+
+		<span class="nx">t</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/%%HIGHLIGHT%%/g</span><span class="p">,</span> <span class="s1">&#39;&lt;span class=&quot;keyword-highlighted&quot;&gt;&#39;</span><span class="p">);</span>
+		<span class="nx">t</span> <span class="o">=</span> <span class="nx">t</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/%%\/HIGHLIGHT%%/g</span><span class="p">,</span> <span class="s1">&#39;&lt;/span&gt;&#39;</span><span class="p">);</span>
+
+		<span class="nx">r</span> <span class="o">=</span> <span class="nx">t</span><span class="p">;</span>
+
+		<span class="k">return</span> <span class="nx">r</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">get_element</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">elm_key</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">elements</span><span class="p">[</span><span class="nx">elm_key</span><span class="p">])</span> <span class="p">{</span>
+			<span class="k">this</span><span class="p">.</span><span class="nx">elements</span><span class="p">[</span><span class="nx">elm_key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="nx">elm_key</span><span class="p">);</span>
+		<span class="p">}</span>
+
+		<span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">elements</span><span class="p">[</span><span class="nx">elm_key</span><span class="p">];</span>
+	<span class="p">},</span>
+
+	<span class="nx">set_element</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">elm</span><span class="p">,</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">rules</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">elements</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">elm</span><span class="p">;</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="p">(</span><span class="nx">rules</span><span class="p">)</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">this</span><span class="p">.</span><span class="nx">validation_rules</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">rules</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">},</span>
+
+	<span class="nx">validate</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+			<span class="nx">validator</span> <span class="o">=</span> <span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Seo</span><span class="p">.</span><span class="nx">validators</span><span class="p">,</span>
+			<span class="nx">result</span> <span class="o">=</span> <span class="p">[],</span>
+			<span class="nx">elm</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+			<span class="nx">elm_key</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+			<span class="nx">rule</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+		<span class="k">for</span> <span class="p">(</span><span class="nx">elm_key</span> <span class="k">in</span> <span class="nx">that</span><span class="p">.</span><span class="nx">validation_rules</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">elm</span> <span class="o">=</span> <span class="nx">that</span><span class="p">.</span><span class="nx">get_element</span><span class="p">(</span><span class="nx">elm_key</span><span class="p">);</span>
+			<span class="k">if</span> <span class="p">(</span><span class="nx">elm</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">result</span><span class="p">[</span><span class="nx">elm_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
+				<span class="k">for</span> <span class="p">(</span><span class="nx">rule</span> <span class="k">in</span> <span class="nx">that</span><span class="p">.</span><span class="nx">validation_rules</span><span class="p">[</span><span class="nx">elm_key</span><span class="p">])</span> <span class="p">{</span>
+					<span class="nx">result</span><span class="p">[</span><span class="nx">elm_key</span><span class="p">][</span><span class="nx">rule</span><span class="p">]</span> <span class="o">=</span> <span class="nx">validator</span><span class="p">.</span><span class="nx">testElm</span><span class="p">(</span><span class="nx">elm</span><span class="p">,</span> <span class="nx">rule</span><span class="p">,</span> <span class="nx">that</span><span class="p">.</span><span class="nx">validation_rules</span><span class="p">[</span><span class="nx">elm_key</span><span class="p">][</span><span class="nx">rule</span><span class="p">]);</span>
+
+					<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">result</span><span class="p">[</span><span class="nx">elm_key</span><span class="p">][</span><span class="nx">rule</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">that</span><span class="p">.</span><span class="nx">stop_on_first_error</span><span class="p">)</span> <span class="p">{</span>
+						<span class="k">break</span><span class="p">;</span>
+					<span class="p">}</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">analyse</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+			<span class="nx">analyzer</span> <span class="o">=</span> <span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Seo</span><span class="p">.</span><span class="nx">analyzers</span><span class="p">,</span>
+			<span class="nx">result</span> <span class="o">=</span> <span class="p">[];</span>
+
+		<span class="nx">analyzer</span><span class="p">.</span><span class="nx">run</span><span class="p">();</span>
+		<span class="nx">result</span> <span class="o">=</span> <span class="nx">analyzer</span><span class="p">.</span><span class="nx">getReport</span><span class="p">();</span>
+
+		<span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">highlight</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">hcfg</span> <span class="o">=</span> <span class="p">{},</span>
+			<span class="nx">texts</span> <span class="o">=</span> <span class="p">[],</span>
+			<span class="nx">title_text</span><span class="p">,</span>
+			<span class="nx">page_body</span><span class="p">,</span>
+			<span class="nx">page_sidebar</span><span class="p">,</span>
+			<span class="nx">browser_title_text</span><span class="p">,</span>
+			<span class="nx">meta_desc_text</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+			<span class="nx">hd</span> <span class="o">=</span> <span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Seo</span><span class="p">.</span><span class="nx">higlightDecorator</span><span class="p">;</span>
+
+		<span class="nx">title_text</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;label&#39;</span> <span class="o">:</span> <span class="nx">I18n</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span><span class="s1">&#39;refinerycms.plugin.seo.part.title&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">defaultValue</span> <span class="o">:</span> <span class="s1">&#39;Title&#39;</span><span class="p">}),</span> <span class="s1">&#39;body&#39;</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">get_highlighted_keywords</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_title&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">())</span> <span class="p">};</span>
+		<span class="nx">page_body</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;label&#39;</span> <span class="o">:</span> <span class="nx">I18n</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span><span class="s1">&#39;refinerycms.plugin.seo.part.page_body&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">defaultValue</span> <span class="o">:</span> <span class="s1">&#39;Page body&#39;</span><span class="p">}),</span> <span class="s1">&#39;body&#39;</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">get_highlighted_keywords</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_parts_attributes_0_body&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">())</span> <span class="p">};</span>
+
+		<span class="nx">texts</span> <span class="o">=</span> <span class="p">[</span><span class="nx">title_text</span><span class="p">,</span> <span class="nx">page_body</span><span class="p">];</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_parts_attributes_1_body&#39;</span><span class="p">).</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span>  <span class="o">&amp;&amp;</span>  <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_parts_attributes_1_body&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">!==</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">page_sidebar</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;label&#39;</span> <span class="o">:</span> <span class="s1">&#39;Page sidebar&#39;</span><span class="p">,</span> <span class="s1">&#39;body&#39;</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">get_highlighted_keywords</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_parts_attributes_1_body&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">())</span> <span class="p">};</span>
+			<span class="nx">texts</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">page_sidebar</span><span class="p">);</span>
+		<span class="p">}</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_browser_title&#39;</span><span class="p">).</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_browser_title&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">!==</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">browser_title_text</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;label&#39;</span> <span class="o">:</span> <span class="s1">&#39;Browser title&#39;</span><span class="p">,</span> <span class="s1">&#39;body&#39;</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">get_highlighted_keywords</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_browser_title&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">())</span> <span class="p">};</span>
+			<span class="nx">texts</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">browser_title_text</span><span class="p">);</span>
+		<span class="p">}</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_meta_description&#39;</span><span class="p">).</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_meta_description&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">()</span> <span class="o">!==</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">meta_desc_text</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;label&#39;</span> <span class="o">:</span> <span class="s1">&#39;Meta description&#39;</span><span class="p">,</span> <span class="s1">&#39;body&#39;</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">get_highlighted_keywords</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_meta_description&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">())</span> <span class="p">};</span>
+			<span class="nx">texts</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">meta_desc_text</span><span class="p">);</span>
+		<span class="p">}</span>
+
+		<span class="nx">hcfg</span><span class="p">.</span><span class="nx">texts</span> <span class="o">=</span> <span class="nx">texts</span><span class="p">;</span>
+		<span class="nx">hcfg</span><span class="p">.</span><span class="nx">holder</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#page_container&#39;</span><span class="p">);</span>
+
+		<span class="k">return</span> <span class="nx">hd</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">hcfg</span><span class="p">);</span>
+	<span class="p">},</span>
+
+	<span class="nx">render</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">decorator</span> <span class="o">=</span> <span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Seo</span><span class="p">.</span><span class="nx">decorator</span><span class="p">;</span>
+
+		<span class="nx">decorator</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+	<span class="p">},</span>
+
+	<span class="cm">/**</span>
+<span class="cm">	 * Initialization</span>
+<span class="cm">	 * @param config Object</span>
+<span class="cm">	 */</span>
+	<span class="nx">init</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">config</span> <span class="o">=</span> <span class="nx">config</span> <span class="o">||</span> <span class="p">{};</span>
+
+		<span class="k">this</span><span class="p">.</span><span class="nx">set_keywords</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">keywords</span> <span class="o">||</span> <span class="p">[]);</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">set_text</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">text</span> <span class="o">||</span> <span class="s1">&#39;&#39;</span><span class="p">);</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">set_text_words</span><span class="p">();</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">set_stop_on_first_error</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">stop_on_first_error</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">stop_on_first_error</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Seo</span><span class="p">.</span><span class="nx">validators</span> <span class="o">=</span> <span class="p">{</span>
+
+	<span class="nx">testElm</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">element</span><span class="p">,</span> <span class="nx">rule</span><span class="p">,</span> <span class="nx">args</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+			<span class="nx">elm</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">element</span><span class="p">),</span>
+			<span class="nx">fnc</span> <span class="o">=</span> <span class="k">this</span><span class="p">[</span><span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nb">String</span><span class="p">.</span><span class="nx">camelize</span><span class="p">(</span><span class="nx">rule</span><span class="p">)];</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="p">(</span><span class="nx">fnc</span><span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">I18n</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span><span class="s1">&#39;refinerycms.plugin.seo.validators.function_not_exists&#39;</span><span class="p">,</span> <span class="p">{</span>
+				<span class="nx">defaultValue</span><span class="o">:</span> <span class="s2">&quot;Function for Validation rule {{fnc}} not exists.&quot;</span><span class="p">,</span>
+				<span class="nx">fnc</span><span class="o">:</span> <span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nb">String</span><span class="p">.</span><span class="nx">camelize</span><span class="p">(</span><span class="nx">rule</span><span class="p">)</span>
+			<span class="p">}));</span>
+		<span class="p">}</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="p">(</span><span class="nx">fnc</span><span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">result</span> <span class="o">=</span> <span class="nx">fnc</span><span class="p">(</span><span class="nx">args</span><span class="p">,</span> <span class="nx">elm</span><span class="p">.</span><span class="nx">val</span><span class="p">());</span>
+		<span class="p">}</span>
+
+		<span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">maxWordsCount</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">arg</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">val</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">).</span><span class="nx">length</span> <span class="o">&lt;=</span> <span class="nx">arg</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">minWordsCount</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">arg</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="o">!!</span><span class="nx">val</span> <span class="o">&amp;&amp;</span> <span class="nx">val</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">).</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="nx">arg</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">filled</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">arg</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="o">!!</span><span class="nx">val</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">minLength</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">arg</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">val</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="nx">arg</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">minWordLength</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">arg</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">separator</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="nx">separator</span> <span class="o">||</span> <span class="s1">&#39;, &#39;</span><span class="p">,</span>
+			<span class="nx">arr</span> <span class="o">=</span> <span class="nx">val</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="nx">s</span><span class="p">),</span>
+			<span class="nx">i</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+
+		<span class="k">while</span> <span class="p">(</span><span class="nx">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">length</span> <span class="o">&lt;=</span> <span class="nx">arg</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">maxLength</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">arg</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">val</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;=</span> <span class="nx">arg</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">length</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">arg</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">arg</span> <span class="o">=</span> <span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Seo</span><span class="p">.</span><span class="nx">validators</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">arg</span><span class="p">)</span> <span class="o">?</span> <span class="nx">arg</span><span class="o">:</span> <span class="p">[</span><span class="nx">arg</span><span class="p">,</span> <span class="nx">arg</span><span class="p">];</span>
+		<span class="k">return</span> <span class="p">(</span><span class="nx">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">||</span> <span class="nx">val</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;=</span> <span class="nx">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">||</span> <span class="nx">val</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;=</span> <span class="nx">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+	<span class="p">},</span>
+
+	<span class="nx">isArray</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">arg</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arg</span><span class="p">)</span> <span class="o">===</span> <span class="s1">&#39;[object Array]&#39;</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Seo</span><span class="p">.</span><span class="nx">analyzers</span> <span class="o">=</span> <span class="p">{</span>
+
+	<span class="nx">keywordsInTitle</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+	<span class="p">},</span>
+
+	<span class="nx">keywordsInDescription</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+	<span class="p">},</span>
+
+	<span class="nx">keywordsInText</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+	<span class="p">},</span>
+
+	<span class="nx">getReport</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[];</span>
+
+		<span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">run</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Seo</span><span class="p">.</span><span class="nx">decorator</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="nx">validation_data</span><span class="o">:</span> <span class="p">[],</span>
+	<span class="nx">analysis_data</span><span class="o">:</span> <span class="p">[],</span>
+	<span class="nx">holder</span><span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+	<span class="nx">report</span><span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+	<span class="nx">rendered</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+	<span class="nx">report_id</span><span class="o">:</span> <span class="s1">&#39;seo-report&#39;</span><span class="p">,</span>
+
+	<span class="nx">getHeader</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">header</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">report_id</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;.header&#39;</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="nx">header</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">header</span><span class="p">;</span>
+		<span class="p">}</span>
+
+		<span class="nx">header</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span>
+			<span class="s1">&#39;class&#39;</span><span class="o">:</span> <span class="s1">&#39;header&#39;</span>
+		<span class="p">});</span>
+
+		<span class="nx">header</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span>
+			<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;h2 /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="o">:</span> <span class="nx">I18n</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span><span class="s1">&#39;refinerycms.plugin.seo.seo_report&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">defaultValue</span> <span class="o">:</span> <span class="s1">&#39;Seo report&#39;</span><span class="p">})})</span>
+		<span class="p">);</span>
+
+		<span class="nx">header</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span>
+			<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;a /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span>
+				<span class="s1">&#39;id&#39;</span><span class="o">:</span> <span class="s1">&#39;run-seo-validator&#39;</span><span class="p">,</span>
+				<span class="s1">&#39;text&#39;</span><span class="o">:</span> <span class="nx">I18n</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span><span class="s1">&#39;refinerycms.plugin.seo.run_validator&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">defaultValue</span> <span class="o">:</span> <span class="s1">&#39;Validate&#39;</span><span class="p">}),</span>
+				<span class="s1">&#39;class&#39;</span><span class="o">:</span> <span class="s1">&#39;button&#39;</span>
+			<span class="p">})</span>
+		<span class="p">);</span>
+
+		<span class="nx">header</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span>
+			<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;a /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span>
+				<span class="s1">&#39;id&#39;</span><span class="o">:</span> <span class="s1">&#39;run-seo-highlighter&#39;</span><span class="p">,</span>
+				<span class="s1">&#39;text&#39;</span><span class="o">:</span> <span class="nx">I18n</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span><span class="s1">&#39;refinerycms.plugin.seo.run_highlighter&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">defaultValue</span> <span class="o">:</span> <span class="s1">&#39;Highlight keywords&#39;</span><span class="p">}),</span>
+				<span class="s1">&#39;class&#39;</span><span class="o">:</span> <span class="s1">&#39;button&#39;</span>
+			<span class="p">})</span>
+		<span class="p">);</span>
+
+		<span class="k">return</span> <span class="nx">header</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">getWrapper</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">report_id</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">wrapper</span><span class="p">;</span>
+		<span class="p">}</span>
+
+		<span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span>
+			<span class="s1">&#39;id&#39;</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">report_id</span>
+		<span class="p">});</span>
+	<span class="p">},</span>
+
+	<span class="nx">getContent</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">content</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">report_id</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;.content&#39;</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="nx">content</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">content</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">buildContent</span><span class="p">());</span>
+			<span class="k">return</span> <span class="nx">content</span><span class="p">;</span>
+		<span class="p">}</span>
+
+		<span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span>
+			<span class="s1">&#39;class&#39;</span><span class="o">:</span> <span class="s1">&#39;content&#39;</span><span class="p">,</span>
+			<span class="s1">&#39;html&#39;</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">buildContent</span><span class="p">()</span>
+		<span class="p">});</span>
+	<span class="p">},</span>
+
+	<span class="nx">getFooter</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">footer</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">report_id</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;.footer&#39;</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="nx">footer</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">footer</span><span class="p">;</span>
+		<span class="p">}</span>
+
+
+		<span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span>
+			<span class="s1">&#39;class&#39;</span><span class="o">:</span> <span class="s1">&#39;footer&#39;</span><span class="p">,</span>
+			<span class="s1">&#39;html&#39;</span><span class="o">:</span> <span class="s1">&#39;&amp;nbsp;&#39;</span>
+		<span class="p">});</span>
+	<span class="p">},</span>
+
+
+	<span class="nx">buildAnalysisContent</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+			<span class="nx">ul</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+			<span class="nx">error_found</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+			<span class="nx">analysis_holder</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="o">:</span> <span class="s1">&#39;analysis-content&#39;</span><span class="p">});</span>
+
+		<span class="k">return</span> <span class="nx">analysis_holder</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">buildValidationContent</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+			<span class="nx">ul</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+			<span class="nx">error_found</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+			<span class="nx">elm_key</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+			<span class="nx">rule</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span>
+			<span class="nx">validation_holder</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="o">:</span> <span class="s1">&#39;validation-content&#39;</span><span class="p">});</span>
+
+		<span class="k">for</span> <span class="p">(</span><span class="nx">elm_key</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="nx">validation_data</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">ul</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;ul /&gt;&#39;</span><span class="p">);</span>
+			<span class="nx">error_found</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+			<span class="k">for</span> <span class="p">(</span><span class="nx">rule</span> <span class="k">in</span> <span class="k">this</span><span class="p">.</span><span class="nx">validation_data</span><span class="p">[</span><span class="nx">elm_key</span><span class="p">])</span> <span class="p">{</span>
+
+				<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">validation_data</span><span class="p">[</span><span class="nx">elm_key</span><span class="p">][</span><span class="nx">rule</span><span class="p">])</span> <span class="p">{</span>
+					<span class="nx">error_found</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+					<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;li /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span>
+						<span class="s1">&#39;class&#39;</span><span class="o">:</span> <span class="s1">&#39;error&#39;</span><span class="p">,</span>
+						<span class="s1">&#39;text&#39;</span><span class="o">:</span> <span class="nx">I18n</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span><span class="s1">&#39;refinerycms.plugin.seo.validators.state_rule_false&#39;</span><span class="p">,</span> <span class="p">{</span>
+							<span class="nx">defaultValue</span><span class="o">:</span> <span class="s2">&quot;State of check rule {{rule}} in  {{elm}} is false.&quot;</span><span class="p">,</span>
+							<span class="nx">rule</span><span class="o">:</span> <span class="nx">I18n</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span><span class="s1">&#39;refinerycms.plugin.seo.validators.&#39;</span> <span class="o">+</span> <span class="nx">rule</span><span class="p">,</span> <span class="p">{</span><span class="nx">defaultValue</span> <span class="o">:</span> <span class="nx">rule</span> <span class="p">}),</span>
+							<span class="nx">elm</span><span class="o">:</span>  <span class="nx">I18n</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span><span class="s1">&#39;refinerycms.plugin.seo.validators.&#39;</span> <span class="o">+</span> <span class="nx">elm_key</span><span class="p">,</span> <span class="p">{</span><span class="nx">defaultValue</span> <span class="o">:</span> <span class="nx">elm_key</span><span class="p">})</span>
+						<span class="p">})</span>
+					<span class="p">}).</span><span class="nx">appendTo</span><span class="p">(</span><span class="nx">ul</span><span class="p">);</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+
+			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">error_found</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;li /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span>
+					<span class="s1">&#39;class&#39;</span><span class="o">:</span> <span class="s1">&#39;success&#39;</span><span class="p">,</span>
+					<span class="s1">&#39;text&#39;</span><span class="o">:</span> <span class="nx">I18n</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span><span class="s1">&#39;refinerycms.plugin.seo.validators.&#39;</span> <span class="o">+</span> <span class="nx">elm_key</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="nx">I18n</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span><span class="s1">&#39;refinerycms.plugin.seo.validators.state_ok&#39;</span><span class="p">,</span> <span class="s1">&#39;ok&#39;</span><span class="p">)</span>
+				<span class="p">}).</span><span class="nx">appendTo</span><span class="p">(</span><span class="nx">ul</span><span class="p">);</span>
+			<span class="p">}</span>
+
+			<span class="nx">validation_holder</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">ul</span><span class="p">);</span>
+		<span class="p">}</span>
+
+		<span class="k">return</span> <span class="nx">validation_holder</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">buildContent</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">tmp_holder</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div /&gt;&#39;</span><span class="p">);</span>
+
+		<span class="nx">tmp_holder</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">buildValidationContent</span><span class="p">());</span>
+		<span class="nx">tmp_holder</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">buildAnalysisContent</span><span class="p">());</span>
+
+		<span class="k">return</span> <span class="nx">tmp_holder</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">destroy</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">report</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">).</span><span class="nx">unbind</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">);</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">report</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">report</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">render</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">cfg</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">cfg</span> <span class="o">=</span> <span class="nx">cfg</span> <span class="o">||</span> <span class="p">{};</span>
+		<span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+
+		<span class="k">this</span><span class="p">.</span><span class="nx">validation_data</span> <span class="o">=</span> <span class="nx">cfg</span><span class="p">.</span><span class="nx">validation_data</span> <span class="o">||</span> <span class="p">[];</span>
+
+		<span class="k">this</span><span class="p">.</span><span class="nx">holder</span> <span class="o">=</span> <span class="nx">cfg</span><span class="p">.</span><span class="nx">holder</span> <span class="o">||</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#more_options&#39;</span><span class="p">);</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">holder</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">this</span><span class="p">.</span><span class="nx">report</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getWrapper</span><span class="p">();</span>
+
+			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">rendered</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">this</span><span class="p">.</span><span class="nx">report</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getHeader</span><span class="p">());</span>
+				<span class="k">this</span><span class="p">.</span><span class="nx">report</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getContent</span><span class="p">());</span>
+
+				<span class="k">this</span><span class="p">.</span><span class="nx">holder</span><span class="p">.</span><span class="nx">prepend</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">report</span><span class="p">);</span>
+				<span class="k">this</span><span class="p">.</span><span class="nx">rendered</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="p">(</span><span class="nx">cfg</span><span class="p">.</span><span class="nx">fade</span><span class="p">)</span> <span class="p">{</span>
+					<span class="k">this</span><span class="p">.</span><span class="nx">report</span><span class="p">.</span><span class="nx">fadeOut</span><span class="p">(</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+						<span class="nx">that</span><span class="p">.</span><span class="nx">getContent</span><span class="p">();</span>
+						<span class="nx">that</span><span class="p">.</span><span class="nx">report</span><span class="p">.</span><span class="nx">fadeIn</span><span class="p">();</span>
+					<span class="p">});</span>
+				<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+					<span class="k">this</span><span class="p">.</span><span class="nx">getContent</span><span class="p">();</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">plugin</span><span class="p">.</span><span class="nx">Seo</span><span class="p">.</span><span class="nx">higlightDecorator</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="nx">texts</span><span class="o">:</span> <span class="p">[],</span>
+	<span class="nx">holder</span><span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+	<span class="nx">report</span><span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+	<span class="nx">rendered</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+	<span class="nx">report_id</span><span class="o">:</span> <span class="s1">&#39;seo-keywords-highlight-popup&#39;</span><span class="p">,</span>
+
+	<span class="nx">getHeader</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+			<span class="nx">header</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">report_id</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;.header&#39;</span><span class="p">),</span>
+			<span class="nx">close_button</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="nx">header</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">header</span><span class="p">;</span>
+		<span class="p">}</span>
+
+		<span class="nx">header</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span>
+			<span class="s1">&#39;class&#39;</span><span class="o">:</span> <span class="s1">&#39;header&#39;</span>
+		<span class="p">});</span>
+
+		<span class="nx">header</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span>
+			<span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;h2 /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="o">:</span> <span class="nx">I18n</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span><span class="s1">&#39;refinerycms.plugin.seo.highlighted_keywords_on_page&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">defaultValue</span> <span class="o">:</span> <span class="s1">&#39;Highlighted keywords on page&#39;</span><span class="p">})})</span>
+		<span class="p">);</span>
+
+		<span class="nx">close_button</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;a /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span>
+			<span class="s1">&#39;text&#39;</span> <span class="o">:</span> <span class="nx">I18n</span><span class="p">.</span><span class="nx">t</span><span class="p">(</span><span class="s1">&#39;refinerycms.plugin.seo.close_popup&#39;</span><span class="p">,</span> <span class="p">{</span><span class="nx">defaultValue</span> <span class="o">:</span> <span class="s1">&#39;Close popup&#39;</span><span class="p">}),</span>
+			<span class="s1">&#39;class&#39;</span> <span class="o">:</span> <span class="s1">&#39;button close_dialog&#39;</span><span class="p">,</span>
+			<span class="s1">&#39;href&#39;</span> <span class="o">:</span> <span class="s1">&#39;#test&#39;</span>
+		<span class="p">});</span>
+
+		<span class="nx">close_button</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+			<span class="nx">that</span><span class="p">.</span><span class="nx">report</span><span class="p">.</span><span class="nx">hide</span><span class="p">();</span>
+		<span class="p">});</span>
+
+		<span class="nx">header</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span>
+			<span class="nx">close_button</span>
+		<span class="p">);</span>
+
+		<span class="k">return</span> <span class="nx">header</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">getWrapper</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">wrapper</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">report_id</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="nx">wrapper</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">wrapper</span><span class="p">;</span>
+		<span class="p">}</span>
+
+		<span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span>
+			<span class="s1">&#39;id&#39;</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">report_id</span>
+		<span class="p">});</span>
+	<span class="p">},</span>
+
+	<span class="nx">getContent</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">content</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">report_id</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;.content&#39;</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="nx">content</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">content</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">buildContent</span><span class="p">());</span>
+			<span class="k">return</span> <span class="nx">content</span><span class="p">;</span>
+		<span class="p">}</span>
+
+		<span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span>
+			<span class="s1">&#39;class&#39;</span><span class="o">:</span> <span class="s1">&#39;content&#39;</span><span class="p">,</span>
+			<span class="s1">&#39;html&#39;</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">buildContent</span><span class="p">()</span>
+		<span class="p">});</span>
+	<span class="p">},</span>
+
+	<span class="nx">getFooter</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span>
+			<span class="s1">&#39;class&#39;</span><span class="o">:</span> <span class="s1">&#39;footer&#39;</span><span class="p">,</span>
+			<span class="s1">&#39;html&#39;</span><span class="o">:</span> <span class="s1">&#39;&amp;nbsp;&#39;</span>
+		<span class="p">});</span>
+	<span class="p">},</span>
+
+	<span class="nx">buildHighlightContent</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+			<span class="nx">block</span><span class="p">,</span>
+			<span class="nx">higlight_holder</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="o">:</span> <span class="s1">&#39;higlight-content&#39;</span><span class="p">});</span>
+
+		<span class="nx">$</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">texts</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+			<span class="nx">block</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span>
+				<span class="s1">&#39;html&#39;</span> <span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;h3 /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;html&#39;</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">label</span><span class="p">})</span>
+			<span class="p">});</span>
+
+			<span class="nx">block</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div /&gt;&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;html&#39;</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">body</span><span class="p">}));</span>
+
+			<span class="nx">higlight_holder</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">block</span><span class="p">);</span>
+		<span class="p">});</span>
+
+		<span class="k">return</span> <span class="nx">higlight_holder</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">buildContent</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">tmp_holder</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;div /&gt;&#39;</span><span class="p">);</span>
+
+		<span class="nx">tmp_holder</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">buildHighlightContent</span><span class="p">());</span>
+
+		<span class="k">return</span> <span class="nx">tmp_holder</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">destroy</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">report</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">).</span><span class="nx">unbind</span><span class="p">(</span><span class="s1">&#39;click&#39;</span><span class="p">);</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">report</span><span class="p">.</span><span class="nx">remove</span><span class="p">();</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">report</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+	<span class="p">},</span>
+
+	<span class="nx">render</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">cfg</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">cfg</span> <span class="o">=</span> <span class="nx">cfg</span> <span class="o">||</span> <span class="p">{};</span>
+		<span class="kd">var</span> <span class="nx">that</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+
+		<span class="k">this</span><span class="p">.</span><span class="nx">texts</span> <span class="o">=</span> <span class="nx">cfg</span><span class="p">.</span><span class="nx">texts</span> <span class="o">||</span> <span class="p">[];</span>
+
+		<span class="k">this</span><span class="p">.</span><span class="nx">holder</span> <span class="o">=</span> <span class="nx">cfg</span><span class="p">.</span><span class="nx">holder</span> <span class="o">||</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;body&#39;</span><span class="p">);</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">holder</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">this</span><span class="p">.</span><span class="nx">report</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getWrapper</span><span class="p">();</span>
+
+			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">rendered</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">this</span><span class="p">.</span><span class="nx">report</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getHeader</span><span class="p">());</span>
+				<span class="k">this</span><span class="p">.</span><span class="nx">report</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getContent</span><span class="p">());</span>
+				<span class="k">this</span><span class="p">.</span><span class="nx">holder</span><span class="p">.</span><span class="nx">prepend</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">report</span><span class="p">);</span>
+				<span class="k">this</span><span class="p">.</span><span class="nx">report</span><span class="p">.</span><span class="nx">show</span><span class="p">();</span>
+				<span class="k">this</span><span class="p">.</span><span class="nx">rendered</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="p">(</span><span class="nx">cfg</span><span class="p">.</span><span class="nx">fade</span><span class="p">)</span> <span class="p">{</span>
+					<span class="k">this</span><span class="p">.</span><span class="nx">report</span><span class="p">.</span><span class="nx">fadeOut</span><span class="p">(</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+						<span class="nx">that</span><span class="p">.</span><span class="nx">getContent</span><span class="p">();</span>
+						<span class="nx">that</span><span class="p">.</span><span class="nx">report</span><span class="p">.</span><span class="nx">fadeIn</span><span class="p">();</span>
+					<span class="p">});</span>
+				<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+					<span class="k">this</span><span class="p">.</span><span class="nx">getContent</span><span class="p">();</span>
+				<span class="p">}</span>
+
+				<span class="k">this</span><span class="p">.</span><span class="nx">report</span><span class="p">.</span><span class="nx">show</span><span class="p">();</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+
+                    </div>
+			</div>
+		</div>
+		<div class="yui-b">
+            <div class="nav">
+
+                    <div id="moduleList" class="module">
+                        <h4>Modules</h4>
+                        <ul class="content">
+                                <li class="selected"><a href="module_refinerycms.html" title="refinerycms">refinerycms</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="classList" class="module">
+                        <h4>Classes</h4>
+                        <ul class="content">
+                                <li class=""><a href="Dialog.html" title="Dialog">Dialog</a></li>
+                                <li class=""><a href="Editor.html" title="Editor">Editor</a></li>
+                                <li class=""><a href="form.html" title="form">form</a></li>
+                                <li class=""><a href="ImageDialog.html" title="ImageDialog">ImageDialog</a></li>
+                                <li class=""><a href="LinkDialog.html" title="LinkDialog">LinkDialog</a></li>
+                                <li class=""><a href="page.html" title="page">page</a></li>
+                                <li class=""><a href="REFINERYCMS.html" title="REFINERYCMS">REFINERYCMS</a></li>
+                                <li class=""><a href="Seo.html" title="Seo">Seo</a></li>
+                                <li class=""><a href="SettingsDialog.html" title="SettingsDialog">SettingsDialog</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="fileList" class="module">
+                        <h4>Files</h4>
+                        <ul class="content">        
+                                <li class=""><a href="dialog.js.html" title="dialog.js">dialog.js</a></li>
+                                <li class=""><a href="dialog_image.js.html" title="dialog_image.js">dialog_image.js</a></li>
+                                <li class=""><a href="dialog_link.js.html" title="dialog_link.js">dialog_link.js</a></li>
+                                <li class=""><a href="dialog_settings.js.html" title="dialog_settings.js">dialog_settings.js</a></li>
+                                <li class=""><a href="editor.js.html" title="editor.js">editor.js</a></li>
+                                <li class=""><a href="form.js.html" title="form.js">form.js</a></li>
+                                <li class=""><a href="menu.js.html" title="menu.js">menu.js</a></li>
+                                <li class=""><a href="page.js.html" title="page.js">page.js</a></li>
+                                <li class=""><a href="refinerycms.js.html" title="refinerycms.js">refinerycms.js</a></li>
+                                <li class=""><a href="seo-init.js.html" title="seo-init.js">seo-init.js</a></li>
+                                <li class="selected"><a href="seo.js.html" title="seo.js">seo.js</a></li>
+                        </ul>
+                    </div>
+
+
+
+
+
+            </div>
+		</div>
+	</div>
+	<div id="ft">
+        <hr />
+        Copyright &copy; 2011 Yahoo! Inc. All rights reserved.
+	</div>
+</div>
+<script type="text/javascript">
+
+    var ALL_YUI_PROPS = [{"url": "form.html#method_addEvent", "access": "", "host": "form", "type": "method", "name": "addEvent"}, {"url": "Dialog.html#method_disable_submit", "access": "", "host": "Dialog", "type": "method", "name": "disable_submit"}, {"url": "Dialog.html#method_enable_submit", "access": "", "host": "Dialog", "type": "method", "name": "enable_submit"}, {"url": "REFINERYCMS.html#method_extendObject", "access": "", "host": "REFINERYCMS", "type": "method", "name": "extendObject"}, {"url": "Seo.html#method_get_highlighted_keywords", "access": "", "host": "Seo", "type": "method", "name": "get_highlighted_keywords"}, {"url": "Seo.html#method_init", "access": "", "host": "Seo", "type": "method", "name": "init"}, {"url": "REFINERYCMS.html#method_init_tooltips", "access": "", "host": "REFINERYCMS", "type": "method", "name": "init_tooltips"}, {"url": "REFINERYCMS.html#method_namespace", "access": "", "host": "REFINERYCMS", "type": "method", "name": "namespace"}];
+</script>
+</body>
+</html>

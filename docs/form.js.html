@@ -4,11 +4,11 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<title>API: refinerycms   form.js  (YUI Library)</title>
 
-	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1303886239.15" />
-	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1303886239.15" />
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css" />
 
-    <script type="text/javascript" src="assets/api-js?stamp=1303886239.15"></script>
-    <script type="text/javascript" src="assets/ac-js?stamp=1303886239.15"></script>
+    <script type="text/javascript" src="assets/api-js"></script>
+    <script type="text/javascript" src="assets/ac-js"></script>
 </head>
 
 <body id="yahoo-com">
@@ -47,7 +47,7 @@
                         <style>
                             #doc3 .classopts { display:none; }
                         </style>
-<div class="highlight"><pre><span class="cm">/**</span>
+                        <div class="highlight"><pre><span class="cm">/**</span>
 <span class="cm">* The REFINERYCMS form object for client side validating forms in REFINERYCMS.</span>
 <span class="cm">* Based on REFINERYCMS.formForms https://github.com/REFINERYCMS.form/REFINERYCMS.form/raw/master/client-side/forms/REFINERYCMS.formForms.js</span>
 <span class="cm">*</span>
@@ -56,6 +56,7 @@
 <span class="cm">* @package    refinerycms-js</span>
 <span class="cm">* @copyright  Copyright (C) 2011</span>
 <span class="cm">* @author     keraM marek@keram.name http//keram.name</span>
+<span class="cm">* @class      form</span>
 <span class="cm">* @license    MIT</span>
 <span class="cm">*/</span>
 
@@ -121,15 +122,16 @@
 
 
 <span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">validateControl</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">elem</span><span class="p">,</span> <span class="nx">rules</span><span class="p">,</span> <span class="nx">onlyCheck</span><span class="p">)</span> <span class="p">{</span>
-	<span class="kd">var</span> <span class="nx">rules</span> <span class="o">=</span> <span class="nx">rules</span> <span class="o">||</span> <span class="nb">eval</span><span class="p">(</span><span class="s1">&#39;[&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">elem</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span><span class="s1">&#39;data-refinerycms-rules&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;]&#39;</span><span class="p">);</span>
+	<span class="nx">rules</span> <span class="o">=</span> <span class="nx">rules</span> <span class="o">||</span> <span class="nb">eval</span><span class="p">(</span><span class="s1">&#39;[&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">elem</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span><span class="s1">&#39;data-refinerycms-rules&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;]&#39;</span><span class="p">);</span>
+	
 	<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">rules</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">id</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">id</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
 		<span class="kd">var</span> <span class="nx">rule</span> <span class="o">=</span> <span class="nx">rules</span><span class="p">[</span><span class="nx">id</span><span class="p">],</span> <span class="nx">op</span> <span class="o">=</span> <span class="nx">rule</span><span class="p">.</span><span class="nx">op</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/(~)?([^?]+)/</span><span class="p">);</span>
-		<span class="nx">rule</span><span class="p">.</span><span class="nx">neg</span> <span class="o">=</span> <span class="nx">op</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
-		<span class="nx">rule</span><span class="p">.</span><span class="nx">op</span> <span class="o">=</span> <span class="nx">op</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
-		<span class="nx">rule</span><span class="p">.</span><span class="nx">condition</span> <span class="o">=</span> <span class="o">!!</span><span class="nx">rule</span><span class="p">.</span><span class="nx">rules</span><span class="p">;</span>
-		<span class="kd">var</span> <span class="nx">el</span> <span class="o">=</span> <span class="nx">rule</span><span class="p">.</span><span class="nx">control</span> <span class="o">?</span> <span class="nx">elem</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">elements</span><span class="p">[</span><span class="nx">rule</span><span class="p">.</span><span class="nx">control</span><span class="p">]</span> <span class="o">:</span> <span class="nx">elem</span><span class="p">;</span>
-
-		<span class="kd">var</span> <span class="nx">success</span> <span class="o">=</span> <span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">validateRule</span><span class="p">(</span><span class="nx">el</span><span class="p">,</span> <span class="nx">rule</span><span class="p">.</span><span class="nx">op</span><span class="p">,</span> <span class="nx">rule</span><span class="p">.</span><span class="nx">arg</span><span class="p">);</span>
+			<span class="nx">rule</span><span class="p">.</span><span class="nx">neg</span> <span class="o">=</span> <span class="nx">op</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+			<span class="nx">rule</span><span class="p">.</span><span class="nx">op</span> <span class="o">=</span> <span class="nx">op</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+			<span class="nx">rule</span><span class="p">.</span><span class="nx">condition</span> <span class="o">=</span> <span class="o">!!</span><span class="nx">rule</span><span class="p">.</span><span class="nx">rules</span><span class="p">,</span>
+			<span class="nx">el</span> <span class="o">=</span> <span class="nx">rule</span><span class="p">.</span><span class="nx">control</span> <span class="o">?</span> <span class="nx">elem</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">elements</span><span class="p">[</span><span class="nx">rule</span><span class="p">.</span><span class="nx">control</span><span class="p">]</span> <span class="o">:</span> <span class="nx">elem</span><span class="p">,</span>
+			<span class="nx">success</span> <span class="o">=</span> <span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">validateRule</span><span class="p">(</span><span class="nx">el</span><span class="p">,</span> <span class="nx">rule</span><span class="p">.</span><span class="nx">op</span><span class="p">,</span> <span class="nx">rule</span><span class="p">.</span><span class="nx">arg</span><span class="p">);</span>
+			
 		<span class="k">if</span> <span class="p">(</span><span class="nx">success</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span> <span class="k">continue</span><span class="p">;</span> <span class="p">}</span>
 		<span class="k">if</span> <span class="p">(</span><span class="nx">rule</span><span class="p">.</span><span class="nx">neg</span><span class="p">)</span> <span class="p">{</span> <span class="nx">success</span> <span class="o">=</span> <span class="o">!</span><span class="nx">success</span><span class="p">;</span> <span class="p">}</span>
 
@@ -147,7 +149,6 @@
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
 <span class="p">};</span>
-
 
 <span class="nx">REFINERYCMS</span><span class="p">.</span><span class="nx">form</span><span class="p">.</span><span class="nx">validateForm</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">sender</span><span class="p">)</span> <span class="p">{</span>
 	<span class="kd">var</span> <span class="nx">form</span> <span class="o">=</span> <span class="nx">sender</span><span class="p">.</span><span class="nx">form</span> <span class="o">||</span> <span class="nx">sender</span><span class="p">;</span>
@@ -367,6 +368,7 @@
 	<span class="p">}</span>
 <span class="p">});</span>
 </pre></div>
+
                     </div>
 			</div>
 		</div>
@@ -385,10 +387,13 @@
                         <ul class="content">
                                 <li class=""><a href="Dialog.html" title="Dialog">Dialog</a></li>
                                 <li class=""><a href="Editor.html" title="Editor">Editor</a></li>
+                                <li class=""><a href="form.html" title="form">form</a></li>
                                 <li class=""><a href="ImageDialog.html" title="ImageDialog">ImageDialog</a></li>
                                 <li class=""><a href="LinkDialog.html" title="LinkDialog">LinkDialog</a></li>
                                 <li class=""><a href="page.html" title="page">page</a></li>
                                 <li class=""><a href="REFINERYCMS.html" title="REFINERYCMS">REFINERYCMS</a></li>
+                                <li class=""><a href="Seo.html" title="Seo">Seo</a></li>
+                                <li class=""><a href="SettingsDialog.html" title="SettingsDialog">SettingsDialog</a></li>
                         </ul>
                     </div>
 
@@ -398,11 +403,14 @@
                                 <li class=""><a href="dialog.js.html" title="dialog.js">dialog.js</a></li>
                                 <li class=""><a href="dialog_image.js.html" title="dialog_image.js">dialog_image.js</a></li>
                                 <li class=""><a href="dialog_link.js.html" title="dialog_link.js">dialog_link.js</a></li>
+                                <li class=""><a href="dialog_settings.js.html" title="dialog_settings.js">dialog_settings.js</a></li>
                                 <li class=""><a href="editor.js.html" title="editor.js">editor.js</a></li>
                                 <li class="selected"><a href="form.js.html" title="form.js">form.js</a></li>
                                 <li class=""><a href="menu.js.html" title="menu.js">menu.js</a></li>
                                 <li class=""><a href="page.js.html" title="page.js">page.js</a></li>
                                 <li class=""><a href="refinerycms.js.html" title="refinerycms.js">refinerycms.js</a></li>
+                                <li class=""><a href="seo-init.js.html" title="seo-init.js">seo-init.js</a></li>
+                                <li class=""><a href="seo.js.html" title="seo.js">seo.js</a></li>
                         </ul>
                     </div>
 
@@ -419,7 +427,8 @@
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "Dialog.html#method_addEvent", "access": "", "host": "Dialog", "type": "method", "name": "addEvent"}, {"url": "Dialog.html#method_disable_submit", "access": "", "host": "Dialog", "type": "method", "name": "disable_submit"}, {"url": "Dialog.html#method_enable_submit", "access": "", "host": "Dialog", "type": "method", "name": "enable_submit"}, {"url": "REFINERYCMS.html#method_extendObject", "access": "", "host": "REFINERYCMS", "type": "method", "name": "extendObject"}, {"url": "Dialog.html#property_menu", "access": "", "host": "Dialog", "type": "property", "name": "menu"}, {"url": "REFINERYCMS.html#method_namespace", "access": "", "host": "REFINERYCMS", "type": "method", "name": "namespace"}];
+
+    var ALL_YUI_PROPS = [{"url": "form.html#method_addEvent", "access": "", "host": "form", "type": "method", "name": "addEvent"}, {"url": "Dialog.html#method_disable_submit", "access": "", "host": "Dialog", "type": "method", "name": "disable_submit"}, {"url": "Dialog.html#method_enable_submit", "access": "", "host": "Dialog", "type": "method", "name": "enable_submit"}, {"url": "REFINERYCMS.html#method_extendObject", "access": "", "host": "REFINERYCMS", "type": "method", "name": "extendObject"}, {"url": "Seo.html#method_get_highlighted_keywords", "access": "", "host": "Seo", "type": "method", "name": "get_highlighted_keywords"}, {"url": "Seo.html#method_init", "access": "", "host": "Seo", "type": "method", "name": "init"}, {"url": "REFINERYCMS.html#method_init_tooltips", "access": "", "host": "REFINERYCMS", "type": "method", "name": "init_tooltips"}, {"url": "REFINERYCMS.html#method_namespace", "access": "", "host": "REFINERYCMS", "type": "method", "name": "namespace"}];
 </script>
 </body>
 </html>
